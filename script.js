@@ -205,42 +205,43 @@ class PieceList {
         var replaceStr = "(" + x + "," + y + ")";
         //update whitepieces
         if (piece == 'wP'){
-            this.whitePawns = whitePawns.replace(oldStr,replaceStr);
+            this.whitePawns = this.whitePawns.replace(oldStr,replaceStr);
+            console.log(this.whitePawns)
             }     
         if (piece == 'wN'){
-            this.whiteKnights = whiteKnights.replace(oldStr,replaceStr);
+            this.whiteKnights = this.whiteKnights.replace(oldStr,replaceStr);
             }
         if (piece == 'wR'){
-            this.whiteRooks = whiteRooks.replace(oldStr,replaceStr);
+            this.whiteRooks = this.whiteRooks.replace(oldStr,replaceStr);
             }     
         if (piece == 'wB'){
-            this.whiteBishops = whiteBishops.replace(oldStr,replaceStr);
+            this.whiteBishops = this.whiteBishops.replace(oldStr,replaceStr);
             }  
         if (piece == 'wQ'){
-            this.whiteQueen = whiteQueen.replace(oldStr,replaceStr);
+            this.whiteQueen = this.whiteQueen.replace(oldStr,replaceStr);
             }   
         if (piece == 'wK'){
-            this.whiteKing = whiteKing.replace(oldStr,replaceStr);
+            this.whiteKing = this.whiteKing.replace(oldStr,replaceStr);
             }
         
         //update blackpieces
         if (piece == 'bP'){
-            this.blackPawns = blackPawns.replace(oldStr,replaceStr);
+            this.blackPawns = this.blackPawns.replace(oldStr,replaceStr);
             }     
         if (piece == 'bN'){
-            this.blackKnights = blackKnights.replace(oldStr,replaceStr);
+            this.blackKnights = this.blackKnights.replace(oldStr,replaceStr);
             }
         if (piece == 'bR'){
-            this.blackRooks = blackRooks.replace(oldStr,replaceStr);
+            this.blackRooks = this.blackRooks.replace(oldStr,replaceStr);
             }     
         if (piece == 'bB'){
-            this.blackBishops = blackBishops.replace(oldStr,replaceStr);
+            this.blackBishops = this.blackBishops.replace(oldStr,replaceStr);
             }  
         if (piece == 'bQ'){
-            this.blackQueen = blackQueen.replace(oldStr,replaceStr);
+            this.blackQueen = this.blackQueen.replace(oldStr,replaceStr);
             }   
         if (piece == 'bK'){
-            this.blackKing = blackKing.replace(oldStr,replaceStr);
+            this.blackKing = this.blackKing.replace(oldStr,replaceStr);
             }        
         
     }
@@ -387,8 +388,7 @@ function selectPiece(p){
       
       
     info.innerHTML = 'Position X : ' + xPos + '<br />Position Y : ' + yPos + '<br />Piece :' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove;
-
-    
+   
       
     if (game.pieceSelected == 'none'){
         game.pieceSelected = game.getHexContent(xPos,yPos);
@@ -404,15 +404,13 @@ function selectPiece(p){
         else{
             game.toMove = 'false';
             if (game.oldX == xPos && game.oldY == yPos){
-                    game.pieceSelected = 'none';
-                    game.oldX = 'none';
-                    game.oldY = 'none';   
+                game.pieceSelected = 'none';
+ 
             }
             else{
                 game.movePiece(xPos,yPos,game.pieceSelected);
                 game.pieceSelected = 'none';
-                game.oldX = 'none';
-                game.oldY = 'none';
+
             }
         }
       } 
