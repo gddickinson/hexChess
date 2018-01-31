@@ -74,8 +74,12 @@ class PieceList {
         this.blackBishops = blackBishops;
         this.blackQueen = blackQueen;
         this.blackKing = blackKing;
-        this.selectedCellX = 15
-        this.selectedCellY = 40
+        this.selectedCellX = 15;
+        this.selectedCellY = 40;
+        this.pieceSelected = 'none';
+        this.toMove = 'false'
+        this.oldX = 15;
+        this.oldY = 40;
     }
     
     
@@ -100,13 +104,13 @@ class PieceList {
     
     setPieces(){
         //white
-        for (var i = 0; i < game.whiteImageList.length; i++){
-            setPiece(game.whiteImageList[i],game.whitePieceList[i]);
+        for (var i = 0; i < this.whiteImageList.length; i++){
+            setPiece(this.whiteImageList[i],this.whitePieceList[i]);
         }
         
         //black
-        for (i = 0; i < game.blackImageList.length; i++){
-            setPiece(game.blackImageList[i],game.blackPieceList[i]);
+        for (i = 0; i < this.blackImageList.length; i++){
+            setPiece(this.blackImageList[i],this.blackPieceList[i]);
         }
         
     }
@@ -115,63 +119,132 @@ class PieceList {
         var ans = 'none';
         var searchStr = "(" + x + "," + y + ")";
         // test for white pieces
-        for (var i = 0; i < game.whitePieceList.length; i++){
-            if (game.whitePieceList[i].includes(searchStr) == true){
-                ans = game.whiteImageList[i];
+        for (var i = 0; i < this.whitePieceList.length; i++){
+            if (this.whitePieceList[i].includes(searchStr) == true){
+                ans = this.whiteImageList[i];
             }
         }
         
         // test for black pieces
-        for (var i = 0; i < game.blackPieceList.length; i++){
-            if (game.blackPieceList[i].includes(searchStr) == true){
-                ans = game.blackImageList[i];
+        for (var i = 0; i < this.blackPieceList.length; i++){
+            if (this.blackPieceList[i].includes(searchStr) == true){
+                ans = this.blackImageList[i];
         }        
         
     }
         return ans;
     }
     
-    selectHex(x,y){
+    selectHex(x,y,colour){
         if (board.hexInBoard(x,y)){
-            if (game.selectedCellX==15){
+            if (this.selectedCellX==15){
                 drawHex((y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
                 rad + rad * Math.sin(Math.PI / 3) * y,
                 rad,
                 x + '' + y,
-                'blue',
+                colour,
                 false,
-                 game.getHexContent(x,y));
+                 this.getHexContent(x,y));
                 
-                 game.selectedCellX = x;
-                 game.selectedCellY = y;       
+                 this.selectedCellX = x;
+                 this.selectedCellY = y;       
                         
             
             }
             else{                
-                drawHex((game.selectedCellY % 2 ? rad * 2.5 : rad) + rad * 3 * game.selectedCellX,
-                rad + rad * Math.sin(Math.PI / 3) * game.selectedCellY,
+                drawHex((this.selectedCellY % 2 ? rad * 2.5 : rad) + rad * 3 * this.selectedCellX,
+                rad + rad * Math.sin(Math.PI / 3) * this.selectedCellY,
                 rad,
-                game.selectedCellX + '' + game.selectedCellY,
+                this.selectedCellX + '' + this.selectedCellY,
                 'white',
                 true,
-                 game.getHexContent(game.selectedCellX,game.selectedCellY));
+                 this.getHexContent(this.selectedCellX,this.selectedCellY));
                         
-                 game.selectedCellX = x;
-                 game.selectedCellY = y;
+                 this.selectedCellX = x;
+                 this.selectedCellY = y;
                         
                 drawHex((y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
                 rad + rad * Math.sin(Math.PI / 3) * y,
                 rad,
                 x + '' + y,
-                'blue',
+                colour,
                 false,
-                 game.getHexContent(x,y));
+                 this.getHexContent(x,y));
   
                 
             }
         }
         
     }
+    
+    
+    movePiece(x,y,piece){
+            //delete old
+            drawHex((this.oldY % 2 ? rad * 2.5 : rad) + rad * 3 * this.oldX,
+                rad + rad * Math.sin(Math.PI / 3) * game.oldY,
+                rad,
+                this.oldX + '' + this.oldY,
+                'white',
+                true,
+                'none');
+        
+            //make new
+            drawHex((y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
+                rad + rad * Math.sin(Math.PI / 3) * y,
+                rad,
+                x + '' + y,
+                'white',
+                false,
+                piece);
+        
+        this.updatePieceList(x,y,piece);
+    }
+    
+    updatePieceList(x,y,piece){
+        var oldStr = "(" + this.oldX + "," + this.oldY + ")";
+        var replaceStr = "(" + x + "," + y + ")";
+        //update whitepieces
+        if (piece == 'wP'){
+            this.whitePawns = whitePawns.replace(oldStr,replaceStr);
+            }     
+        if (piece == 'wN'){
+            this.whiteKnights = whiteKnights.replace(oldStr,replaceStr);
+            }
+        if (piece == 'wR'){
+            this.whiteRooks = whiteRooks.replace(oldStr,replaceStr);
+            }     
+        if (piece == 'wB'){
+            this.whiteBishops = whiteBishops.replace(oldStr,replaceStr);
+            }  
+        if (piece == 'wQ'){
+            this.whiteQueen = whiteQueen.replace(oldStr,replaceStr);
+            }   
+        if (piece == 'wK'){
+            this.whiteKing = whiteKing.replace(oldStr,replaceStr);
+            }
+        
+        //update blackpieces
+        if (piece == 'bP'){
+            this.blackPawns = blackPawns.replace(oldStr,replaceStr);
+            }     
+        if (piece == 'bN'){
+            this.blackKnights = blackKnights.replace(oldStr,replaceStr);
+            }
+        if (piece == 'bR'){
+            this.blackRooks = blackRooks.replace(oldStr,replaceStr);
+            }     
+        if (piece == 'bB'){
+            this.blackBishops = blackBishops.replace(oldStr,replaceStr);
+            }  
+        if (piece == 'bQ'){
+            this.blackQueen = blackQueen.replace(oldStr,replaceStr);
+            }   
+        if (piece == 'bK'){
+            this.blackKing = blackKing.replace(oldStr,replaceStr);
+            }        
+        
+    }
+    
 }
 
 
@@ -313,11 +386,37 @@ function selectPiece(p){
     }
       
       
-    info.innerHTML = 'Position X : ' + xPos + '<br />Position Y : ' + yPos + '<br />Piece :' + game.getHexContent(xPos,yPos);
-      
-    game.selectHex(xPos,yPos)
-      } 
+    info.innerHTML = 'Position X : ' + xPos + '<br />Position Y : ' + yPos + '<br />Piece :' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove;
+
     
+      
+    if (game.pieceSelected == 'none'){
+        game.pieceSelected = game.getHexContent(xPos,yPos);
+        }
+    else{
+        if (game.toMove == 'false'){
+            game.selectHex(xPos,yPos,'blue');
+            game.pieceSelected = game.getHexContent(xPos,yPos);
+            game.oldX = game.selectedCellX;
+            game.oldY = game.selectedCellY;
+            game.toMove = 'true';     
+        }
+        else{
+            game.toMove = 'false';
+            if (game.oldX == xPos && game.oldY == yPos){
+                    game.pieceSelected = 'none';
+                    game.oldX = 'none';
+                    game.oldY = 'none';   
+            }
+            else{
+                game.movePiece(xPos,yPos,game.pieceSelected);
+                game.pieceSelected = 'none';
+                game.oldX = 'none';
+                game.oldY = 'none';
+            }
+        }
+      } 
+  }
 }
 
 //add event listeners
