@@ -6,6 +6,16 @@ var width = 700;
 var height = 700;
 var rad = width / (20 * 1.55);
 
+function getHex_X(x,y){
+    var rad = width / (20 * 1.55);
+    return (y % 2 ? rad * 2.5 : rad) + rad * 3 * x;
+}
+
+function getHex_Y(x,y){
+    var rad = width / (20 * 1.55);
+    return rad + rad * Math.sin(Math.PI / 3) * y;
+}
+
 //set board shape by designating cells outside of board that will not be drawn
 var offBoard = "(0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,9),(0,10),(0,11),(0,12),(0,13),(0,14),(0,15),(0,16),(0,18),(0,19),(0,20),(0,21),(0,22),(0,24),(0,25),(0,26),(0,27),(0,28),(0,29),(0,30),(0,31),(0,32),(0,33),(0,34),(0,35),(0,36),(0,37),(0,38),(0,39)(1,0),(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,12),(1,20),(1,26),(1,28),(1,30),(1,31),(1,31),(1,32),(1,33),(1,34),(1,35),(1,36),(1,37),(1,38),(1,39),(2,0),(2,1),(2,2),(2,3),(2,4),(2,6),(2,34),(2,36),(2,37),(2,38),(2,39),(3,0),(3,1),(3,2),(3,3),(3,4),(3,5),(3,35),(3,36),(3,37),(3,38),(3,39),(4,0),(4,1),(4,39),(5,0),(5,1),(5,39),(6,0),(6,1),(6,39),(7,0),(7,1),(7,39),(8,0),(8,1),(8,3),(8,5),(8,35),(8,37),(8,39),(9,0),(9,1),(9,2),(9,3),(9,4),(9,36),(9,37),(9,38),(9,39),(10,0),(10,1),(10,2),(10,3),(10,4),(10,5),(10,6),(10,7),(10,9),(10,31),(10,33),(10,34),(10,35),(10,36),(10,37),(10,38),(10,39),(11,0),(11,1),(11,2),(11,3),(11,4),(11,5),(11,6),(11,7),(11,8),(11,9),(11,10),(11,11),(11,12),(11,13),(11,15),(11,19),(11,20),(11,21),(11,25),(11,27),(11,28),(11,29),(11,30),(11,31),(11,32),(11,33),(11,34),(11,35),(11,36),(11,37),(11,38),(11,39)";
 
@@ -31,8 +41,8 @@ class Gameboard {
               if(offBoard.includes(searchStr) == false){
 
                 drawHex(
-                    (y % 2 ? this.rad * 2.5 : this.rad) + this.rad * 3 * x,
-                    this.rad + this.rad * Math.sin(Math.PI / 3) * y,
+                    getHex_X(x,y),
+                    getHex_Y(x,y),
                     this.rad,
                     x + '' + y,
                     "white",
@@ -77,9 +87,12 @@ class PieceList {
         this.selectedCellX = 15;
         this.selectedCellY = 40;
         this.pieceSelected = 'none';
+        this.colourSelected = 'none';
+        this.pieceTypeSelected = 'none';
         this.toMove = 'false'
         this.oldX = 15;
         this.oldY = 40;
+
     }
     
     
@@ -138,8 +151,8 @@ class PieceList {
     selectHex(x,y,colour){
         if (board.hexInBoard(x,y)){
             if (this.selectedCellX==15){
-                drawHex((y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
-                rad + rad * Math.sin(Math.PI / 3) * y,
+                drawHex(getHex_X(x,y),
+                getHex_Y(x,y),
                 rad,
                 x + '' + y,
                 colour,
@@ -152,8 +165,8 @@ class PieceList {
             
             }
             else{                
-                drawHex((this.selectedCellY % 2 ? rad * 2.5 : rad) + rad * 3 * this.selectedCellX,
-                rad + rad * Math.sin(Math.PI / 3) * this.selectedCellY,
+                drawHex(getHex_X(this.selectedCellX,this.selectedCellY),
+                getHex_Y(this.selectedCellX,this.selectedCellY),
                 rad,
                 this.selectedCellX + '' + this.selectedCellY,
                 'white',
@@ -163,8 +176,8 @@ class PieceList {
                  this.selectedCellX = x;
                  this.selectedCellY = y;
                         
-                drawHex((y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
-                rad + rad * Math.sin(Math.PI / 3) * y,
+                drawHex(getHex_X(x,y),
+                getHex_Y(x,y),
                 rad,
                 x + '' + y,
                 colour,
@@ -180,8 +193,8 @@ class PieceList {
     
     movePiece(x,y,piece){
             //delete old
-            drawHex((this.oldY % 2 ? rad * 2.5 : rad) + rad * 3 * this.oldX,
-                rad + rad * Math.sin(Math.PI / 3) * game.oldY,
+            drawHex(getHex_X(this.oldX,this.oldY),
+                getHex_Y(this.oldX,this.oldY),
                 rad,
                 this.oldX + '' + this.oldY,
                 'white',
@@ -189,8 +202,8 @@ class PieceList {
                 'none');
         
             //make new
-            drawHex((y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
-                rad + rad * Math.sin(Math.PI / 3) * y,
+            drawHex(getHex_X(x,y),
+                getHex_Y(x,y),
                 rad,
                 x + '' + y,
                 'white',
@@ -246,7 +259,45 @@ class PieceList {
         
     }
     
-}
+    available(x,y){
+        if (this.colourSelected == 'w'){
+           var currentHex = "(" + this.oldX + "," + this.oldY + ")";
+           var allUnavailable = this.whitePawns+this.whiteKnights+this.whiteRooks+this.whiteBishops+this.whiteQueen+this.whiteKing+offBoard+currentHex;
+           var searchStr = "(" + x + "," + y + ")"; 
+           if (allUnavailable.includes(searchStr) == true){
+               return false;
+           }
+            else{
+                return true;
+            }
+        }
+        else{
+               var currentHex = "(" + this.oldX + "," + this.oldY + ")";
+               var allUnavailable = this.blackPawns+this.blackKnights+this.blackRooks+this.blackBishops+this.blackQueen+this.blackKing+offBoard+currentHex;
+               var searchStr = "(" + x + "," + y + ")"; 
+               if (allUnavailable.includes(searchStr) == true){
+                   return false;
+               }
+                else{
+                    return true;
+                }
+            }
+        }
+    
+    
+    setPieceSelected(x,y){
+        this.pieceSelected = this.getHexContent(x,y);
+        if (this.pieceSelected == 'none'){
+            this.colourSelected = 'none';
+            this.pieceTypeSelected = 'none';
+            return;
+        }
+        var splitStr = this.pieceSelected.split("")
+        this.colourSelected = splitStr[0]
+        this.pieceTypeSelected = splitStr[1]
+    }
+    
+}//end of class
 
 
 
@@ -290,8 +341,8 @@ function setPiece(piece,positionList){
             if (positionList.includes(searchStr) == true){      
               
                 drawHex(
-                    (y % 2 ? rad * 2.5 : rad) + rad * 3 * x,
-                    rad + rad * Math.sin(Math.PI / 3) * y,
+                    getHex_X(x,y),
+                    getHex_Y(x,y),
                     rad,
                     x + '' + y,
                     "white",
@@ -308,8 +359,8 @@ function setPiece(piece,positionList){
 function clickHex(colour){
     var newX = 0;
     var newY = 0;
-    drawHex((newY % 2 ? rad * 2.5 : rad) + rad * 3 * newX,
-      rad + rad * Math.sin(Math.PI / 3) * newY,
+    drawHex(getHex_X(x,y),
+      getHex_Y(x,y),
       rad,
       newX + '' + newY,
       colour,
@@ -387,16 +438,16 @@ function selectPiece(p){
     }
       
       
-    info.innerHTML = 'Position X : ' + xPos + '<br />Position Y : ' + yPos + '<br />Piece :' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove;
+    info.innerHTML = 'Position X : ' + xPos + '<br />Position Y : ' + yPos + '<br />Piece :' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove + '<br />Colour: ' +game.colourSelected;
    
       
     if (game.pieceSelected == 'none'){
-        game.pieceSelected = game.getHexContent(xPos,yPos);
+        game.setPieceSelected(xPos,yPos);
         }
     else{
         if (game.toMove == 'false'){
-            game.selectHex(xPos,yPos,'blue');
-            game.pieceSelected = game.getHexContent(xPos,yPos);
+            game.selectHex(xPos,yPos,'blue');           
+            game.setPieceSelected(xPos,yPos);
             game.oldX = game.selectedCellX;
             game.oldY = game.selectedCellY;
             game.toMove = 'true';     
@@ -404,12 +455,17 @@ function selectPiece(p){
         else{
             game.toMove = 'false';
             if (game.oldX == xPos && game.oldY == yPos){
-                game.pieceSelected = 'none';
+                //game.pieceSelected = 'none';
  
             }
             else{
-                game.movePiece(xPos,yPos,game.pieceSelected);
-                game.pieceSelected = 'none';
+                if(game.available(xPos,yPos)) {
+                    game.movePiece(xPos,yPos,game.pieceSelected);
+                    game.pieceSelected = 'none';
+                }
+                else{
+                    info.innerHTML = 'Invalid Move';
+                }
 
             }
         }
