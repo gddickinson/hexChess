@@ -233,43 +233,55 @@ class PieceList {
         //update whitepieces
         if (piece == 'wP'){
             this.whitePawns = this.whitePawns.replace(oldStr,replaceStr);
-            console.log(this.whitePawns)
+            this.blackPawns = this.blackPawns.replace(replaceStr,"");
+            //console.log(this.whitePawns);
             }     
         if (piece == 'wN'){
             this.whiteKnights = this.whiteKnights.replace(oldStr,replaceStr);
+            this.blackKnights = this.blackKnights.replace(replaceStr,"");
             }
         if (piece == 'wR'){
             this.whiteRooks = this.whiteRooks.replace(oldStr,replaceStr);
+            this.blackRooks = this.blackRooks.replace(replaceStr,"");
             }     
         if (piece == 'wB'){
             this.whiteBishops = this.whiteBishops.replace(oldStr,replaceStr);
+            this.blackBishops = this.blackBishops.replace(replaceStr,"")
             }  
         if (piece == 'wQ'){
             this.whiteQueen = this.whiteQueen.replace(oldStr,replaceStr);
+            this.blackQueen = this.blackQueen.replace(replaceStr,"");
             }   
         if (piece == 'wK'){
             this.whiteKing = this.whiteKing.replace(oldStr,replaceStr);
+            this.blackKing = this.blackKing.replace(replaceStr,"");
             }
         
         //update blackpieces
         if (piece == 'bP'){
             this.blackPawns = this.blackPawns.replace(oldStr,replaceStr);
+            this.whitePawns = this.whitePawns.replace(replaceStr,"");
             }     
         if (piece == 'bN'){
             this.blackKnights = this.blackKnights.replace(oldStr,replaceStr);
+            this.whiteKnights = this.whiteKnights.replace(replaceStr,"");
             }
         if (piece == 'bR'){
             this.blackRooks = this.blackRooks.replace(oldStr,replaceStr);
+            this.whiteRooks = this.whiteRooks.replace(replaceStr,"");
             }     
         if (piece == 'bB'){
             this.blackBishops = this.blackBishops.replace(oldStr,replaceStr);
+            this.whiteBishops = this.whiteBishops.replace(replaceStr,"");
             }  
         if (piece == 'bQ'){
             this.blackQueen = this.blackQueen.replace(oldStr,replaceStr);
+            this.whiteQueen = this.whiteQueen.replace(replaceStr,"");
             }   
         if (piece == 'bK'){
             this.blackKing = this.blackKing.replace(oldStr,replaceStr);
-            }        
+            this.whiteKing = this.whiteKing.replace(replaceStr,"");
+            } 
         
     }
     
