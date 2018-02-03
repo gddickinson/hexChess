@@ -59,6 +59,9 @@ class Gameboard {
         if (x>11){
             return false;
         }
+        if (y>39){
+            return false;
+        }
         
         if(offBoard.includes(searchStr)){
             return false;
@@ -286,6 +289,11 @@ class PieceList {
     }
     
    availableForSelection(x,y,colour){
+       // check on board
+       if (board.hexInBoard(x,y) == false){
+           return false;
+       }
+       else{
        var searchStr = "(" + x + "," + y + ")";
        if(colour == 'w'){
             var allAvailable = this.whitePawns+this.whiteKnights+this.whiteRooks+this.whiteBishops+this.whiteQueen+this.whiteKing;
@@ -295,10 +303,15 @@ class PieceList {
             var allAvailable = this.blackPawns+this.blackKnights+this.blackRooks+this.blackBishops+this.blackQueen+this.blackKing;
             return allAvailable.includes(searchStr);
         }
+       }
    } 
     
     
     availableForMove(x,y){
+        // check on board
+        if (board.hexInBoard(x,y) == false){
+            return false;
+        }
         if (this.colourSelected == 'w'){
            var currentHex = "(" + this.oldX + "," + this.oldY + ")";
            var allUnavailable = this.whitePawns+this.whiteKnights+this.whiteRooks+this.whiteBishops+this.whiteQueen+this.whiteKing+offBoard+currentHex;
