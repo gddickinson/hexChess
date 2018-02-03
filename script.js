@@ -84,14 +84,28 @@ class PieceList {
         this.blackBishops = blackBishops;
         this.blackQueen = blackQueen;
         this.blackKing = blackKing;
+ 
+        this.turnNumber = 0;
+        
+        this.sideToMove = 'white';
+        this.turnComplete = false;
+        
+        
+        this.pieceToMoveHexSelected = false;
+        this.hexToMoveToSelected = false;
         this.selectedCellX = 15;
         this.selectedCellY = 40;
+        this.selectedCelltoMovetoX = 15;
+        this.selectedCelltoMovetoY = 40;
+        this.oldX = 15;
+        this.oldY = 40;
+        
+        
         this.pieceSelected = 'none';
         this.colourSelected = 'none';
         this.pieceTypeSelected = 'none';
-        this.toMove = 'false'
-        this.oldX = 15;
-        this.oldY = 40;
+        this.toMove = 'false';
+
 
     }
     
@@ -438,7 +452,7 @@ function selectPiece(p){
     }
       
       
-    info.innerHTML = 'Position X : ' + xPos + '<br />Position Y : ' + yPos + '<br />Piece :' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove + '<br />Colour: ' +game.colourSelected;
+    info.innerHTML = 'Side to move: ' + game.sideToMove + '<br />Position X: ' + xPos + '<br />Position Y: ' + yPos + '<br />Piece: ' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove + '<br />Colour: ' +game.colourSelected;
    
       
     if (game.pieceSelected == 'none'){
@@ -471,7 +485,7 @@ function selectPiece(p){
         }
       } 
   }
-}
+}//end_selectPiece
 
 //add event listeners
 //addEventListener('mousemove', getPos, false);
