@@ -87,7 +87,7 @@ class PieceList {
  
         this.turnNumber = 0;
         
-        this.sideToMove = 'white';
+        this.sideToMove = 'w';
         this.turnComplete = false;
         
         
@@ -104,7 +104,7 @@ class PieceList {
         this.pieceSelected = 'none';
         this.colourSelected = 'none';
         this.pieceTypeSelected = 'none';
-        this.toMove = 'false';
+        this.readyToMove = false;
 
 
     }
@@ -273,7 +273,20 @@ class PieceList {
         
     }
     
-    available(x,y){
+   availableForSelection(x,y,colour){
+       var searchStr = "(" + x + "," + y + ")";
+       if(colour == 'w'){
+            var allAvailable = this.whitePawns+this.whiteKnights+this.whiteRooks+this.whiteBishops+this.whiteQueen+this.whiteKing;
+            return allAvailable.includes(searchStr);
+       }
+        if(colour == 'b'){
+            var allAvailable = this.blackPawns+this.blackKnights+this.blackRooks+this.blackBishops+this.blackQueen+this.blackKing;
+            return allAvailable.includes(searchStr);
+        }
+   } 
+    
+    
+    availableForMove(x,y){
         if (this.colourSelected == 'w'){
            var currentHex = "(" + this.oldX + "," + this.oldY + ")";
            var allUnavailable = this.whitePawns+this.whiteKnights+this.whiteRooks+this.whiteBishops+this.whiteQueen+this.whiteKing+offBoard+currentHex;
@@ -311,6 +324,14 @@ class PieceList {
         this.pieceTypeSelected = splitStr[1]
     }
     
+    changeSideToMove(){
+        if(this.sideToMove == 'w'){
+           this.sideToMove = 'b';
+           }
+        else{
+           this.sideToMove = 'w';
+           }
+        }
 }//end of class
 
 
@@ -438,9 +459,10 @@ function selectPiece(p){
   var rect = c.getBoundingClientRect();
   var xPos = p.pageX - rect.left;
   var yPos = p.pageY - rect.top;
+    
   if (xPos < 0 || yPos <0 || xPos > 890 || yPos >800){
       info.innerHTML = 'Off Board';
-  }    
+    }    
   else{
       if((xPos % 67)<34) {
             xPos = Math.floor(xPos/67);
@@ -454,37 +476,40 @@ function selectPiece(p){
       
     info.innerHTML = 'Side to move: ' + game.sideToMove + '<br />Position X: ' + xPos + '<br />Position Y: ' + yPos + '<br />Piece: ' + game.getHexContent(xPos,yPos) + '<br />' + game.toMove + '<br />Colour: ' +game.colourSelected;
    
-      
-    if (game.pieceSelected == 'none'){
-        game.setPieceSelected(xPos,yPos);
-        }
-    else{
-        if (game.toMove == 'false'){
+   
+    //check if piece is selected to move  
+    if (game.pieceToMoveHexSelected != true){
+                  
+        //check if hex selected contains a valid piece
+        if(game.availableForSelection(xPos,yPos,game.sideToMove)){
             game.selectHex(xPos,yPos,'blue');           
             game.setPieceSelected(xPos,yPos);
             game.oldX = game.selectedCellX;
             game.oldY = game.selectedCellY;
-            game.toMove = 'true';     
+            game.readyToMove = true;
+            game.pieceToMoveHexSelected = true;
+            }
+            
         }
+    else{
+        //check if hex to move to is valid
+        if(game.availableForMove(xPos,yPos)){
+            game.movePiece(xPos,yPos,game.pieceSelected);
+            game.readyToMove = false;
+            game.pieceToMoveHexSelected = false;
+            game.changeSideToMove();
+           return; //TODO
+           }
         else{
-            game.toMove = 'false';
-            if (game.oldX == xPos && game.oldY == yPos){
-                //game.pieceSelected = 'none';
- 
-            }
-            else{
-                if(game.available(xPos,yPos)) {
-                    game.movePiece(xPos,yPos,game.pieceSelected);
-                    game.pieceSelected = 'none';
-                }
-                else{
-                    info.innerHTML = 'Invalid Move';
-                }
-
-            }
+           return; //TODO 
         }
-      } 
-  }
+    }    
+        
+        
+        }
+      
+      
+      
 }//end_selectPiece
 
 //add event listeners
