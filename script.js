@@ -70,7 +70,16 @@ class Gameboard {
         if (x > 11) {
             return false;
         }
+
+        if (x < 0) {
+            return false;
+        }
+
         if (y > 39) {
+            return false;
+        }
+
+        if (y < 0) {
             return false;
         }
 
@@ -389,7 +398,7 @@ class PieceList {
             }
             //odd x
             else {
-                return [[x, y + 1], [x, y + 1], [x + 1, y + 1]];
+                return [[x, y + 1], [x, y + 2], [x + 1, y + 1]];
             }
         }
     }
@@ -398,22 +407,22 @@ class PieceList {
         //TODO
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 5], [x - 1, y-4], [x - 1, y - 1], [x - 1, y + 1], [x - 1, y + 4], [x - 1, y + 5], [x + 1, y - 5], [x + 1, y - 4], [x + 1, y - 1], [x + 1, y + 1], [x + 1, y + 4], [x + 1, y + 5]];
+            return [[x - 1, y - 5], [x - 1, y - 4], [x - 2, y - 1], [x - 2, y + 1], [x - 1, y + 4], [x - 1, y + 5], [x, y - 5], [x + 1, y - 4], [x + 1, y - 1], [x + 1, y + 1], [x + 1, y + 4], [x, y + 5]];
         }
         //odd y
         else {
-            return [[x, y - 5], [x - 1, y - 4], [x - 1, y - 1], [x - 1, y + 1], [x - 1, y + 4], [x, y + 5], [x + 1, y - 5], [x + 2, y - 4], [x + 1, y - 1], [x + 1, y + 1], [x + 1, y + 4], [x + 2, y + 5]];
+            return [[x, y - 5], [x - 1, y - 4], [x - 1, y - 1], [x - 1, y + 1], [x - 1, y + 4], [x, y + 5], [x + 1, y - 5], [x + 1, y - 4], [x + 2, y - 1], [x + 2, y + 1], [x + 1, y + 4], [x + 1, y + 5]];
         }
     }
 
     bishopMoves(x, y) {
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 3], [x - 1, y], [x-1, y +3], [x, y -3], [x+1, y], [x, y + 3]];
+            return [[x - 1, y - 3], [x - 1, y], [x - 1, y + 3], [x, y - 3], [x + 1, y], [x, y + 3],[x+1,y-6],[x+1,y+6], [x+1,y-4],[x+1,y+4]];
         }
         //odd y
         else {
-            return [[x, y - 3], [x-1, y], [x, y +3], [x+1, y -3], [x + 1, y], [x + 1, y + 3]];
+            return [[x, y - 3], [x - 1, y], [x, y + 3], [x + 1, y - 3], [x + 1, y], [x + 1, y + 3]];
         }
 
     }
@@ -421,11 +430,11 @@ class PieceList {
     rookMoves(x, y) {
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 1], [x - 1, y + 1], [x, y - 2], [x, y + 2], [x, y - 1], [x, y + 1]];
+            return [[x - 1, y - 1], [x - 1, y + 1], [x, y - 2], [x, y + 2], [x, y - 1], [x, y + 1], [x - 1, y - 2], [x - 2, y - 3], [x - 1, y + 2], [x - 2, y + 3], [x, y - 4], [x, y - 6], [x, y + 4], [x, y + 6], [x + 1, y - 2], [x + 1, y - 3], [x + 1, y + 2], [x + 1, y + 3]];
         }
         //odd y
         else {
-            return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1]];
+            return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1],[x-1,y-2],[x-1,y-3],[x-1,y+2],[x-1,y+3],[x,y-4],[x,y-6],[x,y+4],[x,y+6],[x+1,y-2],[x+2,y-3],[x+1,y+2],[x+2,y+3]];
         }
 
     }
@@ -433,22 +442,22 @@ class PieceList {
     queenMoves(x, y) {
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 1], [x - 1, y - 2], [x, y - 2], [x, y - 1], [x + 1, y - 1], [x - 1, y + 1], [x - 1, y + 2], [x, y + 2], [x, y + 1]];
+            return [[x - 1, y - 1], [x - 1, y - 2], [x, y - 2], [x, y - 4], [x, y + 4], [x, y - 1], [x + 1, y - 2], [x - 1, y + 1], [x - 1, y + 2], [x, y + 2], [x, y + 1], [x + 1, y + 2]];
         }
         //odd y
         else {
-            return [[x, y - 1], [x, y - 1], [x, y + 1], [x, y + 1], [x + 1, y + 1]];
+            return [[x, y - 1], [x, y + 1], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1], [x, y - 2]];
         }
     }
 
     kingMoves(x, y) {
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 1], [x - 1, y - 2], [x, y - 2], [x, y - 1], [x + 1, y - 1], [x - 1, y + 1], [x - 1, y + 2], [x, y + 2], [x, y + 1]];
+            return [[x - 1, y - 1], [x, y - 1], [x, y - 2], [x - 1, y + 1], [x, y + 2], [x, y + 1]];
         }
         //odd y
         else {
-            return [[x, y - 1], [x, y - 1], [x, y + 1], [x, y + 1], [x + 1, y + 1]];
+            return [[x, y - 1], [x, y + 1], [x, y + 2], [x + 1, y + 1], [x + 1, y - 1], [x, y - 2]];
         }
     }
 
@@ -482,24 +491,24 @@ class PieceList {
             var testY = hexsToActivate[i][1];
             //get near piece to fill near hex
             var nearPiece = this.getHexContent(testX, testY);
-            
-            if(this.availableForMove(testX,testY)){
-                    drawHex(
-                        getHex_X(testX, testY),
-                        getHex_Y(testX, testY),
-                        rad,
-                        testX + '' + testY,
-                        "yellow",
-                        false,
-                        nearPiece
-                    );
-               return;
-               }
-            
-            console.log(nearPiece);
-            //draw near hex
-        }
 
+            if (this.availableForMove(testX, testY)) {
+                drawHex(
+                    getHex_X(testX, testY),
+                    getHex_Y(testX, testY),
+                    rad,
+                    testX + '' + testY,
+                    "yellow",
+                    false,
+                    nearPiece
+                );
+            }
+
+            console.log(nearPiece);
+
+
+        }
+        return;
     }
 
     updateGameState() {
@@ -508,7 +517,7 @@ class PieceList {
 
         this.gameRecord.push(newTurn);
         console.log(this.gameRecord);
-        
+
     }
 
 } ///////////////end of class//////////////////////////////////////////////
@@ -654,7 +663,7 @@ function selectPiece(p) {
         }
 
         updateMessageBox(xPos, yPos)
-        
+
         board.drawBoard();
         game.setPieces();
 
@@ -756,12 +765,11 @@ function resetGame() {
 function undoMove() {
     //TODO
     //move game state back one step
-    if (game.turnNumber == 1){
-       resetGame(); 
+    if (game.turnNumber == 1) {
+        resetGame();
         return;
-    }
-    else{
-        var lastRecord = game.gameRecord[game.turnNumber-2];
+    } else {
+        var lastRecord = game.gameRecord[game.turnNumber - 2];
         console.log(lastRecord);
 
         game.whitePawns = lastRecord[2];
