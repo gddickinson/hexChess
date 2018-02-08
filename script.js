@@ -395,11 +395,27 @@ class PieceList {
     }
 
     knightMoves(x, y) {
-        return;
+        //TODO
+        //even y
+        if (y % 2 == 0) {
+            return [[x - 1, y - 5], [x - 1, y-4], [x - 1, y - 1], [x - 1, y + 1], [x - 1, y + 4], [x - 1, y + 5], [x + 1, y - 5], [x + 1, y - 4], [x + 1, y - 1], [x + 1, y + 1], [x + 1, y + 4], [x + 1, y + 5]];
+        }
+        //odd y
+        else {
+            return [[x, y - 5], [x - 1, y - 4], [x - 1, y - 1], [x - 1, y + 1], [x - 1, y + 4], [x, y + 5], [x + 1, y - 5], [x + 2, y - 4], [x + 1, y - 1], [x + 1, y + 1], [x + 1, y + 4], [x + 2, y + 5]];
+        }
     }
 
     bishopMoves(x, y) {
-        return;
+        //even y
+        if (y % 2 == 0) {
+            return [[x - 1, y - 3], [x - 1, y], [x-1, y +3], [x, y -3], [x+1, y], [x, y + 3]];
+        }
+        //odd y
+        else {
+            return [[x, y - 3], [x-1, y], [x, y +3], [x+1, y -3], [x + 1, y], [x + 1, y + 3]];
+        }
+
     }
 
     rookMoves(x, y) {
@@ -412,7 +428,6 @@ class PieceList {
             return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1]];
         }
 
-        return;
     }
 
     queenMoves(x, y) {
@@ -467,6 +482,20 @@ class PieceList {
             var testY = hexsToActivate[i][1];
             //get near piece to fill near hex
             var nearPiece = this.getHexContent(testX, testY);
+            
+            if(this.availableForMove(testX,testY)){
+                    drawHex(
+                        getHex_X(testX, testY),
+                        getHex_Y(testX, testY),
+                        rad,
+                        testX + '' + testY,
+                        "yellow",
+                        false,
+                        nearPiece
+                    );
+               return;
+               }
+            
             console.log(nearPiece);
             //draw near hex
         }
@@ -625,6 +654,9 @@ function selectPiece(p) {
         }
 
         updateMessageBox(xPos, yPos)
+        
+        board.drawBoard();
+        game.setPieces();
 
         //check if piece is selected to move  
         if (game.pieceToMoveHexSelected != true) {
