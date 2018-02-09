@@ -251,60 +251,82 @@ class PieceList {
         this.updatePieceList(x, y, piece);
     }
 
+
+    removeblackPiece(replaceStr) {
+        this.blackPawns = this.blackPawns.replace(replaceStr, "");
+        this.blackKnights = this.blackKnights.replace(replaceStr, "");
+        this.blackRooks = this.blackRooks.replace(replaceStr, "");
+        this.blackBishops = this.blackBishops.replace(replaceStr, "");
+        this.blackQueen = this.blackQueen.replace(replaceStr, "");
+        this.blackKing = this.blackKing.replace(replaceStr, "");
+
+    }
+
+    removewhitePiece(replaceStr) {
+        this.whitePawns = this.whitePawns.replace(replaceStr, "");
+        this.whiteKnights = this.whiteKnights.replace(replaceStr, "");
+        this.whiteRooks = this.whiteRooks.replace(replaceStr, "");
+        this.whiteBishops = this.whiteBishops.replace(replaceStr, "");
+        this.whiteQueen = this.whiteQueen.replace(replaceStr, "");
+        this.whiteKing = this.whiteKing.replace(replaceStr, "");
+
+    }
+
+
     updatePieceList(x, y, piece) {
         var oldStr = "(" + this.oldX + "," + this.oldY + ")";
         var replaceStr = "(" + x + "," + y + ")";
         //update whitepieces
         if (piece == 'wP') {
             this.whitePawns = this.whitePawns.replace(oldStr, replaceStr);
-            this.blackPawns = this.blackPawns.replace(replaceStr, "");
+            this.removeblackPiece(replaceStr);
             //console.log(this.whitePawns);
         }
         if (piece == 'wN') {
             this.whiteKnights = this.whiteKnights.replace(oldStr, replaceStr);
-            this.blackKnights = this.blackKnights.replace(replaceStr, "");
+            this.removeblackPiece(replaceStr);
         }
         if (piece == 'wR') {
             this.whiteRooks = this.whiteRooks.replace(oldStr, replaceStr);
-            this.blackRooks = this.blackRooks.replace(replaceStr, "");
+            this.removeblackPiece(replaceStr);
         }
         if (piece == 'wB') {
             this.whiteBishops = this.whiteBishops.replace(oldStr, replaceStr);
-            this.blackBishops = this.blackBishops.replace(replaceStr, "")
+            this.removeblackPiece(replaceStr);
         }
         if (piece == 'wQ') {
             this.whiteQueen = this.whiteQueen.replace(oldStr, replaceStr);
-            this.blackQueen = this.blackQueen.replace(replaceStr, "");
+            this.removeblackPiece(replaceStr);
         }
         if (piece == 'wK') {
             this.whiteKing = this.whiteKing.replace(oldStr, replaceStr);
-            this.blackKing = this.blackKing.replace(replaceStr, "");
+            this.removeblackPiece(replaceStr);
         }
 
         //update blackpieces
         if (piece == 'bP') {
             this.blackPawns = this.blackPawns.replace(oldStr, replaceStr);
-            this.whitePawns = this.whitePawns.replace(replaceStr, "");
+            this.removewhitePiece(replaceStr);
         }
         if (piece == 'bN') {
             this.blackKnights = this.blackKnights.replace(oldStr, replaceStr);
-            this.whiteKnights = this.whiteKnights.replace(replaceStr, "");
+            this.removewhitePiece(replaceStr);
         }
         if (piece == 'bR') {
             this.blackRooks = this.blackRooks.replace(oldStr, replaceStr);
-            this.whiteRooks = this.whiteRooks.replace(replaceStr, "");
+            this.removewhitePiece(replaceStr);
         }
         if (piece == 'bB') {
             this.blackBishops = this.blackBishops.replace(oldStr, replaceStr);
-            this.whiteBishops = this.whiteBishops.replace(replaceStr, "");
+            this.removewhitePiece(replaceStr);
         }
         if (piece == 'bQ') {
             this.blackQueen = this.blackQueen.replace(oldStr, replaceStr);
-            this.whiteQueen = this.whiteQueen.replace(replaceStr, "");
+            this.removewhitePiece(replaceStr);
         }
         if (piece == 'bK') {
             this.blackKing = this.blackKing.replace(oldStr, replaceStr);
-            this.whiteKing = this.whiteKing.replace(replaceStr, "");
+            this.removewhitePiece(replaceStr);
         }
 
     }
@@ -389,7 +411,7 @@ class PieceList {
             }
             //odd x
             else {
-                return [[x, y - 1], [x, y - 1], [x, y - 1]];
+                return [[x, y - 1], [x, y - 2], [x + 1, y - 1]];
             }
         } else {
             //even x
@@ -418,11 +440,11 @@ class PieceList {
     bishopMoves(x, y) {
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 3], [x - 1, y], [x - 1, y + 3], [x, y - 3], [x + 1, y], [x, y + 3],[x+1,y-6],[x+1,y+6], [x+1,y-4],[x+1,y+4]];
+            return [[x - 1, y - 3], [x - 1, y], [x - 1, y + 3], [x, y - 3], [x + 1, y], [x, y + 3], [x - 1, y - 6], [x + 1, y - 6], [x - 2, y], [x + 2, y], [x - 1, y + 6], [x + 1, y + 6]];
         }
         //odd y
         else {
-            return [[x, y - 3], [x - 1, y], [x, y + 3], [x + 1, y - 3], [x + 1, y], [x + 1, y + 3]];
+            return [[x, y - 3], [x - 1, y], [x, y + 3], [x + 1, y - 3], [x + 1, y], [x + 1, y + 3], [x - 1, y - 6], [x + 1, y - 6], [x + 2, y], [x - 2, y], [x - 1, y + 6], [x + 1, y + 6]];
         }
 
     }
@@ -434,7 +456,7 @@ class PieceList {
         }
         //odd y
         else {
-            return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1],[x-1,y-2],[x-1,y-3],[x-1,y+2],[x-1,y+3],[x,y-4],[x,y-6],[x,y+4],[x,y+6],[x+1,y-2],[x+2,y-3],[x+1,y+2],[x+2,y+3]];
+            return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 2], [x - 1, y - 3], [x - 1, y + 2], [x - 1, y + 3], [x, y - 4], [x, y - 6], [x, y + 4], [x, y + 6], [x + 1, y - 2], [x + 2, y - 3], [x + 1, y + 2], [x + 2, y + 3]];
         }
 
     }
@@ -442,12 +464,13 @@ class PieceList {
     queenMoves(x, y) {
         //even y
         if (y % 2 == 0) {
-            return [[x - 1, y - 1], [x - 1, y - 2], [x, y - 2], [x, y - 4], [x, y + 4], [x, y - 1], [x + 1, y - 2], [x - 1, y + 1], [x - 1, y + 2], [x, y + 2], [x, y + 1], [x + 1, y + 2]];
+            return [[x - 1, y - 1], [x - 1, y + 1], [x, y - 2], [x, y + 2], [x, y - 1], [x, y + 1], [x - 1, y - 2], [x - 2, y - 3], [x - 1, y + 2], [x - 2, y + 3], [x, y - 4], [x, y - 6], [x, y + 4], [x, y + 6], [x + 1, y - 2], [x + 1, y - 3], [x + 1, y + 2], [x + 1, y + 3], [x - 1, y - 3], [x - 1, y], [x - 1, y + 3], [x, y - 3], [x + 1, y], [x, y + 3], [x - 1, y - 6], [x + 1, y - 6], [x - 2, y], [x + 2, y], [x - 1, y + 6], [x + 1, y + 6], [x, y - 8], [x, y + 8], [x + 2, y - 4], [x + 2, y + 4], [x - 2, y - 4], [x - 2, y + 4]];
         }
         //odd y
         else {
-            return [[x, y - 1], [x, y + 1], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1], [x, y - 2]];
+            return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 2], [x - 1, y - 3], [x - 1, y + 2], [x - 1, y + 3], [x, y - 4], [x, y - 6], [x, y + 4], [x, y + 6], [x + 1, y - 2], [x + 2, y - 3], [x + 1, y + 2], [x + 2, y + 3], [x, y - 3], [x - 1, y], [x, y + 3], [x + 1, y - 3], [x + 1, y], [x + 1, y + 3], [x - 1, y - 6], [x + 1, y - 6], [x + 2, y], [x - 2, y], [x - 1, y + 6], [x + 1, y + 6], [x, y - 8], [x, y + 8], [x + 2, y - 4], [x + 2, y + 4], [x - 2, y - 4], [x - 2, y + 4]];
         }
+
     }
 
     kingMoves(x, y) {
