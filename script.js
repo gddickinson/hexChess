@@ -539,16 +539,21 @@ class PieceList {
         var diffX = Math.abs(x1 - x2);
         var diffY = Math.abs(y1 - y2);
 
+        //get number of intermediate hexs
+        diffY = (diffY/2);
+
+
+
         if (x1 == x2) {
             if (y2 < y1) {
-                for (var i = 1; i < (diffY - 3); i++) {
+                for (var i = 1; i < diffY; i++) {
                     var intHex = "(" + x1 + "," + (y1 - (2 * i)) + ")";
                     listOfHexs = listOfHexs + intHex;
                     //console.log(listOfHexs);
                 }
             }
             if (y2 > y1) {
-                for (var i = 1; i < (diffY - 3); i++) {
+                for (var i = 1; i < diffY; i++) {
                     var intHex = "(" + x1 + "," + (y1 + (2 * i)) + ")";
                     listOfHexs = listOfHexs + intHex;
                     //console.log(listOfHexs);
