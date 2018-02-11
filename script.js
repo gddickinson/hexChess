@@ -6,7 +6,7 @@ if (ctx.canvas.width < ctx.canvas.height) {
     ctx.canvas.height = ctx.canvas.width;
 } else {
     ctx.canvas.height = window.innerHeight - (window.innerHeight * 0.05);
-    ctx.canvas.width = ctx.canvas.height
+    ctx.canvas.width = ctx.canvas.height;
 }
 
 
@@ -128,6 +128,8 @@ class PieceList {
         this.colourSelected = 'none';
         this.pieceTypeSelected = 'none';
         this.readyToMove = false;
+
+        this.availableMovesForCurrentPiece = '';
 
         this.gameRecord = [];
 
@@ -525,12 +527,19 @@ class PieceList {
                     false,
                     nearPiece
                 );
+                var pushStr = "(" + testX + "," + testY + ")";
+                this.availableMovesForCurrentPiece = this.availableMovesForCurrentPiece + pushStr;
             }
 
-            console.log(nearPiece);
+            console.log(this.availableMovesForCurrentPiece);
 
 
         }
+        return;
+    }
+    
+    resetAvailableMoves(){
+        this.availableMovesForCurrentPiece = "";
         return;
     }
 
@@ -709,17 +718,21 @@ function selectPiece(p) {
         } else {
             //check if hex to move to is valid
             if (game.availableForMove(xPos, yPos)) {
+                //move piece
                 game.movePiece(xPos, yPos, game.pieceSelected);
                 game.readyToMove = false;
                 game.pieceToMoveHexSelected = false;
                 game.changeSideToMove();
+                game.resetAvailableMoves();
 
                 updateMessageBox(xPos, yPos);
 
                 return; //TODO
             } else {
+                game.resetAvailableMoves();
                 //if hex not available unselect piece - select new piece if one in hex
                 if (game.availableForSelection(xPos, yPos, game.sideToMove)) {
+                    game.resetAvailableMoves();
                     game.selectHex(xPos, yPos, 'blue');
                     game.setPieceSelected(xPos, yPos);
                     game.showHexsAvailabletoMove(xPos, yPos, game.pieceSelected);
@@ -777,6 +790,8 @@ function resetGame() {
     game.colourSelected = 'none';
     game.pieceTypeSelected = 'none';
     game.readyToMove = false;
+    
+    game.availableMovesForCurrentPiece = "";
 
     game.gameRecord = [];
     board.drawBoard();
@@ -828,6 +843,8 @@ function undoMove() {
         game.colourSelected = 'none';
         game.pieceTypeSelected = 'none';
         game.readyToMove = false;
+        
+        game.availableMovesForCurrentPiece = "";
 
         game.gameRecord.pop();
         board.drawBoard();
