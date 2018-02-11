@@ -428,7 +428,6 @@ class PieceList {
     }
 
     knightMoves(x, y) {
-        //TODO
         //even y
         if (y % 2 == 0) {
             return [[x - 1, y - 5], [x - 1, y - 4], [x - 2, y - 1], [x - 2, y + 1], [x - 1, y + 4], [x - 1, y + 5], [x, y - 5], [x + 1, y - 4], [x + 1, y - 1], [x + 1, y + 1], [x + 1, y + 4], [x, y + 5]];
@@ -531,7 +530,7 @@ class PieceList {
                 this.availableMovesForCurrentPiece = this.availableMovesForCurrentPiece + pushStr;
             }
         }
-        console.log(this.availableMovesForCurrentPiece);
+        console.log("Available moves: " + this.availableMovesForCurrentPiece);
         return;
     }
 
@@ -542,13 +541,17 @@ class PieceList {
 
         if (x1 == x2) {
             if (y2 < y1) {
-                for (var i = 0; i < diffY; i++) {
-                    listOfHexs = listOfHexs + "(" + x1 + "," + y1 - (2 * i) + ")";
+                for (var i = 1; i < (diffY - 3); i++) {
+                    var intHex = "(" + x1 + "," + (y1 - (2 * i)) + ")";
+                    listOfHexs = listOfHexs + intHex;
+                    //console.log(listOfHexs);
                 }
             }
             if (y2 > y1) {
-                for (var i = 0; i < diffY; i++) {
-                    listOfHexs = listOfHexs + "(" + x1 + "," + y1 + (2 * i) + ")";
+                for (var i = 1; i < (diffY - 3); i++) {
+                    var intHex = "(" + x1 + "," + (y1 + (2 * i)) + ")";
+                    listOfHexs = listOfHexs + intHex;
+                    //console.log(listOfHexs);
                 }
             }
 
@@ -752,6 +755,7 @@ function selectPiece(p) {
 
         } else {
             //check if hex to move to is valid
+            console.log("Intermediate hexs: " + game.getIntermediateHexs(game.oldX, game.oldY, xPos, yPos));
             if (game.availableForMove(xPos, yPos) && game.availableCurrentPieceMove(xPos, yPos)) {
                 //move piece
                 game.movePiece(xPos, yPos, game.pieceSelected);
