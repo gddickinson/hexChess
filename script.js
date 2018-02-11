@@ -539,12 +539,29 @@ class PieceList {
         var diffX = Math.abs(x1 - x2);
         var diffY = Math.abs(y1 - y2);
 
-        //get number of intermediate hexs
-        diffY = (diffY/2);
 
+        
+        //bishop sideways move
+        if (y1 == y2){
+            if (x2>x1){
+                var intHex = "(" + (x1+1) + "," + (y1) + ")";
+            }
+            else{
+                 var intHex = "(" + (x1-1) + "," + (y1) + ")";
+            }
+            listOfHexs = listOfHexs + intHex;
+            return listOfHexs;
+            }
+        
 
-
+        //castle moves
         if (x1 == x2) {
+            if (diffY % 3 == 0) {
+                //bishop diag - 1 step
+                return listOfHexs;
+            }
+            //get number of intermediate hexs
+            diffY = (diffY / 2);
             if (y2 < y1) {
                 for (var i = 1; i < diffY; i++) {
                     var intHex = "(" + x1 + "," + (y1 - (2 * i)) + ")";
@@ -559,6 +576,60 @@ class PieceList {
                     //console.log(listOfHexs);
                 }
             }
+
+        } else {
+
+
+            if (x2 > x1) {
+                if (diffY % 3 == 0) {
+                    //bishop diag - 1 step
+                    if (y2 < y1) {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1) + "," + (y1 - 3) + ")";
+                        } else {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 - 3) + ")";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    }
+                    else{
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1) + "," + (y1 + 3) + ")";
+                        } else {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 + 3) + ")";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    }
+
+                }
+
+            } else {
+                if (diffY % 3 == 0) {
+                    //bishop diag - 1 step
+                    if (y2 < y1) {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 - 3) + ")";
+                        } else {
+                            var intHex = "(" + (x1) + "," + (y1 - 3) + ")";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    }
+                    else{
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 + 3) + ")";
+                        } else {
+                            var intHex = "(" + (x1) + "," + (y1 + 3) + ")";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs; 
+                    }
+
+                }
+
+            }
+
 
         }
 
