@@ -530,15 +530,21 @@ class PieceList {
                 var pushStr = "(" + testX + "," + testY + ")";
                 this.availableMovesForCurrentPiece = this.availableMovesForCurrentPiece + pushStr;
             }
-
-            console.log(this.availableMovesForCurrentPiece);
-
-
         }
+        console.log(this.availableMovesForCurrentPiece);
         return;
     }
-    
-    resetAvailableMoves(){
+
+    availableCurrentPieceMove(x, y) {
+        var searchStr = "(" + x + "," + y + ")";
+        if (this.availableMovesForCurrentPiece.includes(searchStr) == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    resetAvailableMoves() {
         this.availableMovesForCurrentPiece = "";
         return;
     }
@@ -717,7 +723,7 @@ function selectPiece(p) {
 
         } else {
             //check if hex to move to is valid
-            if (game.availableForMove(xPos, yPos)) {
+            if (game.availableForMove(xPos, yPos) && game.availableCurrentPieceMove(xPos, yPos)) {
                 //move piece
                 game.movePiece(xPos, yPos, game.pieceSelected);
                 game.readyToMove = false;
@@ -743,6 +749,10 @@ function selectPiece(p) {
 
                     updateMessageBox(xPos, yPos);
                     return; //TODO 
+                } else {
+                    game.pieceSelected = 'none';
+                    game.pieceToMoveHexSelected = false;
+                    game.colourSelected = 'none';
                 }
             }
         }
@@ -790,7 +800,7 @@ function resetGame() {
     game.colourSelected = 'none';
     game.pieceTypeSelected = 'none';
     game.readyToMove = false;
-    
+
     game.availableMovesForCurrentPiece = "";
 
     game.gameRecord = [];
@@ -843,7 +853,7 @@ function undoMove() {
         game.colourSelected = 'none';
         game.pieceTypeSelected = 'none';
         game.readyToMove = false;
-        
+
         game.availableMovesForCurrentPiece = "";
 
         game.gameRecord.pop();
@@ -861,10 +871,10 @@ function undoMove() {
 //addEventListener('mousemove', getPos, false);
 addEventListener('click', selectPiece, false);
 
-function mDown(obj) {
-    clickHex("blue");
-}
-
-function mUp(obj) {
-    clickHex("red")
-}
+//function mDown(obj) {
+//    clickHex("blue");
+//}
+//
+//function mUp(obj) {
+//    clickHex("red")
+//}
