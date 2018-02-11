@@ -535,6 +535,35 @@ class PieceList {
         return;
     }
 
+    getIntermediateHexs(x1, y1, x2, y2) {
+        var listOfHexs = "";
+        var diffX = Math.abs(x1 - x2);
+        var diffY = Math.abs(y1 - y2);
+
+        if (x1 == x2) {
+            if (y2 < y1) {
+                for (var i = 0; i < diffY; i++) {
+                    listOfHexs = listOfHexs + "(" + x1 + "," + y1 - (2 * i) + ")";
+                }
+            }
+            if (y2 > y1) {
+                for (var i = 0; i < diffY; i++) {
+                    listOfHexs = listOfHexs + "(" + x1 + "," + y1 + (2 * i) + ")";
+                }
+            }
+
+        }
+
+        return listOfHexs;
+    }
+
+
+    jumpNeeded(x1, y1, x2, y2) {
+        //TODO
+        return;
+    }
+
+
     availableCurrentPieceMove(x, y) {
         var searchStr = "(" + x + "," + y + ")";
         if (this.availableMovesForCurrentPiece.includes(searchStr) == true) {
