@@ -521,7 +521,8 @@ class PieceList {
             //get near piece to fill near hex
             var nearPiece = this.getHexContent(testX, testY);
 
-            if (this.availableForMove(testX, testY)) {
+            //test if hex open and not blocked by intermediate piece
+            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, nearPiece) == false) {
                 drawHex(
                     getHex_X(testX, testY),
                     getHex_Y(testX, testY),
@@ -645,15 +646,15 @@ class PieceList {
         if (testPiece == "N") {
             return false;
 
-            
+
         } else {
-            
-            var intermediates = this.getIntermediateHexs(x1, y1, x2, y2).split(";");    
-            
-            if  (intermediates == ""){
+
+            var intermediates = this.getIntermediateHexs(x1, y1, x2, y2).split(";");
+
+            if (intermediates == "") {
                 return false;
             }
-            
+
             console.log("intermediates" + intermediates);
 
             var occupied = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + offBoard;
