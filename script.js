@@ -609,6 +609,17 @@ class PieceList {
                     }
 
                 }
+                //fix for diagonal moves TODO - add for other directions
+                if (y1 % 2 == 0) {
+                    if (diffX ==1 && diffY == 3) {
+                        var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                        var intHex2 = "(" + (x1+1) + "," + (y1 - 2) + ");";
+                    }
+                    listOfHexs = listOfHexs + intHex + intHex2;
+                    return listOfHexs;
+                }
+                
+                
 
                 if (diffX < 2 && diffY == 3) {
                     //bishop diag - 1 step
@@ -761,7 +772,7 @@ class PieceList {
                     if (diffY - 1 == 3) {
                         listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
                     }
-
+                    console.log("diifY: " + diffY);
                     return listOfHexs;
                 }
 
