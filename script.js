@@ -522,7 +522,8 @@ class PieceList {
             var nearPiece = this.getHexContent(testX, testY);
 
             //test if hex open and not blocked by intermediate piece
-            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, nearPiece) == false) {
+            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, piece) == false) {
+                console.log(testX + "," + testY);
                 drawHex(
                     getHex_X(testX, testY),
                     getHex_Y(testX, testY),
@@ -544,6 +545,7 @@ class PieceList {
         var listOfHexs = "";
         var diffX = Math.abs(x1 - x2);
         var diffY = Math.abs(y1 - y2);
+        //console.log(diffY);
 
 
 
@@ -578,15 +580,15 @@ class PieceList {
                 for (var i = 1; i < diffY; i++) {
                     var intHex = "(" + x1 + "," + (y1 + (2 * i)) + ");";
                     listOfHexs = listOfHexs + intHex;
-                    //console.log(listOfHexs);
+
                 }
             }
 
         } else {
 
-
+            //TODO - Something not right with bishop moves - incorrectly hetting blocked pieces
             if (x2 > x1) {
-                if (diffY % 3 == 0) {
+                if (diffY % 3 == 0 && diffY > 3) {
                     //bishop diag - 1 step
                     if (y2 < y1) {
                         if (y1 % 2 == 0) {
@@ -608,8 +610,78 @@ class PieceList {
 
                 }
 
+                if (diffX < 2 && diffY == 3) {
+                    //bishop diag - 1 step
+                    if (y2 < y1) {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1) + "," + (y1 - 3) + ");";
+                        } else {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 - 3) + ");";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    } else {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1) + "," + (y1 + 3) + ");";
+                        } else {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 + 3) + ");";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    }
+
+                } else {
+                    //castle diag - move right
+                    //move up + right
+                    if (y2 < y1) {
+                        //start from left side hex
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                            //console.log("test even up")
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 + 1) + "," + (y1 - 3) + ");";
+
+                            //start from right side hex
+                        } else {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 - 1) + ");";
+                            //console.log("test odd up")
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 + 2) + "," + (y1 - 3) + ");";
+                        }
+                        //move down and right  
+                    } else {
+
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1) + "," + (y1 + 1) + ");";
+                            //console.log("test even down")
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 + 2) + ");";
+                            var intHex3 = "(" + (x1 + 1) + "," + (y1 + 3) + ");";
+
+                        } else {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 + 1) + ");";
+                            //console.log("test odd down")
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 + 2) + ");";
+                            var intHex3 = "(" + (x1 + 2) + "," + (y1 + 3) + ");";
+                        }
+
+
+                    }
+
+                    if (diffY - 1 == 1) {
+                        listOfHexs = listOfHexs + intHex;
+                    }
+                    if (diffY - 1 == 2) {
+                        listOfHexs = listOfHexs + intHex + intHex2;
+                    }
+                    if (diffY - 1 == 3) {
+                        listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                    }
+                    console.log(diffY + "list of hexs" + listOfHexs)
+                    return listOfHexs;
+                }
+
             } else {
-                if (diffY % 3 == 0) {
+                if (diffY % 3 == 0 && diffY > 3) {
                     //bishop diag - 1 step
                     if (y2 < y1) {
                         if (y1 % 2 == 0) {
@@ -630,6 +702,68 @@ class PieceList {
                     }
 
                 }
+                
+                if (diffX < 2 && diffY == 3) {
+                    //bishop diag - 1 step
+                    if (y2 < y1) {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 - 3) + ");";
+                        } else {
+                            var intHex = "(" + (x1) + "," + (y1 - 3) + ");";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    } else {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 + 3) + ");";
+                        } else {
+                            var intHex = "(" + (x1) + "," + (y1 + 3) + ");";
+                        }
+                        listOfHexs = listOfHexs + intHex;
+                        return listOfHexs;
+                    }
+
+                }
+                
+                
+                else {
+                    //castle diag
+                    //moving up and left
+                    if (y2 < y1) {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 - 2) + "," + (y1 - 3) + ");";
+                        } else {
+                            var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 - 1) + "," + (y1 - 3) + ");";
+                        }
+
+                    } else {
+                        if (y1 % 2 == 0) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 + 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 + 2) + ");";
+                            var intHex3 = "(" + (x1 - 2) + "," + (y1 + 3) + ");";
+                        } else {
+                            var intHex = "(" + (x1) + "," + (y1 + 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 + 2) + ");";
+                            var intHex3 = "(" + (x1 - 1) + "," + (y1 + 3) + ");";
+                        }
+
+                    }
+                    if (diffY - 1 == 1) {
+                        listOfHexs = listOfHexs + intHex;
+                    }
+                    if (diffY - 1 == 2) {
+                        listOfHexs = listOfHexs + intHex + intHex2;
+                    }
+                    if (diffY - 1 == 3) {
+                        listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                    }
+
+                    return listOfHexs;
+                }
 
             }
 
@@ -643,6 +777,7 @@ class PieceList {
     jumpNeeded(x1, y1, x2, y2, piece) {
         //if knight ignore jumps and return false
         var testPiece = piece.split("")[1];
+
         if (testPiece == "N") {
             return false;
 
@@ -651,25 +786,29 @@ class PieceList {
 
             var intermediates = this.getIntermediateHexs(x1, y1, x2, y2).split(";");
 
+
             if (intermediates == "") {
+                console.log("No intermediates: " + x2 + "," + y2)
                 return false;
             }
+
 
             console.log("intermediates" + intermediates);
 
             var occupied = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + offBoard;
 
-            console.log("occupied" + occupied);
+            //console.log("occupied" + occupied);
             for (var i = 0; i < intermediates.length; i++) {
-                if (occupied.includes(intermediates[i])) {
-                    console.log("Test--" + intermediates[i])
+                //console.log(i,intermediates[i]);
+                if (occupied.includes(intermediates[i]) && intermediates[i] != "") {
+                    console.log("occupied includes: " + intermediates[i]);
                     return true;
-                } else {
-                    return false;
                 }
+
             }
-            return false;
+
         }
+        return false;
     }
 
 
@@ -692,7 +831,7 @@ class PieceList {
         var newTurn = [this.turnNumber, this.sideToMove, this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing];
 
         this.gameRecord.push(newTurn);
-        console.log(this.gameRecord);
+        //console.log(this.gameRecord);
 
     }
 
@@ -861,10 +1000,8 @@ function selectPiece(p) {
 
         } else {
             //check if hex to move to is valid
-            console.log("Intermediate hexs: " + game.getIntermediateHexs(game.oldX, game.oldY, xPos, yPos));
-            console.log("Jump needed: " + game.jumpNeeded(game.oldX, game.oldY, xPos, yPos, game.pieceSelected))
 
-            if (game.availableForMove(xPos, yPos) && game.availableCurrentPieceMove(xPos, yPos) && game.jumpNeeded(game.oldX, game.oldY, xPos, yPos, game.pieceSelected) == false) {
+            if (game.availableForMove(xPos, yPos) && game.availableCurrentPieceMove(xPos, yPos)) {
                 //move piece
                 game.movePiece(xPos, yPos, game.pieceSelected);
                 game.readyToMove = false;
