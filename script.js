@@ -587,7 +587,65 @@ class PieceList {
         } else {
 
             //TODO - Something not right with bishop moves - incorrectly hetting blocked pieces
-            if (x2 > x1) {
+            if (x2 > x1) { //moves to the right
+                //fix for diagonal moves 
+                if (y2 < y1) {
+                    if (y1 % 2 == 0) { //even
+                        if (diffX == 1 && diffY == 3) {
+                            var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 - 2) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2;
+                            return listOfHexs;
+                        }
+                        if (diffX == 2 && diffY == 4) {
+                            var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 + 1) + "," + (y1 - 3) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                            return listOfHexs;
+
+                        }
+
+                    } else { //odd
+                        if (diffX == 2 && diffY == 3) {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 - 2) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2;
+                            return listOfHexs;
+                        }
+                        if (diffX == 2 && diffY == 4) {
+                            var intHex = "(" + (x1 + 1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 + 2) + "," + (y1 - 3) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                            return listOfHexs;
+
+                        }
+
+                    }
+
+                } else {
+
+                    if (y1 % 2 == 0) {
+                        if (diffX == 1 && diffY == 3) {
+                            var intHex = "(" + (x1) + "," + (y1 + 1) + ");";
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 + 2) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2;
+                            return listOfHexs;
+                        }
+                        if (diffX == 2 && diffY == 4) {
+                            var intHex = "(" + (x1) + "," + (y1 + 1) + ");";
+                            var intHex2 = "(" + (x1 + 1) + "," + (y1 + 2) + ");";
+                            var intHex3 = "(" + (x1 + 1) + "," + (y1 + 3) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                            return listOfHexs;
+
+                        }
+
+                    }
+                }
+
+
                 if (diffY % 3 == 0 && diffY > 3) {
                     //bishop diag - 1 step
                     if (y2 < y1) {
@@ -609,17 +667,9 @@ class PieceList {
                     }
 
                 }
-                //fix for diagonal moves TODO - add for other directions
-                if (y1 % 2 == 0) {
-                    if (diffX ==1 && diffY == 3) {
-                        var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
-                        var intHex2 = "(" + (x1+1) + "," + (y1 - 2) + ");";
-                    }
-                    listOfHexs = listOfHexs + intHex + intHex2;
-                    return listOfHexs;
-                }
-                
-                
+
+
+
 
                 if (diffX < 2 && diffY == 3) {
                     //bishop diag - 1 step
@@ -691,7 +741,68 @@ class PieceList {
                     return listOfHexs;
                 }
 
-            } else {
+            } else { //moves to the left
+
+                //fix for diagonal moves 
+                if (y2 < y1) {
+                    if (y1 % 2 == 0) { //Even
+                        if (diffX == 2 && diffY == 3) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 - 2) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2;
+                            return listOfHexs;
+                        }
+                        if (diffX == 2 && diffY == 4) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 - 2) + "," + (y1 - 3) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                            return listOfHexs;
+
+                        }
+
+
+
+                    } else { //odd
+                        if (diffX == 1 && diffY == 3) {
+                            var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 - 2) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2;
+                            return listOfHexs;
+                        }
+                        if (diffX == 2 && diffY == 4) {
+                            var intHex = "(" + (x1) + "," + (y1 - 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 - 2) + ");";
+                            var intHex3 = "(" + (x1 - 1) + "," + (y1 - 3) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                            return listOfHexs;
+
+                        }
+
+                    }
+                } else {
+
+                    if (y1 % 2 == 0) {
+                        if (diffX == 1 && diffY == 3) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 + 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 + 2) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2;
+                            return listOfHexs;
+                        }
+                        if (diffX == 2 && diffY == 4) {
+                            var intHex = "(" + (x1 - 1) + "," + (y1 + 1) + ");";
+                            var intHex2 = "(" + (x1 - 1) + "," + (y1 + 2) + ");";
+                            var intHex3 = "(" + (x1 - 2) + "," + (y1 + 3) + ");";
+                            listOfHexs = listOfHexs + intHex + intHex2 + intHex3;
+                            return listOfHexs;
+
+                        }
+
+                    }
+                }
+
+
+
                 if (diffY % 3 == 0 && diffY > 3) {
                     //bishop diag - 1 step
                     if (y2 < y1) {
@@ -713,7 +824,7 @@ class PieceList {
                     }
 
                 }
-                
+
                 if (diffX < 2 && diffY == 3) {
                     //bishop diag - 1 step
                     if (y2 < y1) {
@@ -734,10 +845,7 @@ class PieceList {
                         return listOfHexs;
                     }
 
-                }
-                
-                
-                else {
+                } else {
                     //castle diag
                     //moving up and left
                     if (y2 < y1) {
