@@ -946,12 +946,58 @@ class PieceList {
     }
 
     updateGameState() {
-        //TODO create function that records all positions turn-by-turn
+        //record all positions turn-by-turn
         var newTurn = [this.turnNumber, this.sideToMove, this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing];
 
         this.gameRecord.push(newTurn);
         //console.log(this.gameRecord);
 
+    }
+
+    redrawBoard() {
+        var lastRecord = this.gameRecord[this.turnNumber - 1];
+        console.log(lastRecord);
+
+        this.whitePawns = lastRecord[2];
+        this.whiteKnights = lastRecord[3];
+        this.whiteRooks = lastRecord[4];
+        this.whiteBishops = lastRecord[5];
+        this.whiteQueen = lastRecord[6];
+        this.whiteKing = lastRecord[7];
+        this.blackPawns = lastRecord[8];
+        this.blackKnights = lastRecord[9];
+        this.blackRooks = lastRecord[10];
+        this.blackBishops = lastRecord[11];
+        this.blackQueen = lastRecord[12];
+        this.blackKing = lastRecord[13];
+
+        this.turnNumber = lastRecord[0];
+
+        this.sideToMove = lastRecord[1];
+        this.turnComplete = false;
+
+
+        this.pieceToMoveHexSelected = false;
+        this.hexToMoveToSelected = false;
+        this.selectedCellX = 15;
+        this.selectedCellY = 40;
+        this.selectedCelltoMovetoX = 15;
+        this.selectedCelltoMovetoY = 40;
+        this.oldX = 15;
+        this.oldY = 40;
+
+
+        this.pieceSelected = 'none';
+        this.colourSelected = 'none';
+        this.pieceTypeSelected = 'none';
+        this.readyToMove = false;
+
+        this.availableMovesForCurrentPiece = "";
+
+        board.drawBoard();
+        this.setPieces();
+        console.log("undo move pushed")
+        return;
     }
 
 } ///////////////end of class//////////////////////////////////////////////
@@ -1127,6 +1173,8 @@ function selectPiece(p) {
                 game.pieceToMoveHexSelected = false;
                 game.changeSideToMove();
                 game.resetAvailableMoves();
+                game.oldX = 15;
+                game.oldY = 40;
 
                 updateMessageBox(xPos, yPos);
 
@@ -1160,6 +1208,8 @@ function selectPiece(p) {
 
 
 } //end_selectPiece
+
+
 
 function resetGame() {
     //TODO
