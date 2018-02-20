@@ -1006,7 +1006,7 @@ class PieceList {
 
 //set start positions
 //white in play
-var whitePawns = "(4,36),(4,35),(5,36),(5,35),(6,34),(6,35),(7,36),(7,35),(8,36)";
+var whitePawns = "(4,36),(4,35),(5,36),(5,35),(6,34),(6,35),(7,36),(7,35),(8,36),(5,34),(5,33),(6,33),(7,34)";
 var whiteKnights = "(4,37),(7,37)";
 var whiteRooks = "(4,38),(8,38)";
 var whiteBishops = "(6,36),(6,37),(7,38)";
@@ -1014,7 +1014,7 @@ var whiteQueen = "(5,37)";
 var whiteKing = "(6,38)"
 
 //black in play
-var blackPawns = "(4,4),(4,5),(5,4),(5,5),(6,6),(6,5),(7,4),(7,5),(8,4)";
+var blackPawns = "(4,4),(4,5),(5,4),(5,5),(6,6),(6,5),(7,4),(7,5),(8,4),(5,6),(5,7),(6,7),(7,6)";
 var blackKnights = "(4,3),(7,3)";
 var blackRooks = "(4,2),(8,2)";
 var blackBishops = "(5,2),(5,3),(6,4)";
@@ -1106,7 +1106,7 @@ function drawHex(x, y, radius, n, colour, textOn, piece) {
 var info = document.getElementById('info');
 
 // Create function for position on canvas
-function getPos(p) {
+/*function getPos(p) {
     var rect = c.getBoundingClientRect();
     var xPos = (p.pageX - rect.left) / 0.8;
     var yPos = (p.pageY - rect.top) / 0.8;
@@ -1120,26 +1120,40 @@ function getPos(p) {
             info.innerHTML = 'Position X : ' + (Math.floor(xPos / 67)) + '<br />Position Y : ' + (((Math.floor((yPos + 20) / 39) - 1) * 2) + 1);
         }
     }
-}
+}*/
 
 function updateMessageBox(x, y) {
-    info.innerHTML = 'Side to move: ' + game.sideToMove + '<br />Position X: ' + x + '<br />Position Y: ' + y + '<br />Piece: ' + game.getHexContent(x, y) + '<br />To move: ' + game.sideToMove + '<br />Colour: ' + game.colourSelected;
+    info.innerHTML = 'Side to move: ' + game.sideToMove + '<br />Position X: ' + x + '<br />Position Y: ' + y + '<br />Piece: ' + game.getHexContent(x, y);
 }
 
 function selectPiece(p) {
     var rect = c.getBoundingClientRect();
-    var xPos = (p.pageX - rect.left) / 0.8;
-    var yPos = (p.pageY - rect.top) / 0.8;
+    var xPos = (p.pageX - rect.left);
+    var yPos = (p.pageY - rect.top);
+    
+    var can_height = ctx.canvas.height;
+    var can_width = ctx.canvas.width;
+    
+    var yAdjust = can_height/45;
+    var xAdjust = can_width/25;
+    
 
-    if (xPos < rect.left || yPos < rect.top - height * 0.2 || xPos > rect.right + width * 0.25 || yPos > rect.bottom + height * 0.2) {
+    if (xPos < (xAdjust*0.1) || yPos < (yAdjust*1.6) || xPos > can_width - xAdjust || yPos > can_height - (yAdjust*4)) {
         info.innerHTML = 'Off Board';
     } else {
-        if ((xPos % 67) < 34) {
-            xPos = Math.floor(xPos / 67);
-            yPos = (Math.floor(yPos / 39)) * 2;
+        if ((yPos % yAdjust) < (yAdjust * 0.5)) {
+            //console.log("YPos: " + yPos % yAdjust);
+            yPos = Math.floor((yPos/yAdjust)-1);
         } else {
-            xPos = Math.floor(xPos / 67);
-            yPos = ((Math.floor((yPos + 20) / 39) - 1) * 2) + 1;
+           //console.log("YPos: " + yPos % yAdjust);
+            yPos = Math.ceil((yPos/yAdjust)-1);
+        }
+        if ((xPos % xAdjust ) < (xAdjust * 0.5)) {
+            //console.log("XPos: "+xPos % xAdjust);
+            xPos = Math.floor(xPos / xAdjust / 2);
+        } else {
+            //console.log("XPos: "+xPos % xAdjust);
+            xPos = Math.ceil((xPos / xAdjust )/2);
         }
 
         updateMessageBox(xPos, yPos)
