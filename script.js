@@ -91,7 +91,21 @@ class Gameboard {
     }
 }
 
-//create class for piece positions
+
+
+
+//Values of pieces////
+
+var pawnValue = 1;
+var knightValue = 3;
+var bishopValue = 3;
+var rookValue = 5;
+var queenValue = 9;
+var kingValue = 100;
+
+
+
+//create class for piece positions///////////////////////////////////////////////////
 class PieceList {
     constructor(whitePawns, whiteKnights, whiteRooks, whiteBishops, whiteQueen, whiteKing,
         blackPawns, blackKnights, blackRooks, blackBishops, blackQueen, blackKing) {
@@ -258,6 +272,18 @@ class PieceList {
             piece);
 
         this.updatePieceList(x, y, piece);
+        
+        //pawn promotion
+        var colour = piece.split("")[0];
+        console.log(colour)
+        if (this.pawnPromoteTest(colour,x,y) == true){
+            if (colour == 'w'){
+                this.promoteWhitePawn(x,y);    
+            }
+            else{
+                this.promoteBlackPawn(x,y); 
+            }
+        }
     }
 
 
@@ -281,7 +307,45 @@ class PieceList {
 
     }
 
-
+    pawnPromoteTest(colour,x,y){
+        var searchStr = "(" + x + "," + y + ")";
+        if (colour == "w"){
+            return whitePawnPromoHexs.includes(searchStr);
+            }
+        else{
+            return blackPawnPromoHexs.includes(searchStr);
+        }
+    }
+    
+    promoteWhitePawn(x,y){
+        var replaceStr = "(" + x + "," + y + ")";
+        this.whitePawns = this.whitePawns.replace(replaceStr, "");
+        this.whiteQueen = this.whiteQueen + replaceStr;
+        
+        drawHex(getHex_X(x, y),
+            getHex_Y(x, y),
+            rad,
+            x + '' + y,
+            'white',
+            false,
+            "wQ");
+    }
+    
+    promoteBlackPawn(x,y){
+        var replaceStr = "(" + x + "," + y + ")";
+        this.blackPawns = this.blackPawns.replace(replaceStr, "");
+        this.blackQueen = this.blackQueen + replaceStr;
+        
+        drawHex(getHex_X(x, y),
+            getHex_Y(x, y),
+            rad,
+            x + '' + y,
+            'white',
+            false,
+            "bQ");
+    }
+    
+    
     updatePieceList(x, y, piece) {
         var oldStr = "(" + this.oldX + "," + this.oldY + ")";
         var replaceStr = "(" + x + "," + y + ")";
@@ -289,7 +353,6 @@ class PieceList {
         if (piece == 'wP') {
             this.whitePawns = this.whitePawns.replace(oldStr, replaceStr);
             this.removeblackPiece(replaceStr);
-            //console.log(this.whitePawns);
         }
         if (piece == 'wN') {
             this.whiteKnights = this.whiteKnights.replace(oldStr, replaceStr);
@@ -525,7 +588,6 @@ class PieceList {
 
             //test if hex open and not blocked by intermediate piece
             if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, piece) == false) {
-                console.log(testX + "," + testY);
                 drawHex(
                     getHex_X(testX, testY),
                     getHex_Y(testX, testY),
@@ -1049,6 +1111,11 @@ var blackRooks = "(4,2),(8,2)";
 var blackBishops = "(5,2),(5,3),(6,4)";
 var blackQueen = "(6,3)";
 var blackKing = "(6,2)";
+
+
+//pawn promotion hexs
+var whitePawnPromoHexs = "(4,2),(4,3),(5,2),(5,3),(6,2),(6,3),(7,2),(7,3),(8,2)";
+var blackPawnPromoHexs = "(4,38),(4,37),(5,38),(5,37),(6,38),(6,37),(7,38),(7,37),(8,38)";
 
 
 //create board object
