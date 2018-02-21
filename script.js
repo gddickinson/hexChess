@@ -272,16 +272,15 @@ class PieceList {
             piece);
 
         this.updatePieceList(x, y, piece);
-        
+
         //pawn promotion
         var colour = piece.split("")[0];
         console.log(colour)
-        if (this.pawnPromoteTest(colour,x,y) == true){
-            if (colour == 'w'){
-                this.promoteWhitePawn(x,y);    
-            }
-            else{
-                this.promoteBlackPawn(x,y); 
+        if (this.pawnPromoteTest(colour, x, y) == true) {
+            if (colour == 'w') {
+                this.promoteWhitePawn(x, y);
+            } else {
+                this.promoteBlackPawn(x, y);
             }
         }
     }
@@ -307,21 +306,20 @@ class PieceList {
 
     }
 
-    pawnPromoteTest(colour,x,y){
+    pawnPromoteTest(colour, x, y) {
         var searchStr = "(" + x + "," + y + ")";
-        if (colour == "w"){
+        if (colour == "w") {
             return whitePawnPromoHexs.includes(searchStr);
-            }
-        else{
+        } else {
             return blackPawnPromoHexs.includes(searchStr);
         }
     }
-    
-    promoteWhitePawn(x,y){
+
+    promoteWhitePawn(x, y) {
         var replaceStr = "(" + x + "," + y + ")";
         this.whitePawns = this.whitePawns.replace(replaceStr, "");
         this.whiteQueen = this.whiteQueen + replaceStr;
-        
+
         drawHex(getHex_X(x, y),
             getHex_Y(x, y),
             rad,
@@ -330,12 +328,12 @@ class PieceList {
             false,
             "wQ");
     }
-    
-    promoteBlackPawn(x,y){
+
+    promoteBlackPawn(x, y) {
         var replaceStr = "(" + x + "," + y + ")";
         this.blackPawns = this.blackPawns.replace(replaceStr, "");
         this.blackQueen = this.blackQueen + replaceStr;
-        
+
         drawHex(getHex_X(x, y),
             getHex_Y(x, y),
             rad,
@@ -344,8 +342,8 @@ class PieceList {
             false,
             "bQ");
     }
-    
-    
+
+
     updatePieceList(x, y, piece) {
         var oldStr = "(" + this.oldX + "," + this.oldY + ")";
         var replaceStr = "(" + x + "," + y + ")";
@@ -604,6 +602,51 @@ class PieceList {
         console.log("Available moves: " + this.availableMovesForCurrentPiece);
         return;
     }
+    
+    
+    
+    getAvailableMoves(x,y,testPiece){
+        var hexsToActivate = [];
+        var availableMoves = [];
+
+        if (testPiece == 'P') {
+            hexsToActivate = this.pawnMoves(x, y);
+        }
+        if (testPiece == 'N') {
+            hexsToActivate = this.knightMoves(x, y);
+        }
+        if (testPiece == 'R') {
+            hexsToActivate = this.rookMoves(x, y);
+        }
+        if (testPiece == 'B') {
+            hexsToActivate = this.bishopMoves(x, y);
+        }
+        if (testPiece == 'Q') {
+            hexsToActivate = this.queenMoves(x, y);
+        }
+        if (testPiece == 'K') {
+            hexsToActivate = this.kingMoves(x, y);
+        }
+
+
+        for (var i = 0; i < hexsToActivate.length; i++) {
+            var testX = hexsToActivate[i][0];
+            var testY = hexsToActivate[i][1];
+            //get near piece to fill near hex
+            var nearPiece = this.getHexContent(testX, testY);
+
+            //test if hex open and not blocked by intermediate piece
+            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, piece) == false) {
+                var move = [testX,testY];
+                availableMoves.push(move);
+            }
+        }
+
+        return availableMoves;
+        
+    }
+    
+    
 
     getIntermediateHexs(x1, y1, x2, y2) {
         var listOfHexs = "";
@@ -971,12 +1014,12 @@ class PieceList {
 
 
             if (intermediates == "") {
-                console.log("No intermediates: " + x2 + "," + y2)
+                //console.log("No intermediates: " + x2 + "," + y2)
                 return false;
             }
 
 
-            console.log("intermediates" + intermediates);
+            //console.log("intermediates" + intermediates);
 
             var occupied = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + offBoard;
 
@@ -1066,26 +1109,65 @@ class PieceList {
 
     isGameWon() {
         //TODO     
-        if (this.blackKing.length < 2){
+        if (this.blackKing.length < 2) {
             this.gameOver = true;
-            this.winner = "White"; 
+            this.winner = "White";
             return true;
         }
-        
-        if (this.whiteKing.length < 2){
+
+        if (this.whiteKing.length < 2) {
             this.gameOver = true;
             this.winner = "Black";
             return true;
-            
+
         }
         return false;
     }
 
     //Basic AI///
 
-    getAllMovesForTurn() {
+
+    
+    convertStringLoc(strLocation){
+        var x = "";
+        var y = "";
+        var ans = strLocation.split(",");
+        x = ans[0].replace("(","");
+        x = ans[1].replace(")","");
+        return [x,y];
+    }
+    
+    getAllMovesForTurn(colour) {
         //TODO
-        return;
+        //AllMoves will contain list of [piece, currentPosition, possiblePosition, score] for every possible move
+
+        var currentPosition = "";
+        var possiblePositions = "";
+        var score = 0;
+        var x = 0;
+        var y = 0;
+
+        var AllMoves = [];
+
+
+        if (colour == "b") {
+            var blackPawnsList = this.blackPawns.split(";");
+            for (var i = 0; i < blackPawnsList.length; i++) {
+                currentPosition = this.convertStringLoc(blackPawnsList[i]);
+                
+                possiblePositions = this.getAvailableMoves(currentPosition[0],currentPosition[1],"P")
+                console.log(possiblePositions + i);
+                
+                for (var i = 0; i < possiblePositions.length; i++) {
+                    var listRow = ["P", currentPosition, possiblePositions[i], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }
+        }
+        console.log(AllMoves);
+        return AllMoves;
+
     }
 
 
@@ -1097,25 +1179,25 @@ class PieceList {
 
 //set start positions
 //white in play
-var whitePawns = "(4,36),(4,35),(5,36),(5,35),(6,34),(6,35),(7,36),(7,35),(8,36),(5,34),(5,33),(6,33),(7,34)";
-var whiteKnights = "(4,37),(7,37)";
-var whiteRooks = "(4,38),(8,38)";
-var whiteBishops = "(6,36),(6,37),(7,38)";
+var whitePawns = "(4,36);(4,35);(5,36);(5,35);(6,34);(6,35);(7,36);(7,35);(8,36);(5,34);(5,33);(6,33);(7,34)";
+var whiteKnights = "(4,37);(7,37)";
+var whiteRooks = "(4,38);(8,38)";
+var whiteBishops = "(6,36);(6,37);(7,38)";
 var whiteQueen = "(5,37)";
 var whiteKing = "(6,38)"
 
 //black in play
-var blackPawns = "(4,4),(4,5),(5,4),(5,5),(6,6),(6,5),(7,4),(7,5),(8,4),(5,6),(5,7),(6,7),(7,6)";
-var blackKnights = "(4,3),(7,3)";
-var blackRooks = "(4,2),(8,2)";
-var blackBishops = "(5,2),(5,3),(6,4)";
+var blackPawns = "(4,4);(4,5);(5,4);(5,5);(6,6);(6,5);(7,4);(7,5);(8,4);(5,6);(5,7);(6,7);(7,6)";
+var blackKnights = "(4,3);(7,3)";
+var blackRooks = "(4,2);(8,2)";
+var blackBishops = "(5,2);(5,3);(6,4)";
 var blackQueen = "(6,3)";
 var blackKing = "(6,2)";
 
 
 //pawn promotion hexs
-var whitePawnPromoHexs = "(4,2),(4,3),(5,2),(5,3),(6,2),(6,3),(7,2),(7,3),(8,2)";
-var blackPawnPromoHexs = "(4,38),(4,37),(5,38),(5,37),(6,38),(6,37),(7,38),(7,37),(8,38)";
+var whitePawnPromoHexs = "(4,2);(4,3);(5,2);(5,3);(6,2);(6,3);(7,2);(7,3);(8,2)";
+var blackPawnPromoHexs = "(4,38);(4,37);(5,38);(5,37);(6,38);(6,37);(7,38);(7,37);(8,38)";
 
 
 //create board object
@@ -1431,6 +1513,10 @@ function undoMove() {
         console.log("undo move pushed")
         return;
     }
+}
+
+function compute(){
+    game.getAllMovesForTurn("b");
 }
 
 
