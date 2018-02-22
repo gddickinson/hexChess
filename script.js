@@ -636,7 +636,7 @@ class PieceList {
             var nearPiece = this.getHexContent(testX, testY);
 
             //test if hex open and not blocked by intermediate piece
-            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, piece) == false) {
+            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, testPiece) == false) {
                 var move = [testX,testY];
                 availableMoves.push(move);
             }
@@ -1152,16 +1152,19 @@ class PieceList {
 
         if (colour == "b") {
             var blackPawnsList = this.blackPawns.split(";");
+            console.log(blackPawnsList)
             for (var i = 0; i < blackPawnsList.length; i++) {
                 currentPosition = this.convertStringLoc(blackPawnsList[i]);
+                console.log(i);
+                console.log(blackPawnsList[i]);
                 
                 possiblePositions = this.getAvailableMoves(currentPosition[0],currentPosition[1],"P")
-                console.log(possiblePositions + i);
+                console.log(possiblePositions);
                 
-                for (var i = 0; i < possiblePositions.length; i++) {
+/*                for (var i = 0; i < possiblePositions.length; i++) {
                     var listRow = ["P", currentPosition, possiblePositions[i], score];
                     AllMoves.push(listRow);
-                }
+                }*/
                 
             }
         }
