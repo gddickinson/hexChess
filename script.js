@@ -1152,22 +1152,52 @@ class PieceList {
 
         if (colour == "b") {
             var blackPawnsList = this.blackPawns.split(";");
-            console.log(blackPawnsList)
+            console.log("list " + blackPawnsList)
             for (var i = 0; i < blackPawnsList.length; i++) {
-                currentPosition = this.convertStringLoc(blackPawnsList[i]);
+                currentPosition = blackPawnsList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
                 console.log(i);
-                console.log(blackPawnsList[i]);
+                console.log("position " + x + "," + y);
                 
-                possiblePositions = this.getAvailableMoves(currentPosition[0],currentPosition[1],"P")
-                console.log(possiblePositions);
-                
-/*                for (var i = 0; i < possiblePositions.length; i++) {
-                    var listRow = ["P", currentPosition, possiblePositions[i], score];
+                possiblePositions = this.getAvailableMoves(x,y,"P")
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["P", blackePawnsList[i], possiblePositions[j], score];
                     AllMoves.push(listRow);
-                }*/
+                }
                 
             }
         }
+        
+        if (colour == "w") {
+            var whitePawnsList = this.whitePawns.split(";");
+            console.log("list " + whitePawnsList)
+            for (var i = 0; i < whitePawnsList.length; i++) {
+                currentPosition = whitePawnsList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"P")
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["P", whitePawnsList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }
+        }
+        
+        
+        
+        
+        
+        
         console.log(AllMoves);
         return AllMoves;
 
@@ -1519,7 +1549,7 @@ function undoMove() {
 }
 
 function compute(){
-    game.getAllMovesForTurn("b");
+    game.getAllMovesForTurn(game.sideToMove);
 }
 
 
