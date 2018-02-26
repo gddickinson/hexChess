@@ -605,7 +605,7 @@ class PieceList {
     
     
     
-    getAvailableMoves(x,y,testPiece){
+    getAvailableMoves(x,y,testPiece,colour){
         var hexsToActivate = [];
         var availableMoves = [];
 
@@ -636,7 +636,7 @@ class PieceList {
             var nearPiece = this.getHexContent(testX, testY);
 
             //test if hex open and not blocked by intermediate piece
-            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, testPiece) == false) {
+            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, colour+testPiece) == false) {
                 var move = [testX,testY];
                 availableMoves.push(move);
             }
@@ -1151,6 +1151,8 @@ class PieceList {
 
 
         if (colour == "b") {
+            
+            //pawn moves
             var blackPawnsList = this.blackPawns.split(";");
             console.log("list " + blackPawnsList)
             for (var i = 0; i < blackPawnsList.length; i++) {
@@ -1160,18 +1162,125 @@ class PieceList {
                 console.log(i);
                 console.log("position " + x + "," + y);
                 
-                possiblePositions = this.getAvailableMoves(x,y,"P")
+                possiblePositions = this.getAvailableMoves(x,y,"P",colour)
                 console.log("moves " + possiblePositions);
                 console.log("# moves total " + possiblePositions.length)
                 for (var j = 0; j < possiblePositions.length; j++) {
-                    var listRow = ["P", blackePawnsList[i], possiblePositions[j], score];
+                    var listRow = ["P", blackPawnsList[i], possiblePositions[j], score];
                     AllMoves.push(listRow);
                 }
                 
             }
+            
+            //rook moves
+            var blackRooksList = this.blackRooks.split(";");
+            console.log("list " + blackRooksList)
+            for (var i = 0; i < blackRooksList.length; i++) {
+                currentPosition = blackRooksList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"R",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["R", blackRooksList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }            
+            
+            
+            //Knight moves
+            var blackKnightsList = this.blackKnights.split(";");
+            console.log("list " + blackKnightsList)
+            for (var i = 0; i < blackKnightsList.length; i++) {
+                currentPosition = blackKnightsList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"N",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["N", blackKnightsList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }
+        
+            //Bishop moves
+            var blackBishopsList = this.blackBishops.split(";");
+            console.log("list " + blackBishopsList)
+            for (var i = 0; i < blackBishopsList.length; i++) {
+                currentPosition = blackBishopsList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"B",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["B", blackBishopsList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }
+        
+            //Queen moves
+            var blackQueenList = this.blackQueen.split(";");
+            console.log("list " + blackQueenList)
+            for (var i = 0; i < blackQueenList.length; i++) {
+                currentPosition = blackQueenList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"Q",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["Q", blackQueenList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            } 
+        
+            //King moves
+            var blackKingList = this.blackKing.split(";");
+            console.log("list " + blackKingList)
+            for (var i = 0; i < blackKingList.length; i++) {
+                currentPosition = blackKingList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"K",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["K", blackKingList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }   
+            
+            
+            
+            
         }
         
         if (colour == "w") {
+            
+            //pawn moves
             var whitePawnsList = this.whitePawns.split(";");
             console.log("list " + whitePawnsList)
             for (var i = 0; i < whitePawnsList.length; i++) {
@@ -1181,7 +1290,7 @@ class PieceList {
                 console.log(i);
                 console.log("position " + x + "," + y);
                 
-                possiblePositions = this.getAvailableMoves(x,y,"P")
+                possiblePositions = this.getAvailableMoves(x,y,"P",colour)
                 console.log("moves " + possiblePositions);
                 console.log("# moves total " + possiblePositions.length)
                 
@@ -1193,9 +1302,105 @@ class PieceList {
             }
         }
         
+            //rook moves
+            var whiteRooksList = this.whiteRooks.split(";");
+            console.log("list " + whiteRooksList)
+            for (var i = 0; i < whiteRooksList.length; i++) {
+                currentPosition = whiteRooksList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"R",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["R", whiteRooksList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            } 
+            
+            //Knight moves
+            var whiteKnightsList = this.whiteKnights.split(";");
+            console.log("list " + whiteKnightsList)
+            for (var i = 0; i < whiteKnightsList.length; i++) {
+                currentPosition = whiteKnightsList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"N",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["N", whiteKnightsList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }
         
+            //Bishop moves
+            var whiteBishopsList = this.whiteBishops.split(";");
+            console.log("list " + whiteBishopsList)
+            for (var i = 0; i < whiteBishopsList.length; i++) {
+                currentPosition = whiteBishopsList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"B",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["B", whiteBishopsList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            }
         
+            //Queen moves
+            var whiteQueenList = this.whiteQueen.split(";");
+            console.log("list " + whiteQueenList)
+            for (var i = 0; i < whiteQueenList.length; i++) {
+                currentPosition = whiteQueenList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"Q",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["Q", whiteQueenList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            } 
         
+            //King moves
+            var whiteKingList = this.whiteKing.split(";");
+            console.log("list " + whiteKingList)
+            for (var i = 0; i < whiteKingList.length; i++) {
+                currentPosition = whiteKingList[i].split(",")
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")",""));
+                console.log(i);
+                console.log("position " + x + "," + y);
+                
+                possiblePositions = this.getAvailableMoves(x,y,"K",colour)
+                console.log("moves " + possiblePositions);
+                console.log("# moves total " + possiblePositions.length)
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var listRow = ["K", whiteKingList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
+                }
+                
+            } 
         
         
         console.log(AllMoves);
