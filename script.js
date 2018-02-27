@@ -608,6 +608,8 @@ class PieceList {
     getAvailableMoves(x,y,testPiece,colour){
         var hexsToActivate = [];
         var availableMoves = [];
+        
+        var unSplitPiece = colour+testPiece
 
         if (testPiece == 'P') {
             hexsToActivate = this.pawnMoves(x, y);
@@ -632,11 +634,15 @@ class PieceList {
         for (var i = 0; i < hexsToActivate.length; i++) {
             var testX = hexsToActivate[i][0];
             var testY = hexsToActivate[i][1];
+            
+            this.setPieceSelected(testX, testY);
+            this.showHexsAvailabletoMove(testX, testY, this.pieceSelected);
+            
             //get near piece to fill near hex
             var nearPiece = this.getHexContent(testX, testY);
 
             //test if hex open and not blocked by intermediate piece
-            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, colour+testPiece) == false) {
+            if (this.availableForMove(testX, testY) && this.jumpNeeded(x, y, testX, testY, unSplitPiece) == false) {
                 var move = [testX,testY];
                 availableMoves.push(move);
             }
@@ -1300,7 +1306,7 @@ class PieceList {
                 }
                 
             }
-        }
+        
         
             //rook moves
             var whiteRooksList = this.whiteRooks.split(";");
@@ -1400,9 +1406,11 @@ class PieceList {
                     AllMoves.push(listRow);
                 }
                 
-            } 
+            }
+        }
         
         
+        console.log("Side to move: " + this.sideToMove);
         console.log(AllMoves);
         return AllMoves;
 
