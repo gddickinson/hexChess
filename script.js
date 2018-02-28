@@ -121,6 +121,8 @@ class PieceList {
         this.blackBishops = blackBishops;
         this.blackQueen = blackQueen;
         this.blackKing = blackKing;
+        
+        this.computerPlayer = 'None';
 
         this.turnNumber = 0;
 
@@ -276,8 +278,9 @@ class PieceList {
 
         //pawn promotion
         var colour = piece.split("")[0];
+        var pieceType = piece.split("")[1]
         //console.log(colour)
-        if (this.pawnPromoteTest(colour, x, y) == true) {
+        if (pieceType == "P" && this.pawnPromoteTest(colour, x, y) == true) {
             if (colour == 'w') {
                 this.promoteWhitePawn(x, y);
             } else {
@@ -1628,85 +1631,51 @@ function displayWinnerMessage() {
 
 function selectPiece(p) {
     if (game.gameOver == false) {
-        var rect = c.getBoundingClientRect();
-        var xPos = (p.pageX - rect.left);
-        var yPos = (p.pageY - rect.top);
+        
+        if (game.computerPlayer == 'b' && game.sideToMove == 'b'){
+            computerMoves();           
+        }
+        
+        else{
+            var rect = c.getBoundingClientRect();
+            var xPos = (p.pageX - rect.left);
+            var yPos = (p.pageY - rect.top);
 
-        var can_height = ctx.canvas.height;
-        var can_width = ctx.canvas.width;
+            var can_height = ctx.canvas.height;
+            var can_width = ctx.canvas.width;
 
-        var yAdjust = can_height / 45;
-        var xAdjust = can_width / 25;
+            var yAdjust = can_height / 45;
+            var xAdjust = can_width / 25;
 
 
-        if (xPos < (xAdjust * 0.1) || yPos < (yAdjust * 1.6) || xPos > can_width - xAdjust || yPos > can_height - (yAdjust * 4)) {
-            info.innerHTML = 'Off Board';
-        } else {
-            if ((yPos % yAdjust) < (yAdjust * 0.5)) {
-                //console.log("YPos: " + yPos % yAdjust);
-                yPos = Math.floor((yPos / yAdjust) - 1);
+            if (xPos < (xAdjust * 0.1) || yPos < (yAdjust * 1.6) || xPos > can_width - xAdjust || yPos > can_height - (yAdjust * 4)) {
+                info.innerHTML = 'Off Board';
             } else {
-                //console.log("YPos: " + yPos % yAdjust);
-                yPos = Math.ceil((yPos / yAdjust) - 1);
-            }
-            if ((xPos % xAdjust) < (xAdjust * 0.5)) {
-                //console.log("XPos: "+xPos % xAdjust);
-                xPos = Math.floor(xPos / xAdjust / 2);
-            } else {
-                //console.log("XPos: "+xPos % xAdjust);
-                xPos = Math.ceil((xPos / xAdjust) / 2);
-            }
-
-            updateMessageBox(xPos, yPos)
-
-            board.drawBoard();
-            game.setPieces();
-
-            //check if piece is selected to move  
-            if (game.pieceToMoveHexSelected != true) {
-
-                //check if hex selected contains a valid piece
-                if (game.availableForSelection(xPos, yPos, game.sideToMove)) {
-                    game.selectHex(xPos, yPos, 'blue');
-                    game.setPieceSelected(xPos, yPos);
-                    game.showHexsAvailabletoMove(xPos, yPos, game.pieceSelected);
-                    game.oldX = game.selectedCellX;
-                    game.oldY = game.selectedCellY;
-                    game.readyToMove = true;
-                    game.pieceToMoveHexSelected = true;
-
-                    updateMessageBox(xPos, yPos);
+                if ((yPos % yAdjust) < (yAdjust * 0.5)) {
+                    //console.log("YPos: " + yPos % yAdjust);
+                    yPos = Math.floor((yPos / yAdjust) - 1);
+                } else {
+                    //console.log("YPos: " + yPos % yAdjust);
+                    yPos = Math.ceil((yPos / yAdjust) - 1);
+                }
+                if ((xPos % xAdjust) < (xAdjust * 0.5)) {
+                    //console.log("XPos: "+xPos % xAdjust);
+                    xPos = Math.floor(xPos / xAdjust / 2);
+                } else {
+                    //console.log("XPos: "+xPos % xAdjust);
+                    xPos = Math.ceil((xPos / xAdjust) / 2);
                 }
 
-            } else {
-                //check if hex to move to is valid
+                updateMessageBox(xPos, yPos)
 
-                if (game.availableForMove(xPos, yPos) && game.availableCurrentPieceMove(xPos, yPos)) {
-                    //move piece
-                    game.movePiece(xPos, yPos, game.pieceSelected);
+                board.drawBoard();
+                game.setPieces();
 
-                    //test if game won - if so exit and display winner
-                    if (game.isGameWon() == true) {
-                        displayWinnerMessage();
-                        game.gameOver = true;
-                        //TODO - update game record with final move?
-                        return;
-                    }
+                //check if piece is selected to move  
+                if (game.pieceToMoveHexSelected != true) {
 
-                    game.readyToMove = false;
-                    game.pieceToMoveHexSelected = false;
-                    game.changeSideToMove();
-                    game.resetAvailableMoves();
-                    game.oldX = 15;
-                    game.oldY = 40;
-                    updateMessageBox(xPos, yPos);
-                    return; //TODO
-
-                } else {
-                    game.resetAvailableMoves();
-                    //if hex not available unselect piece - select new piece if one in hex
+                    //check if hex selected contains a valid piece
                     if (game.availableForSelection(xPos, yPos, game.sideToMove)) {
-                        game.resetAvailableMoves();
                         game.selectHex(xPos, yPos, 'blue');
                         game.setPieceSelected(xPos, yPos);
                         game.showHexsAvailabletoMove(xPos, yPos, game.pieceSelected);
@@ -1714,21 +1683,63 @@ function selectPiece(p) {
                         game.oldY = game.selectedCellY;
                         game.readyToMove = true;
                         game.pieceToMoveHexSelected = true;
+
                         updateMessageBox(xPos, yPos);
-                        return; //TODO 
-                    } else {
-                        game.pieceSelected = 'none';
+                    }
+
+                } else {
+                    //check if hex to move to is valid
+
+                    if (game.availableForMove(xPos, yPos) && game.availableCurrentPieceMove(xPos, yPos)) {
+                        //move piece
+                        game.movePiece(xPos, yPos, game.pieceSelected);
+
+                        //test if game won - if so exit and display winner
+                        if (game.isGameWon() == true) {
+                            displayWinnerMessage();
+                            game.gameOver = true;
+                            //TODO - update game record with final move?
+                            return;
+                        }
+
+                        game.readyToMove = false;
                         game.pieceToMoveHexSelected = false;
-                        game.colourSelected = 'none';
+                        game.changeSideToMove();
+                        game.resetAvailableMoves();
+                        game.oldX = 15;
+                        game.oldY = 40;
+                        updateMessageBox(xPos, yPos);
+                        return; //TODO
+
+                    } else {
+                        game.resetAvailableMoves();
+                        //if hex not available unselect piece - select new piece if one in hex
+                        if (game.availableForSelection(xPos, yPos, game.sideToMove)) {
+                            game.resetAvailableMoves();
+                            game.selectHex(xPos, yPos, 'blue');
+                            game.setPieceSelected(xPos, yPos);
+                            game.showHexsAvailabletoMove(xPos, yPos, game.pieceSelected);
+                            game.oldX = game.selectedCellX;
+                            game.oldY = game.selectedCellY;
+                            game.readyToMove = true;
+                            game.pieceToMoveHexSelected = true;
+                            updateMessageBox(xPos, yPos);
+                            return; //TODO 
+                        } else {
+                            game.pieceSelected = 'none';
+                            game.pieceToMoveHexSelected = false;
+                            game.colourSelected = 'none';
+                        }
                     }
                 }
             }
+
+
         }
-
-
-    } else {
-        displayWinnerMessage();
-    }
+    }else {
+            displayWinnerMessage();
+        }
+    
 } //end_selectPiece
 
 
@@ -1890,6 +1901,15 @@ function computerMoves() {
 
 function setPlayerNumber(){
     //TODO
+    if (game.computerPlayer == 'None'){
+        game.computerPlayer = 'b';
+        document.getElementById('btnNumberPlayers').innerHTML = "Set to 2 Player";
+    }
+    else{
+        game.computerPlayer = 'None';
+        document.getElementById('btnNumberPlayers').innerHTML = "Set to 1 Player";
+    }
+    
     return;
 }
 
