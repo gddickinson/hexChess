@@ -94,14 +94,7 @@ class Gameboard {
 
 
 
-//Values of pieces////
 
-var pawnValue = 1;
-var knightValue = 3;
-var bishopValue = 3;
-var rookValue = 5;
-var queenValue = 9;
-var kingValue = 100;
 
 
 
@@ -151,6 +144,16 @@ class PieceList {
         this.gameOver = false;
         this.winner = "None";
 
+        
+        //Values of pieces
+        this.pawnValue = 1;
+        this.knightValue = 3;
+        this.bishopValue = 3;
+        this.rookValue = 5;
+        this.queenValue = 9;
+        this.kingValue = 100;
+        
+        
 
     }
 
@@ -254,6 +257,34 @@ class PieceList {
     }
 
 
+    getPieceScore (piece){
+        
+        if (piece == 'P'){
+            return this.pawnValue;
+        }
+        
+        if (piece == 'N'){
+            return this.knightValue;
+        }
+        
+        if (piece == 'B'){
+            return this.bishopValue;
+        }
+        
+        if (piece == 'R'){
+            return this.rookValue;
+        }
+        
+        if (piece == 'Q'){
+            return this.queenValue;
+        }
+        
+        if (piece == 'K'){
+            return this.kingValue;
+        }
+        
+    }
+    
     movePiece(x, y, piece) {
         //delete old
         drawHex(getHex_X(this.oldX, this.oldY),
@@ -273,7 +304,7 @@ class PieceList {
             false,
             piece);
 
-        console.log(piece)
+        //console.log(piece)
         this.updatePieceList(x, y, piece);
 
         //pawn promotion
@@ -352,9 +383,9 @@ class PieceList {
         var oldStr = "(" + this.oldX + "," + this.oldY + ")";
         var replaceStr = "(" + x + "," + y + ")";
 
-        console.log("piece", piece);
-        console.log("oldStr", oldStr);
-        console.log("replaceStr", replaceStr);
+        //console.log("piece", piece);
+        //console.log("oldStr", oldStr);
+        //console.log("replaceStr", replaceStr);
 
         //update whitepieces
         if (piece == 'wP') {
@@ -644,8 +675,7 @@ class PieceList {
             var testX = hexsToActivate[i][0];
             var testY = hexsToActivate[i][1];
 
-            this.setPieceSelected(testX, testY);
-            this.showHexsAvailabletoMove(testX, testY, this.pieceSelected);
+            //this.setPieceSelected(testX, testY);
 
             //get near piece to fill near hex
             var nearPiece = this.getHexContent(testX, testY);
@@ -1183,6 +1213,11 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
+                            
                             var listRow = ["P", blackPawnsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1208,6 +1243,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["R", blackRooksList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1234,6 +1273,11 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
+                            
                             var listRow = ["N", blackKnightsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1259,6 +1303,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["B", blackBishopsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1285,6 +1333,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["Q", blackQueenList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1311,6 +1363,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["K", blackKingList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1344,6 +1400,10 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
 
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["P", whitePawnsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1370,6 +1430,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["R", whiteRooksList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1396,6 +1460,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["N", whiteKnightsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1422,6 +1490,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["B", whiteBishopsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1447,6 +1519,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["Q", whiteQueenList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1474,6 +1550,10 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                            if (hexContent != 'none'){
+                                score = this.getPieceScore(hexContent.split("")[1])   
+                            }
                             var listRow = ["K", whiteKingList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
                         }
@@ -1484,8 +1564,8 @@ class PieceList {
         }
 
 
-        console.log("Side to move: " + this.sideToMove);
-        console.log(AllMoves);
+        //console.log("Side to move: " + this.sideToMove);
+        //console.log(AllMoves);
 
         return AllMoves;
 
@@ -1856,11 +1936,24 @@ function compute() {
 
 function computerMoves() {
     if (game.gameOver == false) {
+        //console.log(game.sideToMove)
+        game.colourSelected = game.sideToMove
         var allMovesAvailable = game.getAllMovesForTurn(game.sideToMove);
+        //console.log(allMovesAvailable)
+        
+        var sortedList = allMovesAvailable.sort(function(a, b) {
+            return a[3] > b[3] ? 1 : -1;
+                })
 
-        //random choice
-        var moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
-        console.log(moveToMake);
+        if (sortedList[0][3] > 0){
+            var moveToMake = sortedList[0][3];
+            console.log(moveToMake)
+        }
+        
+        else{//random choice
+            var moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
+        //console.log(moveToMake);
+        }
 
         //make move
         var currentPosition = moveToMake[1].split(",")
@@ -1871,7 +1964,7 @@ function computerMoves() {
         var newY = moveToMake[2][1];
 
         var pieceToMove = game.sideToMove + moveToMake[0];
-        console.log("Piece to move: ", pieceToMove);
+        //console.log("Piece to move: ", pieceToMove);
 
 
         game.selectHex(xPos, yPos, 'blue');
