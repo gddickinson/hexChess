@@ -1632,8 +1632,12 @@ function displayWinnerMessage() {
 function selectPiece(p) {
     if (game.gameOver == false) {
         
-        if (game.computerPlayer == 'b' && game.sideToMove == 'b'){
-            computerMoves();           
+        if (game.computerPlayer == 'Auto'){           
+            //loop if auto on - every 500ms
+            setInterval(function () {
+                if (game.computerPlayer == 'Auto'){
+                computerMoves();}}, 500);         
+
         }
         
         else{
@@ -1733,6 +1737,8 @@ function selectPiece(p) {
                     }
                 }
             }
+
+            
 
 
         }
@@ -1902,12 +1908,12 @@ function computerMoves() {
 function setPlayerNumber(){
     //TODO
     if (game.computerPlayer == 'None'){
-        game.computerPlayer = 'b';
-        document.getElementById('btnNumberPlayers').innerHTML = "Set to 2 Player";
+        game.computerPlayer = 'Auto';
+        document.getElementById('btnNumberPlayers').innerHTML = "Auto Play Off";
     }
     else{
         game.computerPlayer = 'None';
-        document.getElementById('btnNumberPlayers').innerHTML = "Set to 1 Player";
+        document.getElementById('btnNumberPlayers').innerHTML = "Auto Play On ";
     }
     
     return;
