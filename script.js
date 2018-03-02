@@ -1188,7 +1188,7 @@ class PieceList {
 
         var currentPosition = "";
         var possiblePositions = "";
-        var score = 0;
+        
         var x = 0;
         var y = 0;
 
@@ -1198,6 +1198,12 @@ class PieceList {
         if (colour == "b") {
 
             if (this.blackPawns.length > 3) {
+                if (this.turnNumber < 100){
+                    var score = 1;
+                            }
+                else{
+                    var score = 0;
+                }
                 //pawn moves
                 var blackPawnsList = this.blackPawns.split(";");
                 //console.log("list " + blackPawnsList)
@@ -1214,6 +1220,7 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+
                             if (hexContent != 'none'){
                                 score = this.getPieceScore(hexContent.split("")[1])   
                             }
@@ -1227,6 +1234,7 @@ class PieceList {
             }
 
             if (this.blackRooks.length > 3) {
+                var score = 0;
                 //rook moves
                 var blackRooksList = this.blackRooks.split(";");
                 //console.log("list " + blackRooksList)
@@ -1257,6 +1265,7 @@ class PieceList {
 
 
             if (this.blackKnights.length > 3) {
+                var score = 0;
                 //Knight moves
                 var blackKnightsList = this.blackKnights.split(";");
                 //console.log("list " + blackKnightsList)
@@ -1287,6 +1296,7 @@ class PieceList {
             }
 
             if (this.blackBishops.length > 3) {
+                var score = 0;
                 //Bishop moves
                 var blackBishopsList = this.blackBishops.split(";");
                 //console.log("list " + blackBishopsList)
@@ -1316,6 +1326,7 @@ class PieceList {
             }
 
             if (this.blackQueen.length > 3) {
+                var score = 0;
 
                 //Queen moves
                 var blackQueenList = this.blackQueen.split(";");
@@ -1346,6 +1357,7 @@ class PieceList {
             }
 
             if (this.blackKing.length > 3) {
+                var score = 0;
 
                 //King moves
                 var blackKingList = this.blackKing.split(";");
@@ -1383,6 +1395,12 @@ class PieceList {
         if (colour == "w") {
 
             if (this.whitePawns.length > 3) {
+                if (this.turnNumber < 100){
+                    var score = 1;
+                            }
+                else{
+                    var score = 0;
+                }
                 //pawn moves
                 var whitePawnsList = this.whitePawns.split(";");
                 //console.log("list " + whitePawnsList)
@@ -1402,7 +1420,7 @@ class PieceList {
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
                             if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                                score = score + this.getPieceScore(hexContent.split("")[1])   
                             }
                             var listRow = ["P", whitePawnsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
@@ -1414,6 +1432,7 @@ class PieceList {
 
 
             if (this.whiteRooks.length > 3) {
+                var score = 0;
                 //rook moves
                 var whiteRooksList = this.whiteRooks.split(";");
                 //console.log("list " + whiteRooksList)
@@ -1444,6 +1463,7 @@ class PieceList {
 
 
             if (this.whiteKnights.length > 3) {
+                var score = 0;
                 //Knight moves
                 var whiteKnightsList = this.whiteKnights.split(";");
                 //console.log("list " + whiteKnightsList)
@@ -1474,6 +1494,7 @@ class PieceList {
 
 
             if (this.whiteBishops.length > 3) {
+                var score = 0;
                 //Bishop moves
                 var whiteBishopsList = this.whiteBishops.split(";");
                 //console.log("list " + whiteBishopsList)
@@ -1503,6 +1524,7 @@ class PieceList {
             }
 
             if (this.whiteQueen.length > 3) {
+                var score = 0;
                 //Queen moves
                 var whiteQueenList = this.whiteQueen.split(";");
                 //console.log("list " + whiteQueenList)
@@ -1532,6 +1554,7 @@ class PieceList {
             }
 
             if (this.whiteKing.length > 3) {
+                var score = 0;
                 //King moves
                 var whiteKingList = this.whiteKing.split(";");
                 //console.log("list " + whiteKingList)
@@ -1939,22 +1962,34 @@ function computerMoves() {
         //console.log(game.sideToMove)
         game.colourSelected = game.sideToMove
         var allMovesAvailable = game.getAllMovesForTurn(game.sideToMove);
-        //console.log(allMovesAvailable)
+        //console.log("All Moves 1st: ", allMovesAvailable[0])
         
         var sortedList = allMovesAvailable.sort(function(a, b) {
-            return a[3] > b[3] ? 1 : -1;
+            return a[3] < b[3] ? 1 : -1;
                 })
-
-        if (sortedList[0][3] > 0){
-            var moveToMake = sortedList[0][3];
-            console.log(moveToMake)
+        
+        var max = sortedList[0][3];
+        
+        sortedList = sortedList.filter(function(num){
+            return (num) => max; 
+            });
+        
+        
+        if (sortedList[0][3] > 0 && Math.random() > 0.1){
+            var moveToMake = sortedList[0];
+            
         }
         
         else{//random choice
-            var moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
-        //console.log(moveToMake);
+           var moveToMake = allMovesAvailable;
+
+
         }
 
+        moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
+        console.log("Move Choosen: ", moveToMake);
+        
+        
         //make move
         var currentPosition = moveToMake[1].split(",")
         xPos = Number(currentPosition[0].replace("(", ""));
