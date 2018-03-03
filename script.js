@@ -114,7 +114,7 @@ class PieceList {
         this.blackBishops = blackBishops;
         this.blackQueen = blackQueen;
         this.blackKing = blackKing;
-        
+
         this.computerPlayer = 'None';
 
         this.turnNumber = 0;
@@ -144,7 +144,7 @@ class PieceList {
         this.gameOver = false;
         this.winner = "None";
 
-        
+
         //Values of pieces
         this.pawnValue = 1;
         this.knightValue = 3;
@@ -152,8 +152,8 @@ class PieceList {
         this.rookValue = 5;
         this.queenValue = 9;
         this.kingValue = 100;
-        
-        
+
+
 
     }
 
@@ -257,34 +257,34 @@ class PieceList {
     }
 
 
-    getPieceScore (piece){
-        
-        if (piece == 'P'){
+    getPieceScore(piece) {
+
+        if (piece == 'P') {
             return this.pawnValue;
         }
-        
-        if (piece == 'N'){
+
+        if (piece == 'N') {
             return this.knightValue;
         }
-        
-        if (piece == 'B'){
+
+        if (piece == 'B') {
             return this.bishopValue;
         }
-        
-        if (piece == 'R'){
+
+        if (piece == 'R') {
             return this.rookValue;
         }
-        
-        if (piece == 'Q'){
+
+        if (piece == 'Q') {
             return this.queenValue;
         }
-        
-        if (piece == 'K'){
+
+        if (piece == 'K') {
             return this.kingValue;
         }
-        
+
     }
-    
+
     movePiece(x, y, piece) {
         //delete old
         drawHex(getHex_X(this.oldX, this.oldY),
@@ -1182,13 +1182,85 @@ class PieceList {
         return [x, y];
     }
 
+
+
+    getHexXYZ(x, y) {
+        if (x == 0) {
+            return hex_0[y];
+        }
+
+        if (x == 1) {
+            return hex_1[y];
+        }
+        if (x == 2) {
+            return hex_2[y];
+        }
+
+        if (x == 3) {
+            return hex_3[y];
+        }
+
+        if (x == 4) {
+            return hex_4[y];
+        }
+
+        if (x == 5) {
+            return hex_5[y];
+        }
+
+        if (x == 6) {
+            return hex_6[y];
+        }
+
+        if (x == 7) {
+            return hex_7[y];
+        }
+
+        if (x == 8) {
+            return hex_8[y];
+        }
+
+        if (x == 9) {
+            return hex_9[y];
+        }
+
+        if (x == 10) {
+            return hex_10[y];
+        }
+
+        if (x == 11) {
+            return hex_11[y];
+        }
+    }
+
+
+    strToCordinates(strPos) {
+        strPos = strPos.split(',');
+        if (strPos[0].length > 1) {
+
+            var x = Number(strPos[0].replace("(", ""));
+            var y = Number(strPos[1].replace(")", ""));
+        }
+        return [x, y]
+    }
+
+
+    distanceBetweenTwoHexs(x1, y1, x2, y2) {
+        var XYZ1 = this.getHexXYZ(x1, y1);
+        var XYZ2 = this.getHexXYZ(x2, y2)
+
+        var distance = Math.max(XYZ2[0] - XYZ1[0], XYZ2[1] - XYZ1[1], XYZ2[2] - XYZ1[2]);
+
+        return distance;
+    }
+
     getAllMovesForTurn(colour) {
         //TODO
         //AllMoves will contain list of [piece, currentPosition, possiblePosition, score] for every possible move
 
         var currentPosition = "";
         var possiblePositions = "";
-        
+
         var x = 0;
         var y = 0;
 
@@ -1198,11 +1270,10 @@ class PieceList {
         if (colour == "b") {
 
             if (this.blackPawns.length > 3) {
-                if (this.turnNumber < 100){
-                    var score = 1;
-                            }
-                else{
-                    var score = 0;
+                if (this.turnNumber < 100) {
+                    var initialScore = 1;
+                } else {
+                    var initialScore = 0;
                 }
                 //pawn moves
                 var blackPawnsList = this.blackPawns.split(";");
@@ -1219,14 +1290,34 @@ class PieceList {
                         //console.log("moves " + possiblePositions);
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
+                            var score = initialScore;
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
 
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
+
                             }
-                            
+
+                            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)"];
+
+                            var promoScore = 0;
+
+                            for (var z = 0; z < promoHexs.length; z++) {
+                                var hexPos = this.strToCordinates(promoHexs[z]);
+
+                                var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
+                                var posScore = Math.ceil(1 / distanceToHex);
+                                if (posScore > promoScore) {
+                                    promoScore = posScore;
+                                }
+
+                            }
+
+                            score = score + promoScore;
+
                             var listRow = ["P", blackPawnsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1234,11 +1325,12 @@ class PieceList {
             }
 
             if (this.blackRooks.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //rook moves
                 var blackRooksList = this.blackRooks.split(";");
                 //console.log("list " + blackRooksList)
                 for (var i = 0; i < blackRooksList.length; i++) {
+                    var score = initialScore;
                     currentPosition = blackRooksList[i].split(",")
                     if (currentPosition[0].length > 1) {
 
@@ -1252,11 +1344,24 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+
+                            var whiteKingPos = this.strToCordinates(this.whiteKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToWhiteKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], whiteKingPos[0], whiteKingPos[1]);
+
+                            score = score + Math.ceil(1 / (distanceToWhiteKing * 10));
+
+
+
                             var listRow = ["R", blackRooksList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1265,14 +1370,15 @@ class PieceList {
 
 
             if (this.blackKnights.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //Knight moves
                 var blackKnightsList = this.blackKnights.split(";");
                 //console.log("list " + blackKnightsList)
                 for (var i = 0; i < blackKnightsList.length; i++) {
+                    var score = initialScore;
                     currentPosition = blackKnightsList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1283,12 +1389,21 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
-                            
+
+                            var whiteKingPos = this.strToCordinates(this.whiteKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToWhiteKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], whiteKingPos[0], whiteKingPos[1]);
+
+                            //score = score + Math.ceil(1/(distanceToWhiteKing*10));
+
                             var listRow = ["N", blackKnightsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1296,14 +1411,15 @@ class PieceList {
             }
 
             if (this.blackBishops.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //Bishop moves
                 var blackBishopsList = this.blackBishops.split(";");
                 //console.log("list " + blackBishopsList)
                 for (var i = 0; i < blackBishopsList.length; i++) {
+                    var score = initialScore;
                     currentPosition = blackBishopsList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1314,11 +1430,22 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+
+                            var whiteKingPos = this.strToCordinates(this.whiteKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToWhiteKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], whiteKingPos[0], whiteKingPos[1]);
+
+                            score = score + Math.ceil(1 / (distanceToWhiteKing * 10));
+
                             var listRow = ["B", blackBishopsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1326,15 +1453,16 @@ class PieceList {
             }
 
             if (this.blackQueen.length > 3) {
-                var score = 0;
+                var initialScore = 0;
 
                 //Queen moves
                 var blackQueenList = this.blackQueen.split(";");
                 //console.log("list " + blackQueenList)
                 for (var i = 0; i < blackQueenList.length; i++) {
+                    var score = initialScore;
                     currentPosition = blackQueenList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1345,11 +1473,24 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+
+                            var whiteKingPos = this.strToCordinates(this.whiteKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToWhiteKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], whiteKingPos[0], whiteKingPos[1]);
+
+                            score = score + Math.ceil(1 / (distanceToWhiteKing * 10));
+
+
+
                             var listRow = ["Q", blackQueenList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1357,15 +1498,16 @@ class PieceList {
             }
 
             if (this.blackKing.length > 3) {
-                var score = 0;
+                var initialScore = 0;
 
                 //King moves
                 var blackKingList = this.blackKing.split(";");
                 //console.log("list " + blackKingList)
                 for (var i = 0; i < blackKingList.length; i++) {
+                    var score = initialScore;
                     currentPosition = blackKingList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1376,8 +1518,8 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = this.getPieceScore(hexContent.split("")[1])
                             }
                             var listRow = ["K", blackKingList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
@@ -1395,19 +1537,19 @@ class PieceList {
         if (colour == "w") {
 
             if (this.whitePawns.length > 3) {
-                if (this.turnNumber < 100){
-                    var score = 1;
-                            }
-                else{
-                    var score = 0;
+                if (this.turnNumber < 100) {
+                    var initialScore = 1;
+                } else {
+                    var initialScore = 0;
                 }
                 //pawn moves
                 var whitePawnsList = this.whitePawns.split(";");
                 //console.log("list " + whitePawnsList)
                 for (var i = 0; i < whitePawnsList.length; i++) {
+                    var score = initialScore;
                     currentPosition = whitePawnsList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1419,11 +1561,32 @@ class PieceList {
 
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = score + this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+
+                            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)"];
+
+                            var promoScore = 0;
+
+                            for (var z = 0; z < promoHexs.length; z++) {
+                                var hexPos = this.strToCordinates(promoHexs[z]);
+
+                                var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
+                                var posScore = Math.ceil(1 / distanceToHex);
+                                if (posScore > promoScore) {
+                                    promoScore = posScore;
+                                }
+
+                            }
+
+                            score = score + promoScore;
+
+
                             var listRow = ["P", whitePawnsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1432,14 +1595,15 @@ class PieceList {
 
 
             if (this.whiteRooks.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //rook moves
                 var whiteRooksList = this.whiteRooks.split(";");
                 //console.log("list " + whiteRooksList)
                 for (var i = 0; i < whiteRooksList.length; i++) {
+                    var score = initialScore;
                     currentPosition = whiteRooksList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1450,11 +1614,22 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+                            var blackKingPos = this.strToCordinates(this.blackKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToBlackKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], blackKingPos[0], blackKingPos[1]);
+                            score = score + Math.ceil((1 / (distanceToBlackKing * 10)));
+
+
+
                             var listRow = ["R", whiteRooksList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1463,14 +1638,15 @@ class PieceList {
 
 
             if (this.whiteKnights.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //Knight moves
                 var whiteKnightsList = this.whiteKnights.split(";");
                 //console.log("list " + whiteKnightsList)
                 for (var i = 0; i < whiteKnightsList.length; i++) {
+                    var score = initialScore;
                     currentPosition = whiteKnightsList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1481,11 +1657,22 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + this.getPieceScore(hexContent.split("")[1]);
                             }
+
+
+                            var blackKingPos = this.strToCordinates(this.blackKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToBlackKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], blackKingPos[0], blackKingPos[1]);
+                            //score = score + Math.ceil((1/(distanceToBlackKing*10));
+
+
                             var listRow = ["N", whiteKnightsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1494,14 +1681,15 @@ class PieceList {
 
 
             if (this.whiteBishops.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //Bishop moves
                 var whiteBishopsList = this.whiteBishops.split(";");
                 //console.log("list " + whiteBishopsList)
                 for (var i = 0; i < whiteBishopsList.length; i++) {
+                    var score = initialScore;
                     currentPosition = whiteBishopsList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1512,11 +1700,22 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+
+                            var blackKingPos = this.strToCordinates(this.blackKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToBlackKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], blackKingPos[0], blackKingPos[1]);
+                            score = score + Math.ceil((1 / (distanceToBlackKing * 10)));
+
+
                             var listRow = ["B", whiteBishopsList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1524,14 +1723,15 @@ class PieceList {
             }
 
             if (this.whiteQueen.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //Queen moves
                 var whiteQueenList = this.whiteQueen.split(";");
                 //console.log("list " + whiteQueenList)
                 for (var i = 0; i < whiteQueenList.length; i++) {
+                    var score = initialScore;
                     currentPosition = whiteQueenList[i].split(",")
                     if (currentPosition[0].length > 1) {
-                        
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1542,11 +1742,22 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
                             }
+
+
+                            var blackKingPos = this.strToCordinates(this.blackKing);
+                            //console.log(this.whitePieceList());
+
+
+                            var distanceToBlackKing = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], blackKingPos[0], blackKingPos[1]);
+                            score = score + Math.ceil((1 / (distanceToBlackKing * 10)));
+
+
                             var listRow = ["Q", whiteQueenList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
+                            score = initialScore;
                         }
                     }
 
@@ -1554,16 +1765,17 @@ class PieceList {
             }
 
             if (this.whiteKing.length > 3) {
-                var score = 0;
+                var initialScore = 0;
                 //King moves
                 var whiteKingList = this.whiteKing.split(";");
                 //console.log("list " + whiteKingList)
                 for (var i = 0; i < whiteKingList.length; i++) {
+                    var score = initialScore;
                     currentPosition = whiteKingList[i].split(",")
                     //console.log(currentPosition[0].length)
                     if (currentPosition[0].length > 1) {
-                        
-                        
+
+
                         x = Number(currentPosition[0].replace("(", ""));
                         y = Number(currentPosition[1].replace(")", ""));
                         //console.log(i);
@@ -1574,8 +1786,8 @@ class PieceList {
                         //console.log("# moves total " + possiblePositions.length)
                         for (var j = 0; j < possiblePositions.length; j++) {
                             var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            if (hexContent != 'none'){
-                                score = this.getPieceScore(hexContent.split("")[1])   
+                            if (hexContent != 'none') {
+                                score = this.getPieceScore(hexContent.split("")[1])
                             }
                             var listRow = ["K", whiteKingList[i], possiblePositions[j], score];
                             AllMoves.push(listRow);
@@ -1734,16 +1946,16 @@ function displayWinnerMessage() {
 
 function selectPiece(p) {
     if (game.gameOver == false) {
-        
-        if (game.computerPlayer == 'Auto'){           
+
+        if (game.computerPlayer == 'Auto') {
             //loop if auto on - every 500ms
             setInterval(function () {
-                if (game.computerPlayer == 'Auto'){
-                computerMoves();}}, 500);         
+                if (game.computerPlayer == 'Auto') {
+                    computerMoves();
+                }
+            }, 500);
 
-        }
-        
-        else{
+        } else {
             var rect = c.getBoundingClientRect();
             var xPos = (p.pageX - rect.left);
             var yPos = (p.pageY - rect.top);
@@ -1841,14 +2053,14 @@ function selectPiece(p) {
                 }
             }
 
-            
+
 
 
         }
-    }else {
-            displayWinnerMessage();
-        }
-    
+    } else {
+        displayWinnerMessage();
+    }
+
 } //end_selectPiece
 
 
@@ -1953,43 +2165,44 @@ function undoMove() {
     }
 }
 
-function compute() {
-    game.getAllMovesForTurn(game.sideToMove);
+function showBoard() {
+    //game.getAllMovesForTurn(game.sideToMove);
+    board.drawBoard();
 }
 
 function computerMoves() {
     if (game.gameOver == false) {
         //console.log(game.sideToMove)
-        game.colourSelected = game.sideToMove
+        game.colourSelected = game.sideToMove;
         var allMovesAvailable = game.getAllMovesForTurn(game.sideToMove);
         //console.log("All Moves 1st: ", allMovesAvailable[0])
-        
-        var sortedList = allMovesAvailable.sort(function(a, b) {
+
+        var sortedList = allMovesAvailable.sort(function (a, b) {
             return a[3] < b[3] ? 1 : -1;
-                })
-        
+        })
+        //console.log("Sorted ", sortedList.length);
         var max = sortedList[0][3];
-        
-        sortedList = sortedList.filter(function(num){
-            return (num) => max; 
-            });
-        
-        
-        if (sortedList[0][3] > 0 && Math.random() > 0.1){
-            var moveToMake = sortedList[0];
-            
-        }
-        
-        else{//random choice
-           var moveToMake = allMovesAvailable;
 
 
+        var filteredList = [];
+
+        for (var i = 0; i < sortedList.length; i++) {
+            if (sortedList[i][3] >= max) {
+                filteredList.push(sortedList[i]);
+            }
         }
 
-        moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
+
+        if (Math.random() > 0.2) {
+            moveToMake = filteredList[Math.floor(Math.random() * filteredList.length)];
+        } else {
+            moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
+        }
+
+
         console.log("Move Choosen: ", moveToMake);
-        
-        
+
+
         //make move
         var currentPosition = moveToMake[1].split(",")
         xPos = Number(currentPosition[0].replace("(", ""));
@@ -2033,17 +2246,16 @@ function computerMoves() {
 
 }
 
-function setPlayerNumber(){
+function setPlayerNumber() {
     //TODO
-    if (game.computerPlayer == 'None'){
+    if (game.computerPlayer == 'None') {
         game.computerPlayer = 'Auto';
         document.getElementById('btnNumberPlayers').innerHTML = "Auto Play Off";
-    }
-    else{
+    } else {
         game.computerPlayer = 'None';
         document.getElementById('btnNumberPlayers').innerHTML = "Auto Play On ";
     }
-    
+
     return;
 }
 
@@ -2059,3 +2271,511 @@ addEventListener('click', selectPiece, false);
 //function mUp(obj) {
 //    clickHex("red")
 //}
+
+
+
+/////////////////////////////////////////////
+/// Hex position table for distance calc
+var hex_0 = [[-12, 16, -4],
+[-11, 15, -4],
+[-12, 15, -3],
+[-11, 14, -3],
+[-12, 14, -2],
+[-11, 13, -2],
+[-12, 13, -1],
+[-11, 12, -1],
+[-12, 12, 0],
+[-11, 11, 0],
+[-12, 11, 1],
+[-11, 10, 1],
+[-12, 10, 2],
+[-11, 9, 2],
+[-12, 9, 3],
+[-11, 8, 3],
+[-12, 8, 4],
+[-11, 7, 4],
+[-12, 7, 5],
+[-11, 6, 5],
+[-12, 6, 6],
+[-11, 5, 6],
+[-12, 5, 7],
+[-11, 4, 7],
+[-12, 4, 8],
+[-11, 3, 8],
+[-12, 3, 9],
+[-11, 2, 9],
+[-12, 2, 10],
+[-11, 1, 10],
+[-12, 1, 11],
+[-11, 0, 11],
+[-12, 0, 12],
+[-11, -1, 12],
+[-12, -1, 13],
+[-11, -2, 13],
+[-12, -2, 14],
+[-11, -3, 14],
+[-12, -3, 15],
+[-11, -4, 15],
+[-12, -4, 16]];
+
+var hex_1 = [[-10, 15, -5],
+[-9, 14, -5],
+[-10, 14, -4],
+[-9, 13, -4],
+[-10, 13, -3],
+[-9, 12, -3],
+[-10, 12, -2],
+[-9, 11, -2],
+[-10, 11, -1],
+[-9, 10, -1],
+[-10, 10, 0],
+[-9, 9, 0],
+[-10, 9, 1],
+[-9, 8, 1],
+[-10, 8, 2],
+[-9, 7, 2],
+[-10, 7, 3],
+[-9, 6, 3],
+[-10, 6, 4],
+[-9, 5, 4],
+[-10, 5, 5],
+[-9, 4, 5],
+[-10, 4, 6],
+[-9, 3, 6],
+[-10, 3, 7],
+[-9, 2, 7],
+[-10, 2, 8],
+[-9, 1, 8],
+[-10, 1, 9],
+[-9, 0, 9],
+[-10, 0, 10],
+[-9, -1, 10],
+[-10, -1, 11],
+[-9, -2, 11],
+[-10, -2, 12],
+[-9, -3, 12],
+[-10, -3, 13],
+[-9, -4, 13],
+[-10, -4, 14],
+[-9, -5, 14],
+[-10, -5, 15]];
+
+var hex_2 = [[-8, 14, -6],
+[-7, 13, -6],
+[-8, 13, -5],
+[-7, 12, -5],
+[-8, 12, -4],
+[-7, 11, -4],
+[-8, 11, -3],
+[-7, 10, -3],
+[-8, 10, -2],
+[-7, 9, -2],
+[-8, 9, -1],
+[-7, 8, -1],
+[-8, 8, 0],
+[-7, 7, 0],
+[-8, 7, 1],
+[-7, 6, 1],
+[-8, 6, 2],
+[-7, 5, 2],
+[-8, 5, 3],
+[-7, 4, 3],
+[-8, 4, 4],
+[-7, 3, 4],
+[-8, 3, 5],
+[-7, 2, 5],
+[-8, 2, 6],
+[-7, 1, 6],
+[-8, 1, 7],
+[-7, 0, 7],
+[-8, 0, 8],
+[-7, -1, 8],
+[-8, -1, 9],
+[-7, -2, 9],
+[-8, -2, 10],
+[-7, -3, 10],
+[-8, -3, 11],
+[-7, -4, 11],
+[-8, -4, 12],
+[-7, -5, 12],
+[-8, -5, 13],
+[-7, -6, 13],
+[-8, -6, 14]];
+
+var hex_3 = [[-6, 13, -7],
+[-5, 12, -7],
+[-6, 12, -6],
+[-5, 11, -6],
+[-6, 11, -5],
+[-5, 10, -5],
+[-6, 10, -4],
+[-5, 9, -4],
+[-6, 9, -3],
+[-5, 8, -3],
+[-6, 8, -2],
+[-5, 7, -2],
+[-6, 7, -1],
+[-5, 6, -1],
+[-6, 6, 0],
+[-5, 5, 0],
+[-6, 5, 1],
+[-5, 4, 1],
+[-6, 4, 2],
+[-5, 3, 2],
+[-6, 3, 3],
+[-5, 2, 3],
+[-6, 2, 4],
+[-5, 1, 4],
+[-6, 1, 5],
+[-5, 0, 5],
+[-6, 0, 6],
+[-5, -1, 6],
+[-6, -1, 7],
+[-5, -2, 7],
+[-6, -2, 8],
+[-5, -3, 8],
+[-6, -3, 9],
+[-5, -4, 9],
+[-6, -4, 10],
+[-5, -5, 10],
+[-6, -5, 11],
+[-5, -6, 11],
+[-6, -6, 12],
+[-5, -7, 12],
+[-6, -7, 13]];
+
+var hex_4 = [[-4, 12, -8],
+[-3, 11, -8],
+[-4, 11, -7],
+[-3, 10, -7],
+[-4, 10, -6],
+[-3, 9, -6],
+[-4, 9, -5],
+[-3, 8, -5],
+[-4, 8, -4],
+[-3, 7, -4],
+[-4, 7, -3],
+[-3, 6, -3],
+[-4, 6, -2],
+[-3, 5, -2],
+[-4, 5, -1],
+[-3, 4, -1],
+[-4, 4, 0],
+[-3, 3, 0],
+[-4, 3, 1],
+[-3, 2, 1],
+[-4, 2, 2],
+[-3, 1, 2],
+[-4, 1, 3],
+[-3, 0, 3],
+[-4, 0, 4],
+[-3, -1, 4],
+[-4, -1, 5],
+[-3, -2, 5],
+[-4, -2, 6],
+[-3, -3, 6],
+[-4, -3, 7],
+[-3, -4, 7],
+[-4, -4, 8],
+[-3, -5, 8],
+[-4, -5, 9],
+[-3, -6, 9],
+[-4, -6, 10],
+[-3, -7, 10],
+[-4, -7, 11],
+[-3, -8, 11],
+[-4, -8, 12]];
+
+var hex_5 = [[-2, 11, -9],
+[-1, 10, -9],
+[-2, 10, -8],
+[-1, 9, -8],
+[-2, 9, -7],
+[-1, 8, -7],
+[-2, 8, -6],
+[-1, 7, -6],
+[-2, 7, -5],
+[-1, 6, -5],
+[-2, 6, -4],
+[-1, 5, -4],
+[-2, 5, -3],
+[-1, 4, -3],
+[-2, 4, -2],
+[-1, 3, -2],
+[-2, 3, -1],
+[-1, 2, -1],
+[-2, 2, 0],
+[-1, 1, 0],
+[-2, 1, 1],
+[-1, 0, 1],
+[-2, 0, 2],
+[-1, -1, 2],
+[-2, -1, 3],
+[-1, -2, 3],
+[-2, -2, 4],
+[-1, -3, 4],
+[-2, -3, 5],
+[-1, -4, 5],
+[-2, -4, 6],
+[-1, -5, 6],
+[-2, -5, 7],
+[-1, -6, 7],
+[-2, -6, 8],
+[-1, -7, 8],
+[-2, -7, 9],
+[-1, -8, 9],
+[-2, -8, 10],
+[-1, -9, 10],
+[-2, -9, 11]];
+
+var hex_6 = [[0, 10, -10],
+[1, 9, -10],
+[0, 9, -9],
+[1, 8, -9],
+[0, 8, -8],
+[1, 7, -8],
+[0, 7, -7],
+[1, 6, -7],
+[0, 6, -6],
+[1, 5, -6],
+[0, 5, -5],
+[1, 4, -5],
+[0, 4, -4],
+[1, 3, -4],
+[0, 3, -3],
+[1, 2, -3],
+[0, 2, -2],
+[1, 1, -2],
+[0, 1, -1],
+[1, 0, -1],
+[0, 0, 0],
+[1, -1, 0],
+[0, -1, 1],
+[1, -2, 1],
+[0, -2, 2],
+[1, -3, 2],
+[0, -3, 3],
+[1, -4, 3],
+[0, -4, 4],
+[1, -5, 4],
+[0, -5, 5],
+[1, -6, 5],
+[0, -6, 6],
+[1, -7, 6],
+[0, -7, 7],
+[1, -8, 7],
+[0, -8, 8],
+[1, -9, 8],
+[0, -9, 9],
+[1, -10, 9],
+[0, -10, 10]];
+
+var hex_7 = [[2, 9, -11],
+[3, 8, -11],
+[2, 8, -10],
+[3, 7, -10],
+[2, 7, -9],
+[3, 6, -9],
+[2, 6, -8],
+[3, 5, -8],
+[2, 5, -7],
+[3, 4, -7],
+[2, 4, -6],
+[3, 3, -6],
+[2, 3, -5],
+[3, 2, -5],
+[2, 2, -4],
+[3, 1, -4],
+[2, 1, -3],
+[3, 0, -3],
+[2, 0, -2],
+[3, -1, -2],
+[2, -1, -1],
+[3, -2, -1],
+[2, -2, 0],
+[3, -3, 0],
+[2, -3, 1],
+[3, -4, 1],
+[2, -4, 2],
+[3, -5, 2],
+[2, -5, 3],
+[3, -6, 3],
+[2, -6, 4],
+[3, -7, 4],
+[2, -7, 5],
+[3, -8, 5],
+[2, -8, 6],
+[3, -9, 6],
+[2, -9, 7],
+[3, -10, 7],
+[2, -10, 8],
+[3, -11, 8],
+[2, -11, 9]];
+
+var hex_8 = [[4, 8, -12],
+[5, 7, -12],
+[4, 7, -11],
+[5, 6, -11],
+[4, 6, -10],
+[5, 5, -10],
+[4, 5, -9],
+[5, 4, -9],
+[4, 4, -8],
+[5, 3, -8],
+[4, 3, -7],
+[5, 2, -7],
+[4, 2, -6],
+[5, 1, -6],
+[4, 1, -5],
+[5, 0, -5],
+[4, 0, -4],
+[5, -1, -4],
+[4, -1, -3],
+[5, -2, -3],
+[4, -2, -2],
+[5, -3, -2],
+[4, -3, -1],
+[5, -4, -1],
+[4, -4, 0],
+[5, -5, 0],
+[4, -5, 1],
+[5, -6, 1],
+[4, -6, 2],
+[5, -7, 2],
+[4, -7, 3],
+[5, -8, 3],
+[4, -8, 4],
+[5, -9, 4],
+[4, -9, 5],
+[5, -10, 5],
+[4, -10, 6],
+[5, -11, 6],
+[4, -11, 7],
+[5, -12, 7],
+[4, -12, 8]];
+
+var hex_9 = [[6, 7, -13],
+[7, 6, -13],
+[6, 6, -12],
+[7, 5, -12],
+[6, 5, -11],
+[7, 4, -11],
+[6, 4, -10],
+[7, 3, -10],
+[6, 3, -9],
+[7, 2, -9],
+[6, 2, -8],
+[7, 1, -8],
+[6, 1, -7],
+[7, 0, -7],
+[6, 0, -6],
+[7, -1, -6],
+[6, -1, -5],
+[7, -2, -5],
+[6, -2, -4],
+[7, -3, -4],
+[6, -3, -3],
+[7, -4, -3],
+[6, -4, -2],
+[7, -5, -2],
+[6, -5, -1],
+[7, -6, -1],
+[6, -6, 0],
+[7, -7, 0],
+[6, -7, 1],
+[7, -8, 1],
+[6, -8, 2],
+[7, -9, 2],
+[6, -9, 3],
+[7, -10, 3],
+[6, -10, 4],
+[7, -11, 4],
+[6, -11, 5],
+[7, -12, 5],
+[6, -12, 6],
+[7, -13, 6],
+[6, -13, 7]];
+
+var hex_10 = [[8, 6, -14],
+[9, 5, -14],
+[8, 5, -13],
+[9, 4, -13],
+[8, 4, -12],
+[9, 3, -12],
+[8, 3, -11],
+[9, 2, -11],
+[8, 2, -10],
+[9, 1, -10],
+[8, 1, -9],
+[9, 0, -9],
+[8, 0, -8],
+[9, -1, -8],
+[8, -1, -7],
+[9, -2, -7],
+[8, -2, -6],
+[9, -3, -6],
+[8, -3, -5],
+[9, -4, -5],
+[8, -4, -4],
+[9, -5, -4],
+[8, -5, -3],
+[9, -6, -3],
+[8, -6, -2],
+[9, -7, -2],
+[8, -7, -1],
+[9, -8, -1],
+[8, -8, 0],
+[9, -9, 0],
+[8, -9, 1],
+[9, -10, 1],
+[8, -10, 2],
+[9, -11, 2],
+[8, -11, 3],
+[9, -12, 3],
+[8, -12, 4],
+[9, -13, 4],
+[8, -13, 5],
+[9, -14, 5],
+[8, -14, 6]];
+
+var hex_11 = [[10, 5, -15],
+[11, 4, -15],
+[10, 4, -14],
+[11, 3, -14],
+[10, 3, -13],
+[11, 2, -13],
+[10, 2, -12],
+[11, 1, -12],
+[10, 1, -11],
+[11, 0, -11],
+[10, 0, -10],
+[11, -1, -10],
+[10, -1, -9],
+[11, -2, -9],
+[10, -2, -8],
+[11, -3, -8],
+[10, -3, -7],
+[11, -4, -7],
+[10, -4, -6],
+[11, -5, -6],
+[10, -5, -5],
+[11, -6, -5],
+[10, -6, -4],
+[11, -7, -4],
+[10, -7, -3],
+[11, -8, -3],
+[10, -8, -2],
+[11, -9, -2],
+[10, -9, -1],
+[11, -10, -1],
+[10, -10, 0],
+[11, -11, 0],
+[10, -11, 1],
+[11, -12, 1],
+[10, -12, 2],
+[11, -13, 2],
+[10, -13, 3],
+[11, -14, 3],
+[10, -14, 4],
+[11, -15, 4],
+[10, -15, 5]];
