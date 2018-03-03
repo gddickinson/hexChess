@@ -100,8 +100,8 @@ class Gameboard {
 
 //create class for piece positions///////////////////////////////////////////////////
 class PieceList {
-    constructor(whitePawns, whiteKnights, whiteRooks, whiteBishops, whiteQueen, whiteKing,
-        blackPawns, blackKnights, blackRooks, blackBishops, blackQueen, blackKing) {
+    constructor(whitePawns, whiteKnights, whiteRooks, whiteBishops, whiteQueen, whiteKing, whiteDragon,
+        blackPawns, blackKnights, blackRooks, blackBishops, blackQueen, blackKing, blackDragon) {
         this.whitePawns = whitePawns;
         this.whiteKnights = whiteKnights;
         this.whiteRooks = whiteRooks;
@@ -114,6 +114,9 @@ class PieceList {
         this.blackBishops = blackBishops;
         this.blackQueen = blackQueen;
         this.blackKing = blackKing;
+        this.blackDragon = blackDragon;
+        this.whiteDragon = whiteDragon;
+
 
         this.computerPlayer = 'None';
 
@@ -151,9 +154,10 @@ class PieceList {
         this.bishopValue = 3;
         this.rookValue = 5;
         this.queenValue = 9;
-        this.kingValue = 100;
+        this.kingValue = 1000;
+        this.dragonValue = 20;
 
-        this.pieceSymbolList = ['P', 'R', 'N', 'B', 'Q', 'K'];
+        this.pieceSymbolList = ['P', 'R', 'N', 'B', 'Q', 'K', 'D'];
 
 
 
@@ -162,45 +166,45 @@ class PieceList {
 
 
     get whitePieceList() {
-        var whiteList = [this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing];
+        var whiteList = [this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.whiteDragon];
         return whiteList;
-        
+
     }
 
-   get whiteHexsOccupied() {
-       //console.log(this.whitePieceList);
-       var ans = [];
-       for (var i = 0; i < this.whitePieceList.length; i++){
-           var subList = this.whitePieceList[i];
-           subList = subList.split(';');
-           for (var j = 0; j < subList.length; j++){
-               if(subList[j].length > 3){
+    get whiteHexsOccupied() {
+        //console.log(this.whitePieceList);
+        var ans = [];
+        for (var i = 0; i < this.whitePieceList.length; i++) {
+            var subList = this.whitePieceList[i];
+            subList = subList.split(';');
+            for (var j = 0; j < subList.length; j++) {
+                if (subList[j].length > 3) {
                     ans.push(subList[j])
-               }
-               
-           }
-       } 
-       return ans;
-   }
-    
+                }
+
+            }
+        }
+        return ans;
+    }
+
     get blackHexsOccupied() {
-       var ans = [];
-       for (var i = 0; i < this.blackPieceList.length; i++){
-           var subList = this.blackPieceList[i];
-           subList = subList.split(';');
-           for (var j = 0; j < subList.length; j++){
-               if(subList[j].length > 3){
+        var ans = [];
+        for (var i = 0; i < this.blackPieceList.length; i++) {
+            var subList = this.blackPieceList[i];
+            subList = subList.split(';');
+            for (var j = 0; j < subList.length; j++) {
+                if (subList[j].length > 3) {
                     ans.push(subList[j])
-               }
-               
-           }
-       } 
-       return ans;
-   } 
-    
-    
+                }
+
+            }
+        }
+        return ans;
+    }
+
+
     get blackPieceList() {
-        var blackList = [this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing];
+        var blackList = [this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing, this.blackDragon];
         return blackList;
     }
 
@@ -210,11 +214,11 @@ class PieceList {
     }
 
     get whiteImageList() {
-        return ['wP', 'wN', 'wR', 'wB', 'wQ', 'wK'];
+        return ['wP', 'wN', 'wR', 'wB', 'wQ', 'wK', 'wD'];
     }
 
     get blackImageList() {
-        return ['bP', 'bN', 'bR', 'bB', 'bQ', 'bK'];
+        return ['bP', 'bN', 'bR', 'bB', 'bQ', 'bK', 'bD'];
     }
 
     setPieces() {
@@ -340,6 +344,10 @@ class PieceList {
             return this.kingValue;
         }
 
+        if (piece == 'D') {
+            return this.dragonValue;
+        }
+
     }
 
     movePiece(x, y, piece) {
@@ -385,6 +393,7 @@ class PieceList {
         this.blackBishops = this.blackBishops.replace(replaceStr, "");
         this.blackQueen = this.blackQueen.replace(replaceStr, "");
         this.blackKing = this.blackKing.replace(replaceStr, "");
+        this.blackDragon = this.blackDragon.replace(replaceStr, "");
 
     }
 
@@ -395,16 +404,19 @@ class PieceList {
         this.whiteBishops = this.whiteBishops.replace(replaceStr, "");
         this.whiteQueen = this.whiteQueen.replace(replaceStr, "");
         this.whiteKing = this.whiteKing.replace(replaceStr, "");
+        this.whiteDragon = this.whiteDragon.replace(replaceStr, "");
 
     }
 
     pawnPromoteTest(colour, x, y) {
         var searchStr = "(" + x + "," + y + ")";
-        if (colour == "w") {
-            return whitePawnPromoHexs.includes(searchStr);
+        if (colour == "w") {       
+            var test = whitePawnPromoHexs + whitePawnPromoHexs2;
+            
         } else {
-            return blackPawnPromoHexs.includes(searchStr);
+            var test = blackPawnPromoHexs + blackPawnPromoHexs2;
         }
+        return test.includes(searchStr);
     }
 
     promoteWhitePawn(x, y) {
@@ -470,6 +482,11 @@ class PieceList {
             this.removeblackPiece(replaceStr);
         }
 
+        if (piece == 'wD') {
+            this.whiteDragon = this.whiteDragon.replace(oldStr, replaceStr);
+            this.removeblackPiece(replaceStr);
+        }
+
         //update blackpieces
         if (piece == 'bP') {
             this.blackPawns = this.blackPawns.replace(oldStr, replaceStr);
@@ -496,6 +513,11 @@ class PieceList {
             this.removewhitePiece(replaceStr);
         }
 
+        if (piece == 'bD') {
+            this.blackDragon = this.blackDragon.replace(oldStr, replaceStr);
+            this.removewhitePiece(replaceStr);
+        }
+
     }
 
     availableForSelection(x, y, colour) {
@@ -505,11 +527,11 @@ class PieceList {
         } else {
             var searchStr = "(" + x + "," + y + ")";
             if (colour == 'w') {
-                var allAvailable = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing;
+                var allAvailable = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + this.whiteDragon;
                 return allAvailable.includes(searchStr);
             }
             if (colour == 'b') {
-                var allAvailable = this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing;
+                var allAvailable = this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + this.blackDragon;
                 return allAvailable.includes(searchStr);
             }
         }
@@ -523,7 +545,7 @@ class PieceList {
         }
         if (this.colourSelected == 'w') {
             var currentHex = "(" + this.oldX + "," + this.oldY + ")";
-            var allUnavailable = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + offBoard + currentHex;
+            var allUnavailable = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + this.whiteDragon + offBoard + currentHex;
             var searchStr = "(" + x + "," + y + ")";
             if (allUnavailable.includes(searchStr) == true) {
                 return false;
@@ -532,7 +554,7 @@ class PieceList {
             }
         } else {
             var currentHex = "(" + this.oldX + "," + this.oldY + ")";
-            var allUnavailable = this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + offBoard + currentHex;
+            var allUnavailable = this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + this.blackDragon + offBoard + currentHex;
             var searchStr = "(" + x + "," + y + ")";
             if (allUnavailable.includes(searchStr) == true) {
                 return false;
@@ -650,6 +672,20 @@ class PieceList {
         }
     }
 
+
+    dragonMoves(x, y) {
+        //even y
+        if (y % 2 == 0) {
+            return [[x - 1, y - 1], [x - 1, y + 1], [x, y - 2], [x, y + 2], [x, y - 1], [x, y + 1], [x - 1, y - 2], [x - 2, y - 3], [x - 1, y - 4], [x - 1, y - 5], [x - 1, y + 2], [x - 2, y + 3], [x, y - 4], [x, y - 6], [x, y + 4], [x, y + 6], [x + 1, y - 2], [x + 1, y - 3], [x + 1, y + 2], [x + 1, y + 3], [x - 1, y - 3], [x - 1, y], [x - 1, y + 3], [x, y - 3], [x + 1, y], [x, y + 3], [x - 1, y - 6], [x + 1, y - 6], [x - 2, y], [x + 2, y], [x - 1, y + 6], [x + 1, y + 6], [x, y - 8], [x, y + 8], [x + 2, y - 4], [x + 2, y + 4], [x - 2, y - 4], [x - 2, y + 4], [x - 2, y - 1], [x - 2, y + 1], [x, y - 5], [x, y + 5], [x + 1, y - 4], [x + 1, y + 4], [x - 1, y + 4], [x - 1, y + 5], [x + 1, y - 1], [x + 1, y + 1]];
+        }
+        //odd y
+        else {
+            return [[x, y - 1], [x, y + 1], [x, y - 2], [x, y + 2], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 2], [x - 1, y - 3], [x - 1, y + 2], [x - 1, y + 3], [x, y - 4], [x, y - 6], [x, y + 4], [x, y + 6], [x + 1, y - 2], [x + 2, y - 3], [x + 1, y + 2], [x + 2, y + 3], [x, y - 3], [x - 1, y], [x, y + 3], [x + 1, y - 3], [x + 1, y], [x + 1, y + 3], [x - 1, y - 6], [x + 1, y - 6], [x + 2, y], [x - 2, y], [x - 1, y + 6], [x + 1, y + 6], [x, y - 8], [x, y + 8], [x + 2, y - 4], [x + 2, y + 4], [x - 2, y - 4], [x - 2, y + 4], [x - 1, y - 4], [x, y - 5], [x + 1, y - 4], [x + 1, y - 5], [x + 2, y - 1], [x + 2, y + 1], [x + 1, y + 4], [x + 1, y + 5], [x, y + 4], [x - 1, y + 4], [x - 1, y + 1], [x - 1, y - 1], [x, y + 5]];
+        }
+
+    }
+
+
     showHexsAvailabletoMove(x, y, piece) {
         var hexsToActivate = [];
 
@@ -672,6 +708,9 @@ class PieceList {
         }
         if (testPiece == 'K') {
             hexsToActivate = this.kingMoves(x, y);
+        }
+        if (testPiece == 'D') {
+            hexsToActivate = this.dragonMoves(x, y);
         }
 
 
@@ -725,6 +764,9 @@ class PieceList {
         }
         if (testPiece == 'K') {
             hexsToActivate = this.kingMoves(x, y);
+        }
+        if (testPiece == 'D') {
+            hexsToActivate = this.dragonMoves(x, y);
         }
 
 
@@ -1156,7 +1198,7 @@ class PieceList {
 
     updateGameState() {
         //record all positions turn-by-turn
-        var newTurn = [this.turnNumber, this.sideToMove, this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing];
+        var newTurn = [this.turnNumber, this.sideToMove, this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.whiteDragon, this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing, this.blackDragon];
 
         this.gameRecord.push(newTurn);
         //console.log(this.gameRecord);
@@ -1167,18 +1209,20 @@ class PieceList {
         var lastRecord = this.gameRecord[this.turnNumber - 1];
         console.log(lastRecord);
 
-        this.whitePawns = lastRecord[2];
-        this.whiteKnights = lastRecord[3];
-        this.whiteRooks = lastRecord[4];
-        this.whiteBishops = lastRecord[5];
-        this.whiteQueen = lastRecord[6];
-        this.whiteKing = lastRecord[7];
-        this.blackPawns = lastRecord[8];
-        this.blackKnights = lastRecord[9];
-        this.blackRooks = lastRecord[10];
-        this.blackBishops = lastRecord[11];
-        this.blackQueen = lastRecord[12];
-        this.blackKing = lastRecord[13];
+        game.whitePawns = lastRecord[2];
+        game.whiteKnights = lastRecord[3];
+        game.whiteRooks = lastRecord[4];
+        game.whiteBishops = lastRecord[5];
+        game.whiteQueen = lastRecord[6];
+        game.whiteKing = lastRecord[7];
+        game.whiteDragon = lastRecord[8];
+        game.blackPawns = lastRecord[9];
+        game.blackKnights = lastRecord[10];
+        game.blackRooks = lastRecord[11];
+        game.blackBishops = lastRecord[12];
+        game.blackQueen = lastRecord[13];
+        game.blackKing = lastRecord[14];
+        game.blackDragon = lastRecord[15];
 
         this.turnNumber = lastRecord[0];
 
@@ -1313,29 +1357,31 @@ class PieceList {
 
     isMoveDangerous(posList, colour) {
         //TODO - get all positions available for move by opposition next turn
-        if (colour == 'w'){
+        if (colour == 'w') {
             var testColour = 'b';
         }
-        if (colour == 'b'){
+        if (colour == 'b') {
             var testColour = 'w';
         }
-               
+
         var oppositionMoves = this.getAllMovesForTurn(testColour);
-        
+
         for (var i = 0; i < posList.length; i++) {
-            for (var j = 0; j < oppositionMoves.length; j++){
+            for (var j = 0; j < oppositionMoves.length; j++) {
                 var test1 = posList[i][2];
                 var test2 = oppositionMoves[j][2];
-                        
-                if (test1[0] == test2[0] && test1[1] == test2[1]){
-                    console.log('danger');   
-                    posList[i][3] = posList[i][3] - (5 * this.getPieceScore(posList[i][0]));
+
+                if (test1[0] == test2[0] && test1[1] == test2[1]) {
+                    console.log('danger');
+                    console.log('before', posList[i][3]);
+                    posList[i][3] = posList[i][3] - (10 * this.getPieceScore(posList[i][0]));
                     //console.log((5 * this.getPieceScore(posList[i][0])));
+                    console.log('after', posList[i][3]);
 
                 }
-            }           
+            }
         }
-        
+
         return posList;
     }
 
@@ -1350,7 +1396,7 @@ class PieceList {
         var otherColour = "";
 
         if (colour == 'b') {
-            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)"];
+            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)","(0,23)","(1,29)","(2,23)","(2,35)","(9,35)","(10,32)","(10,29)","(11,26)","(11,23)"];
             otherColour = 'w';
 
             if (piece == 'P') {
@@ -1371,9 +1417,12 @@ class PieceList {
             if (piece == 'K') {
                 var piecesList = this.blackKing.split(";");
             }
+            if (piece == 'D') {
+                var piecesList = this.blackDragon.split(";");
+            }
         }
         if (colour == 'w') {
-            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)"];
+            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)","(2,5)","(1,11)","(0,17)","(9,5)","(10,8)","(10,11)","(11,14)","(11,17)"];
             otherColour = 'b';
 
             if (piece == 'P') {
@@ -1393,6 +1442,9 @@ class PieceList {
             }
             if (piece == 'K') {
                 var piecesList = this.whiteKing.split(";");
+            }
+            if (piece == 'D') {
+                var piecesList = this.whiteDragon.split(";");
             }
         }
 
@@ -1416,7 +1468,6 @@ class PieceList {
                     var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
                     var hexContent2 = this.getHexContent(possiblePositionsIfColourDif[j][0], possiblePositionsIfColourDif[j][1]);
 
-                    //console.log(hexContent);
 
                     //capture if possible
                     if (hexContent != 'none') {
@@ -1425,45 +1476,40 @@ class PieceList {
 
                     //defend own pieces if possible
                     if (hexContent2 != 'none') {
-                        //score = score + (this.getPieceScore(hexContent2.split("")[1]));
-                        score = score + 1;
+                        score = score + 1 + (2 * (this.getPieceScore(hexContent2.split("")[1])));
                     }
-                    
+
                     //flock together
                     //console.log('white hexs', this.whiteHexsOccupied);
-                    
-                    if (colour == 'w'){
-                        var ownedHexPos =  this.whiteHexsOccupied;   
+
+                    if (colour == 'w') {
+                        var ownedHexPos = this.whiteHexsOccupied;
                     }
-                    if (colour == 'b'){
-                        var ownedHexPos =  this.blackHexsOccupied; 
+                    if (colour == 'b') {
+                        var ownedHexPos = this.blackHexsOccupied;
                     }
-                    
-                    if (ownedHexPos.length > 3){
-                    
-                    //head toward white owned hexs
-                    var ownedScore = 0;
+
+                    if (ownedHexPos.length > 3) {
+
+                        //head toward owned hexs
+                        var ownedScore = 0;
                         for (var z = 0; z < ownedHexPos.length; z++) {
                             var hexPos = this.strToCordinates(ownedHexPos[z]);
                             var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
-                            if (distanceToHex > 0){
-                            var newScore = Math.ceil(1 / distanceToHex);
-                            if (newScore > ownedScore) {
-                                ownedScore = newScore;
-                            }
+                            if (distanceToHex > 0) {
+                                var newScore = 1 + Math.ceil(1 / distanceToHex);
+                                if (newScore > ownedScore) {
+                                    ownedScore = newScore;
+                                }
                             }
 
                         }
                         score = score + ownedScore;
                     }
-                    
-                    
-                    
 
-                    //avoid capture if possibe
-                    //TODO
 
-                    //add piece specific scoring here
+
+                    //add piece specific scoring here///
 
                     //pawns
                     //move early
@@ -1472,7 +1518,7 @@ class PieceList {
                             score = score + 1;
                         }
 
-                        //head toward queening hexs
+                        //head toward promo hexs
                         var promoScore = 0;
                         for (var z = 0; z < promoHexs.length; z++) {
                             var hexPos = this.strToCordinates(promoHexs[z]);
@@ -1532,6 +1578,19 @@ class PieceList {
 
 
                     } ///end Queen
+                    
+                    
+                    //Dragon
+                    //move medium
+                    //console.log(piece);
+                    if (piece == 'D') {
+                        if (this.turnNumber > 50) {
+                            score = score + 1;
+                        }
+
+
+                    } ///end Dragon
+                    
 
 
                     //king capture              
@@ -1553,7 +1612,8 @@ class PieceList {
                             var kingPos = this.strToCordinates(this.whiteKing);
                         }
                         var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
-                        var posScore = Math.ceil(1 / distanceToHex);
+                        
+                        var posScore = (Math.ceil(1 / distanceToHex)*5);
                         score = score + posScore;
 
                     }
@@ -1598,6 +1658,8 @@ var whiteRooks = "(4,38);(8,38)";
 var whiteBishops = "(6,36);(6,37);(7,38)";
 var whiteQueen = "(5,37)";
 var whiteKing = "(6,38)"
+var whiteDragon = "(10,28)";
+
 
 //black in play
 var blackPawns = "(4,4);(4,5);(5,4);(5,5);(6,6);(6,5);(7,4);(7,5);(8,4);(5,6);(5,7);(6,7);(7,6)";
@@ -1606,11 +1668,14 @@ var blackRooks = "(4,2);(8,2)";
 var blackBishops = "(5,2);(5,3);(6,4)";
 var blackQueen = "(6,3)";
 var blackKing = "(6,2)";
+var blackDragon = "(2,12)";
 
 
 //pawn promotion hexs
-var whitePawnPromoHexs = "(4,2);(4,3);(5,2);(5,3);(6,2);(6,3);(7,2);(7,3);(8,2)";
-var blackPawnPromoHexs = "(4,38);(4,37);(5,38);(5,37);(6,38);(6,37);(7,38);(7,37);(8,38)";
+var whitePawnPromoHexs = "(4,2);(5,2);(6,2);(7,2);(8,2)";
+var blackPawnPromoHexs = "(4,38);(5,38);(6,38);(7,38);(8,38)";
+var whitePawnPromoHexs2 = "(2,5);(1,11);(0,17);(9,5);(10,8);(10,11);(11,14);(11,17)";
+var blackPawnPromoHexs2 = "(0,23);(1,29);(2,23);(2,35);(9,35);(10,32);(10,29);(11,26);(11,23)";
 
 
 //create board object
@@ -1618,7 +1683,7 @@ const board = new Gameboard(height, width, rad, offBoard)
 board.drawBoard()
 
 //create game object
-const game = new PieceList(whitePawns, whiteKnights, whiteRooks, whiteBishops, whiteQueen, whiteKing, blackPawns, blackKnights, blackRooks, blackBishops, blackQueen, blackKing);
+const game = new PieceList(whitePawns, whiteKnights, whiteRooks, whiteBishops, whiteQueen, whiteKing, whiteDragon, blackPawns, blackKnights, blackRooks, blackBishops, blackQueen, blackKing, blackDragon);
 
 //set board
 game.setPieces();
@@ -1718,7 +1783,7 @@ function updateMessageBox(x, y) {
 }
 
 function displayWinnerMessage() {
-    info.innerHTML = game.winner + ' Wins!'+ '<br />Turn #: ' + game.turnNumber;
+    info.innerHTML = game.winner + ' Wins!' + '<br />Turn #: ' + game.turnNumber;
 }
 
 function selectPiece(p) {
@@ -1851,12 +1916,14 @@ function resetGame() {
     game.whiteBishops = whiteBishops;
     game.whiteQueen = whiteQueen;
     game.whiteKing = whiteKing;
+    game.whiteDragon = whiteDragon;
     game.blackPawns = blackPawns;
     game.blackKnights = blackKnights;
     game.blackRooks = blackRooks;
     game.blackBishops = blackBishops;
     game.blackQueen = blackQueen;
     game.blackKing = blackKing;
+    game.blackDragon = blackDragon;
 
     game.turnNumber = 0;
 
@@ -1904,12 +1971,17 @@ function undoMove() {
         game.whiteBishops = lastRecord[5];
         game.whiteQueen = lastRecord[6];
         game.whiteKing = lastRecord[7];
-        game.blackPawns = lastRecord[8];
-        game.blackKnights = lastRecord[9];
-        game.blackRooks = lastRecord[10];
-        game.blackBishops = lastRecord[11];
-        game.blackQueen = lastRecord[12];
-        game.blackKing = lastRecord[13];
+        game.whiteDragon = lastRecord[8];
+        game.blackPawns = lastRecord[9];
+        game.blackKnights = lastRecord[10];
+        game.blackRooks = lastRecord[11];
+        game.blackBishops = lastRecord[12];
+        game.blackQueen = lastRecord[13];
+        game.blackKing = lastRecord[14];
+        game.blackDragon = lastRecord[15];
+
+
+
 
         game.turnNumber = lastRecord[0];
 
@@ -1952,10 +2024,10 @@ function computerMoves() {
         //console.log(game.sideToMove)
         game.colourSelected = game.sideToMove;
         var allMovesAvailable = game.getAllMovesForTurn(game.sideToMove);
-        
+
         //score dangerous moves
-        allMovesAvailable = game.isMoveDangerous(allMovesAvailable,game.sideToMove);
-            
+        allMovesAvailable = game.isMoveDangerous(allMovesAvailable, game.sideToMove);
+
         //console.log("All Moves 1st: ", allMovesAvailable[0])
 
         var sortedList = allMovesAvailable.sort(function (a, b) {
