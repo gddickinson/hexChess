@@ -1658,7 +1658,7 @@ var whiteRooks = "(4,38);(8,38)";
 var whiteBishops = "(6,36);(6,37);(7,38)";
 var whiteQueen = "(5,37)";
 var whiteKing = "(6,38)"
-var whiteDragon = "(10,28)";
+var whiteDragon = "(10,28);(2,28)";
 
 
 //black in play
@@ -1668,7 +1668,7 @@ var blackRooks = "(4,2);(8,2)";
 var blackBishops = "(5,2);(5,3);(6,4)";
 var blackQueen = "(6,3)";
 var blackKing = "(6,2)";
-var blackDragon = "(2,12)";
+var blackDragon = "(2,12);(10,12)";
 
 
 //pawn promotion hexs
