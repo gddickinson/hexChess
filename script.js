@@ -152,8 +152,8 @@ class PieceList {
         this.rookValue = 5;
         this.queenValue = 9;
         this.kingValue = 100;
-        
-        this.pieceSymbolList = ['P','R','N','B','Q','K'];
+
+        this.pieceSymbolList = ['P', 'R', 'N', 'B', 'Q', 'K'];
 
 
 
@@ -164,8 +164,41 @@ class PieceList {
     get whitePieceList() {
         var whiteList = [this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing];
         return whiteList;
+        
     }
 
+   get whiteHexsOccupied() {
+       //console.log(this.whitePieceList);
+       var ans = [];
+       for (var i = 0; i < this.whitePieceList.length; i++){
+           var subList = this.whitePieceList[i];
+           subList = subList.split(';');
+           for (var j = 0; j < subList.length; j++){
+               if(subList[j].length > 3){
+                    ans.push(subList[j])
+               }
+               
+           }
+       } 
+       return ans;
+   }
+    
+    get blackHexsOccupied() {
+       var ans = [];
+       for (var i = 0; i < this.blackPieceList.length; i++){
+           var subList = this.blackPieceList[i];
+           subList = subList.split(';');
+           for (var j = 0; j < subList.length; j++){
+               if(subList[j].length > 3){
+                    ans.push(subList[j])
+               }
+               
+           }
+       } 
+       return ans;
+   } 
+    
+    
     get blackPieceList() {
         var blackList = [this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing];
         return blackList;
@@ -215,6 +248,28 @@ class PieceList {
 
         }
         return ans;
+    }
+
+
+    getHexOwner(x, y) {
+        var ans = 'none';
+        var searchStr = "(" + x + "," + y + ")";
+        // test for white pieces
+        for (var i = 0; i < this.whitePieceList.length; i++) {
+            if (this.whitePieceList[i].includes(searchStr) == true) {
+                ans = 'w';
+            }
+        }
+
+        // test for black pieces
+        for (var i = 0; i < this.blackPieceList.length; i++) {
+            if (this.blackPieceList[i].includes(searchStr) == true) {
+                ans = 'b';
+            }
+
+        }
+        return ans;
+
     }
 
     selectHex(x, y, colour) {
@@ -518,21 +573,21 @@ class PieceList {
             //even x
             if (y % 2 == 0) {
                 //console.log([[x-1,y-1],[x,y-2],[x,y-1]]);
-                return [[x - 1, y - 1], [x, y - 2], [x, y - 1]];
+                return [[x - 1, y - 1], [x, y - 2], [x, y - 4], [x, y - 1]];
 
             }
             //odd x
             else {
-                return [[x, y - 1], [x, y - 2], [x + 1, y - 1]];
+                return [[x, y - 1], [x, y - 2], [x, y - 4], [x + 1, y - 1]];
             }
         } else {
             //even x
             if (y % 2 == 0) {
-                return [[x - 1, y + 1], [x, y + 2], [x, y + 1]];
+                return [[x - 1, y + 1], [x, y + 2], [x, y + 1], [x, y + 4]];
             }
             //odd x
             else {
-                return [[x, y + 1], [x, y + 2], [x + 1, y + 1]];
+                return [[x, y + 1], [x, y + 2], [x + 1, y + 1], [x, y + 4]];
             }
         }
     }
@@ -740,7 +795,7 @@ class PieceList {
 
         } else {
 
-            //TODO - Something not right with bishop moves - incorrectly hetting blocked pieces
+            //TODO - Something not right with bishop moves - incorrectly getting blocked pieces
             if (x2 > x1) { //moves to the right
                 //fix for diagonal moves 
                 if (y2 < y1) {
@@ -1255,9 +1310,36 @@ class PieceList {
 
         return distance;
     }
-    
-    
-    getMovesAndScore(piece, colour){
+
+    isMoveDangerous(posList, colour) {
+        //TODO - get all positions available for move by opposition next turn
+        if (colour == 'w'){
+            var testColour = 'b';
+        }
+        if (colour == 'b'){
+            var testColour = 'w';
+        }
+               
+        var oppositionMoves = this.getAllMovesForTurn(testColour);
+        
+        for (var i = 0; i < posList.length; i++) {
+            for (var j = 0; j < oppositionMoves.length; j++){
+                var test1 = posList[i][2];
+                var test2 = oppositionMoves[j][2];
+                        
+                if (test1[0] == test2[0] && test1[1] == test2[1]){
+                    console.log('danger');   
+                    posList[i][3] = posList[i][3] - (5 * this.getPieceScore(posList[i][0]));
+                    //console.log((5 * this.getPieceScore(posList[i][0])));
+
+                }
+            }           
+        }
+        
+        return posList;
+    }
+
+    getMovesAndScore(piece, colour) {
         var initialScore = 0;
         var currentPosition = "";
         var possiblePositions = "";
@@ -1270,116 +1352,221 @@ class PieceList {
         if (colour == 'b') {
             var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)"];
             otherColour = 'w';
-            
-            if (piece == 'P'){
-                var piecesList = this.blackPawns.split(";");  
-               
+
+            if (piece == 'P') {
+                var piecesList = this.blackPawns.split(";");
             }
-            if (piece == 'R'){
-                var piecesList = this.blackRooks.split(";"); 
+            if (piece == 'R') {
+                var piecesList = this.blackRooks.split(";");
             }
-            if (piece == 'N'){
-                var piecesList = this.blackKnights.split(";"); 
+            if (piece == 'N') {
+                var piecesList = this.blackKnights.split(";");
             }
-            if (piece == 'B'){
-                var piecesList = this.blackBishops.split(";"); 
+            if (piece == 'B') {
+                var piecesList = this.blackBishops.split(";");
             }
-            if (piece == 'Q'){
-                var piecesList = this.blackQueen.split(";"); 
-            }       
-            if (piece == 'K'){
-                var piecesList = this.blackKing.split(";"); 
+            if (piece == 'Q') {
+                var piecesList = this.blackQueen.split(";");
+            }
+            if (piece == 'K') {
+                var piecesList = this.blackKing.split(";");
             }
         }
         if (colour == 'w') {
             var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)"];
             otherColour = 'b';
-            
-            if (piece == 'P'){
+
+            if (piece == 'P') {
                 var piecesList = this.whitePawns.split(";");
-                
             }
-            if (piece == 'R'){
-                var piecesList = this.whiteRooks.split(";"); 
+            if (piece == 'R') {
+                var piecesList = this.whiteRooks.split(";");
             }
-            if (piece == 'N'){
-                var piecesList = this.whiteKnights.split(";"); 
+            if (piece == 'N') {
+                var piecesList = this.whiteKnights.split(";");
             }
-            if (piece == 'B'){
-                var piecesList = this.whiteBishops.split(";"); 
+            if (piece == 'B') {
+                var piecesList = this.whiteBishops.split(";");
             }
-            if (piece == 'Q'){
-                var piecesList = this.whiteQueen.split(";"); 
-            }       
-            if (piece == 'K'){
-                var piecesList = this.whiteKing.split(";"); 
+            if (piece == 'Q') {
+                var piecesList = this.whiteQueen.split(";");
+            }
+            if (piece == 'K') {
+                var piecesList = this.whiteKing.split(";");
             }
         }
-        
-            if (piecesList.length < 3) {
-                return [];
-            }
-        
-            for (var i = 0; i < piecesList.length; i++) {
-                currentPosition = piecesList[i].split(",")
-                
-                if (currentPosition[0].length > 1) {
-                        x = Number(currentPosition[0].replace("(", ""));
-                        y = Number(currentPosition[1].replace(")", ""));
 
-                        possiblePositions = this.getAvailableMoves(x, y, piece, colour);
-                        possiblePositionsIfColourDif = this.getAvailableMoves(x, y, piece, otherColour);
+        if (piecesList.length < 1) {
+            console.log('No pieces error!');
+            return [];
+        }
+        //console.log(piece);
+        for (var i = 0; i < piecesList.length; i++) {
+            currentPosition = piecesList[i].split(",")
 
-                        for (var j = 0; j < possiblePositions.length; j++) {
-                            var score = initialScore;
-                            var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
-                            var hexContent2 = this.getHexContent(possiblePositionsIfColourDif[j][0], possiblePositionsIfColourDif[j][1]);
-                            console.log(hexContent);
-                            //capture if possible
-                            if (hexContent != 'none') {
-                                score = score + 2 * (this.getPieceScore(hexContent.split("")[1]));
-                            }
-                            //defend own pieces if possible
-                            if (hexContent2 != 'none') {
-                                score = score + (this.getPieceScore(hexContent2.split("")[1]));
-                            }
-                            //avoid capture if possibe
-                            //TODO
-                            
-                            //add piece specific scoring here
-                            
-                            //pawns
-                            //move early
-                            if (piece == 'P'){
-                                if (this.turnNumber < 100) {
-                                    var initialScore = 1;
-                                        } else {
-                                    var initialScore = 0;
-                                    }
-                                
-                            //head toward queening hexs
-                            var promoScore = 0;
-                            for (var z = 0; z < promoHexs.length; z++) {
-                                var hexPos = this.strToCordinates(promoHexs[z]);
+            if (currentPosition[0].length > 1) {
+                x = Number(currentPosition[0].replace("(", ""));
+                y = Number(currentPosition[1].replace(")", ""));
 
-                                var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
-                                var posScore = Math.ceil(1 / distanceToHex);
-                                if (posScore > promoScore) {
-                                    promoScore = posScore;
-                                }
+                possiblePositions = this.getAvailableMoves(x, y, piece, colour);
+                possiblePositionsIfColourDif = this.getAvailableMoves(x, y, piece, otherColour);
 
-                            }
-                            score = score + promoScore;                                
-                            }
+                for (var j = 0; j < possiblePositions.length; j++) {
+                    var score = initialScore;
+                    var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
+                    var hexContent2 = this.getHexContent(possiblePositionsIfColourDif[j][0], possiblePositionsIfColourDif[j][1]);
 
-                            var listRow = [piece, piecesList[i], possiblePositions[j], score];
-                            AllMoves.push(listRow);
-                            console.log(listRow);
-                        }
+                    //console.log(hexContent);
+
+                    //capture if possible
+                    if (hexContent != 'none') {
+                        score = score + 1 + (2 * (this.getPieceScore(hexContent.split("")[1])));
                     }
 
+                    //defend own pieces if possible
+                    if (hexContent2 != 'none') {
+                        //score = score + (this.getPieceScore(hexContent2.split("")[1]));
+                        score = score + 1;
+                    }
+                    
+                    //flock together
+                    //console.log('white hexs', this.whiteHexsOccupied);
+                    
+                    if (colour == 'w'){
+                        var ownedHexPos =  this.whiteHexsOccupied;   
+                    }
+                    if (colour == 'b'){
+                        var ownedHexPos =  this.blackHexsOccupied; 
+                    }
+                    
+                    if (ownedHexPos.length > 3){
+                    
+                    //head toward white owned hexs
+                    var ownedScore = 0;
+                        for (var z = 0; z < ownedHexPos.length; z++) {
+                            var hexPos = this.strToCordinates(ownedHexPos[z]);
+                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
+                            if (distanceToHex > 0){
+                            var newScore = Math.ceil(1 / distanceToHex);
+                            if (newScore > ownedScore) {
+                                ownedScore = newScore;
+                            }
+                            }
+
+                        }
+                        score = score + ownedScore;
+                    }
+                    
+                    
+                    
+
+                    //avoid capture if possibe
+                    //TODO
+
+                    //add piece specific scoring here
+
+                    //pawns
+                    //move early
+                    if (piece == 'P') {
+                        if (this.turnNumber < 50) {
+                            score = score + 1;
+                        }
+
+                        //head toward queening hexs
+                        var promoScore = 0;
+                        for (var z = 0; z < promoHexs.length; z++) {
+                            var hexPos = this.strToCordinates(promoHexs[z]);
+
+                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
+                            var posScore = Math.ceil(1 / distanceToHex);
+                            if (posScore > promoScore) {
+                                promoScore = posScore;
+                            }
+
+                        }
+                        score = score + promoScore;
+
+                    } ///end pawns
+
+                    //Knights
+                    //move early
+                    //console.log(piece);
+                    if (piece == 'N') {
+                        if (this.turnNumber < 50) {
+                            score = score + 2;
+                        }
+
+
+                    } ///end Knights
+
+
+                    //Bishops
+                    //move early
+                    //console.log(piece);
+                    if (piece == 'B') {
+                        if (this.turnNumber < 50) {
+                            score = score + 2;
+                        }
+
+
+                    } ///end Bishops
+
+                    //Rooks
+                    //move medium
+                    //console.log(piece);
+                    if (piece == 'R') {
+                        if (this.turnNumber > 100) {
+                            score = score + 2;
+                        }
+
+
+                    } ///end Rooks
+
+                    //Queen
+                    //move late
+                    //console.log(piece);
+                    if (piece == 'Q') {
+                        if (this.turnNumber > 150) {
+                            score = score + 3;
+                        }
+
+
+                    } ///end Queen
+
+
+                    //king capture              
+                    if (colour == 'w') {
+                        var kingPos = this.strToCordinates(this.blackKing);
+                    }
+                    if (colour == 'b') {
+                        var kingPos = this.strToCordinates(this.whiteKing);
+                    }
+                    var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
+                    var posScore = Math.ceil(1 / distanceToHex);
+                    score = score + posScore;
+
+                    if (this.turnNumber > 150) {
+                        if (colour == 'w') {
+                            var kingPos = this.strToCordinates(this.blackKing);
+                        }
+                        if (colour == 'b') {
+                            var kingPos = this.strToCordinates(this.whiteKing);
+                        }
+                        var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
+                        var posScore = Math.ceil(1 / distanceToHex);
+                        score = score + posScore;
+
+                    }
+
+
+
+                    var listRow = [piece, piecesList[i], possiblePositions[j], score];
+                    AllMoves.push(listRow);
                 }
-        
+            }
+
+        }
+
         return AllMoves;
     }
 
@@ -1387,7 +1574,7 @@ class PieceList {
         //TODO
         //AllMoves will contain list of [piece, currentPosition, possiblePosition, score] for every possible move
         var AllMoves = [];
-        
+
         for (var p = 0; p < this.pieceSymbolList.length; p++) {
             var pieceMoves = this.getMovesAndScore(this.pieceSymbolList[p], colour);
             for (var q = 0; q < pieceMoves.length; q++) {
@@ -1395,9 +1582,9 @@ class PieceList {
             }
         }
         return AllMoves;
-        }
-        
-        
+    }
+
+
 
 } ///////////////end of class//////////////////////////////////////////////
 
@@ -1527,11 +1714,11 @@ var info = document.getElementById('info');
 }*/
 
 function updateMessageBox(x, y) {
-    info.innerHTML = 'Side to move: ' + game.sideToMove + '<br />Position X: ' + x + '<br />Position Y: ' + y + '<br />Piece: ' + game.getHexContent(x, y);
+    info.innerHTML = 'Side to move: ' + game.sideToMove + '<br />Position X: ' + x + '<br />Position Y: ' + y + '<br />Piece: ' + game.getHexContent(x, y) + '<br />Turn #: ' + game.turnNumber;
 }
 
 function displayWinnerMessage() {
-    info.innerHTML = game.winner + ' Wins!';
+    info.innerHTML = game.winner + ' Wins!'+ '<br />Turn #: ' + game.turnNumber;
 }
 
 function selectPiece(p) {
@@ -1765,6 +1952,10 @@ function computerMoves() {
         //console.log(game.sideToMove)
         game.colourSelected = game.sideToMove;
         var allMovesAvailable = game.getAllMovesForTurn(game.sideToMove);
+        
+        //score dangerous moves
+        allMovesAvailable = game.isMoveDangerous(allMovesAvailable,game.sideToMove);
+            
         //console.log("All Moves 1st: ", allMovesAvailable[0])
 
         var sortedList = allMovesAvailable.sort(function (a, b) {
@@ -1783,7 +1974,7 @@ function computerMoves() {
         }
 
 
-        if (Math.random() > 0.2) {
+        if (Math.random() > 0.1) {
             moveToMake = filteredList[Math.floor(Math.random() * filteredList.length)];
         } else {
             moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
