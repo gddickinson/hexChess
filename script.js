@@ -209,7 +209,7 @@ class PieceList {
     }
 
     allPieces() {
-        var allList = [this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing];
+        var allList = [this.whitePawns, this.whiteKnights, this.whiteRooks, this.whiteBishops, this.whiteQueen, this.whiteKing, this.whiteDragon, this.blackPawns, this.blackKnights, this.blackRooks, this.blackBishops, this.blackQueen, this.blackKing, this.blackDragon];
         return allList;
     }
 
@@ -410,9 +410,9 @@ class PieceList {
 
     pawnPromoteTest(colour, x, y) {
         var searchStr = "(" + x + "," + y + ")";
-        if (colour == "w") {       
+        if (colour == "w") {
             var test = whitePawnPromoHexs + whitePawnPromoHexs2;
-            
+
         } else {
             var test = blackPawnPromoHexs + blackPawnPromoHexs2;
         }
@@ -1145,13 +1145,25 @@ class PieceList {
 
 
     jumpNeeded(x1, y1, x2, y2, piece) {
-        //if knight ignore jumps and return false
         var testPiece = piece.split("")[1];
+        var colour = this.getHexOwner(x1, y1);
+
+        if (testPiece == "P") {
+            if (colour == 'w' && this.getHexContent(x1, y1 - 2) != 'none' && Math.abs(y2 - y1) > 1) {
+                return true;
+            }
+            if (colour == 'b' && this.getHexContent(x1, y1 + 2) != 'none' && Math.abs(y2 - y1) > 1) {
+                return true;
+            }
+
+        }
+
+
+        //if knight ignore jumps and return false
+
 
         if (testPiece == "N") {
             return false;
-
-
         } else {
 
             var intermediates = this.getIntermediateHexs(x1, y1, x2, y2).split(";");
@@ -1165,6 +1177,7 @@ class PieceList {
 
             //console.log("intermediates" + intermediates);
 
+            //dragon not included
             var occupied = this.whitePawns + this.whiteKnights + this.whiteRooks + this.whiteBishops + this.whiteQueen + this.whiteKing + this.blackPawns + this.blackKnights + this.blackRooks + this.blackBishops + this.blackQueen + this.blackKing + offBoard;
 
             //console.log("occupied" + occupied);
@@ -1180,6 +1193,7 @@ class PieceList {
         }
         return false;
     }
+
 
 
     availableCurrentPieceMove(x, y) {
@@ -1372,11 +1386,11 @@ class PieceList {
                 var test2 = oppositionMoves[j][2];
 
                 if (test1[0] == test2[0] && test1[1] == test2[1]) {
-                    console.log('danger');
-                    console.log('before', posList[i][3]);
-                    posList[i][3] = posList[i][3] - (10 * this.getPieceScore(posList[i][0]));
+                    //console.log('danger');
+                    //console.log('before', posList[i][3]);
+                    posList[i][3] = posList[i][3] - (5 * this.getPieceScore(posList[i][0]));
                     //console.log((5 * this.getPieceScore(posList[i][0])));
-                    console.log('after', posList[i][3]);
+                    //console.log('after', posList[i][3]);
 
                 }
             }
@@ -1396,7 +1410,7 @@ class PieceList {
         var otherColour = "";
 
         if (colour == 'b') {
-            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)","(0,23)","(1,29)","(2,23)","(2,35)","(9,35)","(10,32)","(10,29)","(11,26)","(11,23)"];
+            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)", "(0,23)", "(1,29)", "(2,23)", "(2,35)", "(9,35)", "(10,32)", "(10,29)", "(11,26)", "(11,23)"];
             otherColour = 'w';
 
             if (piece == 'P') {
@@ -1422,7 +1436,7 @@ class PieceList {
             }
         }
         if (colour == 'w') {
-            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)","(2,5)","(1,11)","(0,17)","(9,5)","(10,8)","(10,11)","(11,14)","(11,17)"];
+            var promoHexs = ["(4,38)", "(5,38)", "(6,38)", "(7,38)", "(8,38)", "(2,5)", "(1,11)", "(0,17)", "(9,5)", "(10,8)", "(10,11)", "(11,14)", "(11,17)"];
             otherColour = 'b';
 
             if (piece == 'P') {
@@ -1471,7 +1485,7 @@ class PieceList {
 
                     //capture if possible
                     if (hexContent != 'none') {
-                        score = score + 1 + (2 * (this.getPieceScore(hexContent.split("")[1])));
+                        score = score + (2 * (this.getPieceScore(piece)));
                     }
 
                     //defend own pieces if possible
@@ -1517,6 +1531,9 @@ class PieceList {
                         if (this.turnNumber < 50) {
                             score = score + 1;
                         }
+                        if (this.turnNumber < 100) {
+                            score = score + 2;
+                        }
 
                         //head toward promo hexs
                         var promoScore = 0;
@@ -1547,10 +1564,12 @@ class PieceList {
 
 
                     //Bishops
-                    //move early
+                    //move 
                     //console.log(piece);
                     if (piece == 'B') {
                         if (this.turnNumber < 50) {
+                            score = score + 1;
+                        } else {
                             score = score + 2;
                         }
 
@@ -1578,19 +1597,19 @@ class PieceList {
 
 
                     } ///end Queen
-                    
-                    
+
+
                     //Dragon
                     //move medium
                     //console.log(piece);
                     if (piece == 'D') {
                         if (this.turnNumber > 50) {
-                            score = score + 1;
+                            score = score + 2;
                         }
 
 
                     } ///end Dragon
-                    
+
 
 
                     //king capture              
@@ -1601,7 +1620,7 @@ class PieceList {
                         var kingPos = this.strToCordinates(this.whiteKing);
                     }
                     var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
-                    var posScore = Math.ceil(1 / distanceToHex);
+                    var posScore = (2 * Math.ceil(1 / distanceToHex));
                     score = score + posScore;
 
                     if (this.turnNumber > 150) {
@@ -1612,8 +1631,8 @@ class PieceList {
                             var kingPos = this.strToCordinates(this.whiteKing);
                         }
                         var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
-                        
-                        var posScore = (Math.ceil(1 / distanceToHex)*5);
+
+                        var posScore = (Math.ceil(1 / distanceToHex) * 2);
                         score = score + posScore;
 
                     }
@@ -2028,14 +2047,16 @@ function computerMoves() {
         //score dangerous moves
         allMovesAvailable = game.isMoveDangerous(allMovesAvailable, game.sideToMove);
 
-        //console.log("All Moves 1st: ", allMovesAvailable[0])
+        //console.log("All Moves length ", allMovesAvailable.length)
 
         var sortedList = allMovesAvailable.sort(function (a, b) {
             return a[3] < b[3] ? 1 : -1;
         })
         //console.log("Sorted ", sortedList.length);
         var max = sortedList[0][3];
-
+        var min = sortedList[sortedList.length - 1][3];
+        console.log('max', max);
+        console.log('min', min);
 
         var filteredList = [];
 
@@ -2045,15 +2066,17 @@ function computerMoves() {
             }
         }
 
+        //console.log("filtered ", filteredList.length);
 
-        if (Math.random() > 0.1) {
+        //random off
+        if (true) {
             moveToMake = filteredList[Math.floor(Math.random() * filteredList.length)];
         } else {
             moveToMake = allMovesAvailable[Math.floor(Math.random() * allMovesAvailable.length)];
         }
 
 
-        console.log("Move Choosen: ", moveToMake);
+        //console.log("Move Choosen: ", moveToMake);
 
 
         //make move
