@@ -128,6 +128,7 @@ class Gameboard {
 //var param_avoidDanger_3 = 5;
 
 loadScript('http://127.0.0.1:8887/parameterFile.txt');
+loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
 //console.log(param_early);
 
 
@@ -438,6 +439,7 @@ class PieceList {
     updatePieceList(x, y, piece) {
         var oldStr = "(" + this.oldX + "," + this.oldY + ")";
         var replaceStr = "(" + x + "," + y + ")";
+
         //update whitepieces
         if (piece == 'wP') {
             this.whitePawns = this.whitePawns.replace(oldStr, replaceStr);
@@ -1037,6 +1039,84 @@ class PieceList {
         return listOfHexs;
     }
 
+
+
+    getPointTotal(colour) {
+        var totalPoints = 0;
+
+        for (var i = 0; i < this.pieceSymbolList.length; i++) {
+
+            var piece = this.pieceSymbolList[i];
+
+
+            if (colour == 'b') {
+
+                if (piece == 'P') {
+                    var piecesList = this.blackPawns.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'R') {
+                    var piecesList = this.blackRooks.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'N') {
+                    var piecesList = this.blackKnights.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'B') {
+                    var piecesList = this.blackBishops.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'Q') {
+                    var piecesList = this.blackQueen.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'K') {
+                    var piecesList = this.blackKing.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'D') {
+                    var piecesList = this.blackDragon.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+            }
+            if (colour == 'w') {
+
+                if (piece == 'P') {
+                    var piecesList = this.whitePawns.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'R') {
+                    var piecesList = this.whiteRooks.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'N') {
+                    var piecesList = this.whiteKnights.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'B') {
+                    var piecesList = this.whiteBishops.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'Q') {
+                    var piecesList = this.whiteQueen.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'K') {
+                    var piecesList = this.whiteKing.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+                if (piece == 'D') {
+                    var piecesList = this.whiteDragon.split(",");
+                    totalPoints = totalPoints + ((piecesList.length - 1) * this.getPieceScore(piece));
+                }
+            }
+
+        }
+
+        return totalPoints;
+    }
+
     jumpNeeded(x1, y1, x2, y2, piece) {
         var testPiece = piece.split("")[1];
         var colour = this.getHexOwner(x1, y1);
@@ -1233,15 +1313,34 @@ class PieceList {
                 var test1 = posList[i][2];
                 var test2 = oppositionMoves[j][2];
 
+                //console.log(test1);
+                //console.log(test2);
+
                 if (test1[0] == test2[0] && test1[1] == test2[1]) {
 
                     if (this.turnNumber < param_early) {
-                        posList[i][3] = posList[i][3] - (param_avoidDanger_1 * this.getPieceScore(posList[i][0]));
+                        if (colour = 'w') {
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_1 * this.getPieceScore(posList[i][0]));
+                        } else {
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_1 * this.getPieceScore(posList[i][0]));
+                        }
+
                     }
+
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                        posList[i][3] = posList[i][3] - (param_avoidDanger_2 * this.getPieceScore(posList[i][0]));
+                        if (colour = 'w') {
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_2 * this.getPieceScore(posList[i][0]));
+                        } else {
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_2 * this.getPieceScore(posList[i][0]));
+                        }
+
                     } else {
-                        posList[i][3] = posList[i][3] - (param_avoidDanger_3 * this.getPieceScore(posList[i][0]));
+                        if (colour = 'w') {
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_3 * this.getPieceScore(posList[i][0]));
+                        } else {
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_3 * this.getPieceScore(posList[i][0]));
+                        }
+
                     }
                 }
             }
@@ -1336,31 +1435,62 @@ class PieceList {
                     //capture if possible
                     if (this.turnNumber < param_early) {
                         if (hexContent != 'none') {
-                            score = score + (param_capture_1 * (this.getPieceScore(piece)));
+                            if (colour == 'w') {
+                                score = score + (param_capture_1 * (this.getPieceScore(piece)));
+                            } else {
+                                score = score + (param_capture_1 * (this.getPieceScore(piece)));
+                            }
                         }
                     }
+
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
                         if (hexContent != 'none') {
-                            score = score + (param_capture_2 * (this.getPieceScore(piece)));
+                            if (colour == 'w') {
+                                score = score + (param_capture_2 * (this.getPieceScore(piece)));
+                            } else {
+                                score = score + (param_capture_2 * (this.getPieceScore(piece)));
+                            }
                         }
                     } else {
-                        score = score + (param_capture_3 * (this.getPieceScore(piece)));
+                        if (hexContent != 'none') {
+                            if (colour == 'w') {
+                                score = score + (param_capture_3 * (this.getPieceScore(piece)));
+                            } else {
+                                score = score + (param_capture_3 * (this.getPieceScore(piece)));
+                            }
+
+                        }
                     }
 
                     //defend own pieces if possible
                     if (this.turnNumber < param_early) {
                         if (hexContent2 != 'none') {
-                            score = score + (param_defend_1 * (this.getPieceScore(hexContent2.split("")[1])));
+                            if (colour == "w") {
+                                score = score + (param_defend_1 * (this.getPieceScore(hexContent2.split("")[1])));
+                            } else {
+                                score = score + (param_defend_1 * (this.getPieceScore(hexContent2.split("")[1])));
+                            }
+
                         }
                     }
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
                         if (hexContent2 != 'none') {
-                            score = score + (param_defend_2 * (this.getPieceScore(hexContent2.split("")[1])));
+                            if (colour == "w") {
+                                score = score + (param_defend_2 * (this.getPieceScore(hexContent2.split("")[1])));
+                            } else {
+                                score = score + (param_defend_2 * (this.getPieceScore(hexContent2.split("")[1])));
+                            }
+
                         }
                     }
                     if (this.turnNumber > param_late) {
                         if (hexContent2 != 'none') {
-                            score = score + (param_defend_3 * (this.getPieceScore(hexContent2.split("")[1])));
+                            if (colour == "w") {
+                                score = score + (param_defend_3 * (this.getPieceScore(hexContent2.split("")[1])));
+                            } else {
+                                score = score + (param_defend_3 * (this.getPieceScore(hexContent2.split("")[1])));
+                            }
+
                         }
                     }
 
@@ -1387,13 +1517,30 @@ class PieceList {
                         }
 
                         if (this.turnNumber < param_early) {
-                            score = score + (param_flock_1 * ownedScore);
+                            if (colour == 'w') {
+                                score = score + (param_flock_1 * ownedScore);
+                            } else {
+                                score = score + (param_flock_1 * ownedScore);
+                            }
+
 
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (param_flock_2 * ownedScore);
+                            if (colour == 'w') {
+                                score = score + (param_flock_2 * ownedScore);
+                            } else {
+                                score = score + (param_flock_2 * ownedScore);
+                            }
+
+
                         } else {
-                            score = score + (param_flock_3 * ownedScore);
+                            if (colour == 'w') {
+                                score = score + (param_flock_3 * ownedScore);
+                            } else {
+                                score = score + (param_flock_3 * ownedScore);
+                            }
+
+
                         }
                     }
 
@@ -1414,15 +1561,34 @@ class PieceList {
                         }
 
                         if (this.turnNumber < param_early) {
-                            score = score + (pawn_1);
-                            score = score + (pawnPromo_1 * promoScore);
+                            if (colour == 'w') {
+                                score = score + (pawn_1);
+                                score = score + (pawnPromo_1 * promoScore);
+                            } else {
+                                score = score + (pawn_1);
+                                score = score + (pawnPromo_1 * promoScore);
+                            }
+
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (pawn_2);
-                            score = score + (pawnPromo_2 * promoScore);
+                            if (colour == 'w') {
+                                score = score + (pawn_2);
+                                score = score + (pawnPromo_2 * promoScore);
+                            } else {
+                                score = score + (pawn_2);
+                                score = score + (pawnPromo_2 * promoScore);
+                            }
+
                         } else {
-                            score = score + (pawn_3);
-                            score = score + (pawnPromo_3 * promoScore);
+                            if (colour == 'w') {
+                                score = score + (pawn_3);
+                                score = score + (pawnPromo_3 * promoScore);
+                            } else {
+                                score = score + (pawn_3);
+                                score = score + (pawnPromo_3 * promoScore);
+                            }
+
                         }
 
                     } ///end pawns
@@ -1430,72 +1596,163 @@ class PieceList {
                     //Knights
                     if (piece == 'N') {
                         if (this.turnNumber < param_early) {
-                            score = score + (knight_1);
+                            if (colour == 'w') {
+                                score = score + (knight_1);
+                            } else {
+                                score = score + (knight_1);
+                            }
+
+
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (knight_2);
+                            if (colour == 'w') {
+                                score = score + (knight_2);
+                            } else {
+                                score = score + (knight_2);
+                            }
+
+
                         } else {
-                            score = score + (knight_3);
+                            if (colour == 'w') {
+                                score = score + (knight_3);
+                            } else {
+                                score = score + (knight_3);
+                            }
+
+
                         }
                     } ///end Knights
 
                     //Bishops
                     if (piece == 'B') {
                         if (this.turnNumber < param_early) {
-                            score = score + (bishop_1);
+                            if (colour == 'w') {
+                                score = score + (bishop_1);
+                            } else {
+                                score = score + (bishop_1);
+                            }
+
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (bishop_2);
+                            if (colour == 'w') {
+                                score = score + (bishop_2);
+                            } else {
+                                score = score + (bishop_2);
+                            }
+
                         } else {
-                            score = score + (bishop_3);
+                            if (colour == 'w') {
+                                score = score + (bishop_3);
+                            } else {
+                                score = score + (bishop_3);
+                            }
+
                         }
                     } ///end Bishops
 
                     //Rooks
                     if (piece == 'R') {
                         if (this.turnNumber < param_early) {
-                            score = score + (rook_1);
+                            if (colour == 'w') {
+                                score = score + (rook_1);
+                            } else {
+                                score = score + (rook_1);
+                            }
+
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (rook_2);
+                            if (colour == 'w') {
+                                score = score + (rook_2);
+                            } else {
+                                score = score + (rook_2);
+                            }
+
                         } else {
-                            score = score + (rook_3);
+                            if (colour == 'w') {
+                                score = score + (rook_3);
+                            } else {
+                                score = score + (rook_3);
+                            }
+
                         }
                     } ///end Rooks
 
                     //Queen
                     if (piece == 'Q') {
                         if (this.turnNumber < param_early) {
-                            score = score + (queen_1);
+                            if (colour == 'w') {
+                                score = score + (queen_1);
+                            } else {
+                                score = score + (queen_1);
+                            }
+
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (queen_2);
+                            if (colour == 'w') {
+                                score = score + (queen_2);
+                            } else {
+                                score = score + (queen_2);
+                            }
                         } else {
-                            score = score + (queen_3);
+                            if (colour == 'w') {
+                                score = score + (queen_3);
+                            } else {
+                                score = score + (queen_3);
+                            }
                         }
                     } ///end Queen
 
                     //King
                     if (piece == 'K') {
                         if (this.turnNumber < param_early) {
-                            score = score + (king_1);
+                            if (colour == 'w') {
+                                score = score + (king_1);
+                            } else {
+                                score = score + (king_1);
+                            }
+
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (king_2);
+                            if (colour == 'w') {
+                                score = score + (king_2);
+                            } else {
+                                score = score + (king_2);
+                            }
+
                         } else {
-                            score = score + (king_3);
+                            if (colour == 'w') {
+                                score = score + (king_3);
+                            } else {
+                                score = score + (king_3);
+                            }
+
                         }
                     } ///end King
 
                     //Dragon
                     if (piece == 'D') {
                         if (this.turnNumber < param_early) {
-                            score = score + (dragon_1);
+                            if (colour == 'w') {
+                                score = score + (dragon_1);
+                            } else {
+                                score = score + (dragon_1);
+                            }
+
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            score = score + (dragon_2);
+                            if (colour == 'w') {
+                                score = score + (dragon_2);
+                            } else {
+                                score = score + (dragon_2);
+                            }
+
                         } else {
-                            score = score + (dragon_3);
+                            if (colour == 'w') {
+                                score = score + (dragon_3);
+                            } else {
+                                score = score + (dragon_3);
+                            }
+
                         }
                     } ///end Dragon
 
@@ -1514,12 +1771,28 @@ class PieceList {
                     var posScore = (2 * Math.ceil(1 / distanceToHex));
 
                     if (this.turnNumber < param_early) {
-                        score = score + (kingCapture_1 * posScore);
+                        if (colour == 'w') {
+                            score = score + (kingCapture_1 * posScore);
+                        } else {
+                            score = score + (kingCapture_1 * posScore);
+                        }
+
                     }
+
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                        score = score + (kingCapture_2 * posScore);
+                        if (colour == 'w') {
+                            score = score + (kingCapture_2 * posScore);
+                        } else {
+                            score = score + (kingCapture_2 * posScore);
+                        }
+
                     } else {
-                        score = score + (kingCapture_3 * posScore);
+                        if (colour == 'w') {
+                            score = score + (kingCapture_3 * posScore);
+                        } else {
+                            score = score + (kingCapture_3 * posScore);
+                        }
+
                     }
 
 
@@ -1535,12 +1808,27 @@ class PieceList {
                     var posScore = (2 * Math.ceil(1 / distanceToHex));
 
                     if (this.turnNumber < param_early) {
-                        score = score + (kingDefend_1 * posScore);
+                        if (colour == 'w') {
+                            score = score + (kingDefend_1 * posScore);
+                        } else {
+                            score = score + (kingDefend_1 * posScore);
+                        }
+
                     }
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                        score = score + (kingDefend_2 * posScore);
+                        if (colour == 'w') {
+                            score = score + (kingDefend_2 * posScore);
+                        } else {
+                            score = score + (kingDefend_2 * posScore);
+                        }
+
                     } else {
-                        score = score + (kingDefend_3 * posScore);
+                        if (colour == 'w') {
+                            score = score + (kingDefend_3 * posScore);
+                        } else {
+                            score = score + (kingDefend_3 * posScore);
+                        }
+
                     }
 
 
@@ -1765,7 +2053,153 @@ class PieceList {
         //        
     }
 
+    mutateParam_b() {
+        var rndChoice = Math.floor(Math.random() * Math.floor(43));
 
+        //console.log("choice :", rndChoice);
+
+        var rndValue = Math.round(Math.random() * 20, 1);
+        if (Math.random() > 0.5) {
+            rndValue = rndValue * -1;
+        }
+
+
+        //console.log(rndValue);
+
+        if (rndChoice == 0) {
+            param_early_b = param_early_b + rndValue;
+        }
+        if (rndChoice == 1) {
+            param_late_b = param_late_b + rndValue;
+        }
+        if (rndChoice == 2) {
+            param_capture_1_b = param_capture_1_b + rndValue;
+        }
+        if (rndChoice == 3) {
+            param_capture_2_b = param_capture_2_b + rndValue;
+        }
+        if (rndChoice == 4) {
+            param_capture_3_b = param_capture_3_b + rndValue;
+        }
+        if (rndChoice == 5) {
+            param_defend_1_b = param_defend_1_b + rndValue;
+        }
+        if (rndChoice == 6) {
+            param_defend_2_b = param_defend_2_b + rndValue;
+        }
+        if (rndChoice == 7) {
+            param_defend_3_b = param_defend_3_b + rndValue;
+        }
+        if (rndChoice == 8) {
+            param_flock_1_b = param_flock_1_b + rndValue;
+        }
+        if (rndChoice == 9) {
+            param_flock_2_b = param_flock_2_b + rndValue;
+        }
+        if (rndChoice == 10) {
+            param_flock_3_b = param_flock_3_b + rndValue;
+        }
+        if (rndChoice == 11) {
+            pawn_1_b = pawn_1_b + rndValue;
+        }
+        if (rndChoice == 12) {
+            pawn_2_b = pawn_2_b + rndValue;
+        }
+        if (rndChoice == 13) {
+            pawn_3_b = pawn_3_b + rndValue;
+        }
+        if (rndChoice == 14) {
+            pawnPromo_1_b = pawnPromo_1_b + rndValue;
+        }
+        if (rndChoice == 15) {
+            pawnPromo_2_b = pawnPromo_2_b + rndValue;
+        }
+        if (rndChoice == 16) {
+            pawnPromo_3_b = pawnPromo_3_b + rndValue;
+        }
+        if (rndChoice == 17) {
+            knight_1_b = knight_1_b + rndValue;
+        }
+        if (rndChoice == 18) {
+            knight_2_b = knight_2_b + rndValue;
+        }
+        if (rndChoice == 19) {
+            knight_3_b = knight_3_b + rndValue;
+        }
+        if (rndChoice == 20) {
+            bishop_1_b = bishop_1_b + rndValue;
+        }
+        if (rndChoice == 21) {
+            bishop_2_b = bishop_2_b + rndValue;
+        }
+        if (rndChoice == 22) {
+            bishop_3_b = bishop_3_b + rndValue;
+        }
+        if (rndChoice == 23) {
+            rook_1_b = rook_1_b + rndValue;
+        }
+        if (rndChoice == 24) {
+            rook_2_b = rook_2_b + rndValue;
+        }
+        if (rndChoice == 25) {
+            rook_3_b = rook_3_b + rndValue;
+        }
+        if (rndChoice == 26) {
+            queen_1_b = queen_1_b + rndValue;
+        }
+        if (rndChoice == 27) {
+            queen_2_b = queen_2_b + rndValue;
+        }
+        if (rndChoice == 28) {
+            queen_3_b = queen_3_b + rndValue;
+        }
+        if (rndChoice == 29) {
+            dragon_1_b = dragon_1_b + rndValue;
+        }
+        if (rndChoice == 30) {
+            dragon_2_b = dragon_2_b + rndValue;
+        }
+        if (rndChoice == 31) {
+            dragon_3_b = dragon_3_b + rndValue;
+        }
+        if (rndChoice == 32) {
+            king_1_b = king_1_b + rndValue;
+        }
+        if (rndChoice == 33) {
+            king_2_b = king_2_b + rndValue;
+        }
+        if (rndChoice == 34) {
+            king_3_b = king_3_b + rndValue;
+        }
+        if (rndChoice == 35) {
+            kingCapture_1_b = kingCapture_1_b + rndValue;
+        }
+        if (rndChoice == 36) {
+            kingCapture_2_b = kingCapture_2_b + rndValue;
+        }
+        if (rndChoice == 37) {
+            kingCapture_3_b = kingCapture_3_b + rndValue;
+        }
+        if (rndChoice == 38) {
+            kingDefend_1_b = kingDefend_1_b + rndValue;
+        }
+        if (rndChoice == 39) {
+            kingDefend_2_b = kingDefend_2_b + rndValue;
+        }
+        if (rndChoice == 40) {
+            kingDefend_3_b = kingDefend_3_b + rndValue;
+        }
+        if (rndChoice == 41) {
+            param_avoidDanger_1_b = param_avoidDanger_1_b + rndValue;
+        }
+        if (rndChoice == 42) {
+            param_avoidDanger_2_b = param_avoidDanger_2_b + rndValue;
+        }
+        if (rndChoice == 43) {
+            param_avoidDanger_3_b = param_avoidDanger_3_b + rndValue;
+        }
+
+    }
 
 
 
@@ -1780,7 +2214,7 @@ var whiteRooks = "(4,38);(8,38),(5,38)";
 var whiteBishops = "(6,36);(6,37);(7,38)";
 var whiteQueen = "(5,37)";
 var whiteKing = "(6,38)"
-var whiteDragon = "(10,28);(2,28)";
+var whiteDragon = "(9,35);(2,35)";
 
 
 //black in play
@@ -1790,7 +2224,7 @@ var blackRooks = "(4,2);(8,2),(7,2)";
 var blackBishops = "(5,2);(5,3);(6,4)";
 var blackQueen = "(6,3)";
 var blackKing = "(6,2)";
-var blackDragon = "(2,12);(10,12)";
+var blackDragon = "(2,5);(9,5)";
 
 
 //pawn promotion hexs
@@ -1887,25 +2321,39 @@ function updateMessageBox(x, y) {
 }
 
 function displayWinnerMessage() {
+    if (game.winner == 'stalemate'){
+        if (game.getPointTotal('w') > game.getPointTotal('b')){
+            game.winner = 'White';
+        }
+        else{
+            game.winner = 'Black';
+        }
+        
+    }
+    
     info.innerHTML = game.winner + ' Wins!' + '<br />Turn #: ' + game.turnNumber;
+    console.log(game.getPointTotal('b'));
+    
+    
+
     //save parameters
     //console.log("Turn #",game.turnNumber);
     //console.log("Previous ",previousScore);
-    if (game.winner != previousWinner) {
-        previousScore = game.turnNumber;
-        saveFile();
-        sleep(500);
-        //console.log("Save File!")
-        
-    }
+
+    previousScore = game.turnNumber;
+    saveFile(game.winner);
+    sleep(500);
+    //console.log("Save File!")
+
 
     //console.log('restart now')
     loadScript('http://127.0.0.1:8887/parameterFile.txt');
+    loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
     resetGame();
     game.gameOver = false;
-    
+
     document.getElementById('btnMutate').click();
-    
+
 }
 
 function selectPiece(p) {
@@ -2117,7 +2565,7 @@ function showBoard() {
 
 function computerMoves() {
     if (game.gameOver == false) {
-        
+
         game.colourSelected = game.sideToMove;
         var allMovesAvailable = game.getAllMovesForTurn(game.sideToMove);
         //score dangerous moves
@@ -2160,13 +2608,13 @@ function computerMoves() {
         game.movePiece(newX, newY, pieceToMove);
 
         //test if game won - if so exit and display winner
-        if (game.isGameWon() == true || game.turnNumber > 500) {
-            if (game.turnNumber >= 500){
+        if (game.isGameWon() == true || game.turnNumber > 301) {
+            if (game.turnNumber >= 300) {
                 game.winner = 'stalemate';
             }
             game.gameOver = true;
             displayWinnerMessage();
-            
+
             //TODO - update game record with final move?
             return;
         }
@@ -2200,9 +2648,10 @@ function setPlayerNumber() {
 function mutate() {
     //TODO
     game.mutateParam();
+    game.mutateParam_b();
 
-        game.computerPlayer = 'Auto';
-        document.getElementById('btnNumberPlayers').innerHTML = "Auto Play Off";
+    game.computerPlayer = 'Auto';
+    document.getElementById('btnNumberPlayers').innerHTML = "Auto Play Off";
 
     return;
 }
@@ -2215,61 +2664,228 @@ function mutate() {
 addEventListener('click', selectPiece, false);
 
 
-function saveFile() {
-    var saveStr = 'var previousWinner = ' + "'" + game.winner +"'" + ';' +
-        'var previousScore = ' + previousScore + ';' +
-        'var param_early = ' + param_early + ';' +
-        'var param_late = ' + param_late + ';' +
-        'var param_capture_1 = ' + param_capture_1 + ';' +
-        'var param_capture_2 = ' + param_capture_2 + ';' +
-        'var param_capture_3 = ' + param_capture_3 + ';' +
-        'var param_defend_1 = ' + param_defend_1 + ';' +
-        'var param_defend_2 = ' + param_defend_2 + ';' +
-        'var param_defend_3 = ' + param_defend_3 + ';' +
-        'var param_flock_1 = ' + param_flock_1 + ';' +
-        'var param_flock_2 = ' + param_flock_2 + ';' +
-        'var param_flock_3 = ' + param_flock_3 + ';' +
-        'var pawn_1 = ' + pawn_1 + ';' +
-        'var pawn_2 = ' + pawn_2 + ';' +
-        'var pawn_3 = ' + pawn_3 + ';' +
-        'var pawnPromo_1 = ' + pawnPromo_1 + ';' +
-        'var pawnPromo_2 = ' + pawnPromo_2 + ';' +
-        'var pawnPromo_3 = ' + pawnPromo_3 + ';' +
-        'var knight_1 = ' + knight_1 + ';' +
-        'var knight_2 = ' + knight_2 + ';' +
-        'var knight_3 = ' + knight_3 + ';' +
-        'var bishop_1 = ' + bishop_1 + ';' +
-        'var bishop_2 = ' + bishop_2 + ';' +
-        'var bishop_3 = ' + bishop_3 + ';' +
-        'var rook_1 = ' + rook_1 + ';' +
-        'var rook_2 = ' + rook_2 + ';' +
-        'var rook_3 = ' + rook_3 + ';' +
-        'var queen_1 = ' + queen_1 + ';' +
-        'var queen_2 = ' + queen_2 + ';' +
-        'var queen_3 = ' + queen_3 + ';' +
-        'var dragon_1 = ' + dragon_1 + ';' +
-        'var dragon_2 = ' + dragon_2 + ';' +
-        'var dragon_3 = ' + dragon_3 + ';' +
-        'var king_1 = ' + king_1 + ';' +
-        'var king_2 = ' + king_2 + ';' +
-        'var king_3 = ' + king_3 + ';' +
-        'var kingCapture_1 = ' + kingCapture_1 + ';' +
-        'var kingCapture_2 = ' + kingCapture_2 + ';' +
-        'var kingCapture_3 = ' + kingCapture_3 + ';' +
-        'var kingDefend_1 = ' + kingDefend_1 + ';' +
-        'var kingDefend_2 = ' + kingDefend_2 + ';' +
-        'var kingDefend_3 = ' + kingDefend_3 + ';' +
-        'var param_avoidDanger_1 = ' + param_avoidDanger_1 + ';' +
-        'var param_avoidDanger_2 = ' + param_avoidDanger_2 + ';' +
-        'var param_avoidDanger_3 = ' + param_avoidDanger_3 + ';'
+function saveFile(winner) {
+    console.log("Winner: ", winner);
+    console.log("Turns:", game.turnNumber);
 
-    download('parameterFile.txt', saveStr);
+    if (winner == 'White' && game.turnNumber < previousScore) {
+
+        var saveStr = 'var previousWinner = ' + "'" + game.winner + "'" + ';' +
+            'var previousScore = ' + previousScore + ';' +
+            'var param_early = ' + param_early + ';' +
+            'var param_late = ' + param_late + ';' +
+            'var param_capture_1 = ' + param_capture_1 + ';' +
+            'var param_capture_2 = ' + param_capture_2 + ';' +
+            'var param_capture_3 = ' + param_capture_3 + ';' +
+            'var param_defend_1 = ' + param_defend_1 + ';' +
+            'var param_defend_2 = ' + param_defend_2 + ';' +
+            'var param_defend_3 = ' + param_defend_3 + ';' +
+            'var param_flock_1 = ' + param_flock_1 + ';' +
+            'var param_flock_2 = ' + param_flock_2 + ';' +
+            'var param_flock_3 = ' + param_flock_3 + ';' +
+            'var pawn_1 = ' + pawn_1 + ';' +
+            'var pawn_2 = ' + pawn_2 + ';' +
+            'var pawn_3 = ' + pawn_3 + ';' +
+            'var pawnPromo_1 = ' + pawnPromo_1 + ';' +
+            'var pawnPromo_2 = ' + pawnPromo_2 + ';' +
+            'var pawnPromo_3 = ' + pawnPromo_3 + ';' +
+            'var knight_1 = ' + knight_1 + ';' +
+            'var knight_2 = ' + knight_2 + ';' +
+            'var knight_3 = ' + knight_3 + ';' +
+            'var bishop_1 = ' + bishop_1 + ';' +
+            'var bishop_2 = ' + bishop_2 + ';' +
+            'var bishop_3 = ' + bishop_3 + ';' +
+            'var rook_1 = ' + rook_1 + ';' +
+            'var rook_2 = ' + rook_2 + ';' +
+            'var rook_3 = ' + rook_3 + ';' +
+            'var queen_1 = ' + queen_1 + ';' +
+            'var queen_2 = ' + queen_2 + ';' +
+            'var queen_3 = ' + queen_3 + ';' +
+            'var dragon_1 = ' + dragon_1 + ';' +
+            'var dragon_2 = ' + dragon_2 + ';' +
+            'var dragon_3 = ' + dragon_3 + ';' +
+            'var king_1 = ' + king_1 + ';' +
+            'var king_2 = ' + king_2 + ';' +
+            'var king_3 = ' + king_3 + ';' +
+            'var kingCapture_1 = ' + kingCapture_1 + ';' +
+            'var kingCapture_2 = ' + kingCapture_2 + ';' +
+            'var kingCapture_3 = ' + kingCapture_3 + ';' +
+            'var kingDefend_1 = ' + kingDefend_1 + ';' +
+            'var kingDefend_2 = ' + kingDefend_2 + ';' +
+            'var kingDefend_3 = ' + kingDefend_3 + ';' +
+            'var param_avoidDanger_1 = ' + param_avoidDanger_1 + ';' +
+            'var param_avoidDanger_2 = ' + param_avoidDanger_2 + ';' +
+            'var param_avoidDanger_3 = ' + param_avoidDanger_3 + ';'
+
+        download('parameterFile.txt', saveStr);
+
+        loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
+
+        var saveStr = 'var previousWinner_b = ' + "'" + game.winner + "'" + ';' +
+            'var previousScore_b = ' + 1000 + ';' +
+            'var param_early_b = ' + param_early_b + ';' +
+            'var param_late_b = ' + param_late_b + ';' +
+            'var param_capture_1_b = ' + param_capture_1_b + ';' +
+            'var param_capture_2_b = ' + param_capture_2_b + ';' +
+            'var param_capture_3_b = ' + param_capture_3_b + ';' +
+            'var param_defend_1_b = ' + param_defend_1_b + ';' +
+            'var param_defend_2_b = ' + param_defend_2_b + ';' +
+            'var param_defend_3_b = ' + param_defend_3_b + ';' +
+            'var param_flock_1_b = ' + param_flock_1_b + ';' +
+            'var param_flock_2_b = ' + param_flock_2_b + ';' +
+            'var param_flock_3_b = ' + param_flock_3_b + ';' +
+            'var pawn_1_b = ' + pawn_1_b + ';' +
+            'var pawn_2_b = ' + pawn_2_b + ';' +
+            'var pawn_3_b = ' + pawn_3_b + ';' +
+            'var pawnPromo_1_b = ' + pawnPromo_1_b + ';' +
+            'var pawnPromo_2_b = ' + pawnPromo_2_b + ';' +
+            'var pawnPromo_3_b = ' + pawnPromo_3_b + ';' +
+            'var knight_1_b = ' + knight_1_b + ';' +
+            'var knight_2_b = ' + knight_2_b + ';' +
+            'var knight_3_b = ' + knight_3_b + ';' +
+            'var bishop_1_b = ' + bishop_1_b + ';' +
+            'var bishop_2_b = ' + bishop_2_b + ';' +
+            'var bishop_3_b = ' + bishop_3_b + ';' +
+            'var rook_1_b = ' + rook_1_b + ';' +
+            'var rook_2_b = ' + rook_2_b + ';' +
+            'var rook_3_b = ' + rook_3_b + ';' +
+            'var queen_1_b = ' + queen_1_b + ';' +
+            'var queen_2_b = ' + queen_2_b + ';' +
+            'var queen_3_b = ' + queen_3_b + ';' +
+            'var dragon_1_b = ' + dragon_1_b + ';' +
+            'var dragon_2_b = ' + dragon_2_b + ';' +
+            'var dragon_3_b = ' + dragon_3_b + ';' +
+            'var king_1_b = ' + king_1_b + ';' +
+            'var king_2_b = ' + king_2_b + ';' +
+            'var king_3_b = ' + king_3_b + ';' +
+            'var kingCapture_1_b = ' + kingCapture_1_b + ';' +
+            'var kingCapture_2_b = ' + kingCapture_2_b + ';' +
+            'var kingCapture_3_b = ' + kingCapture_3_b + ';' +
+            'var kingDefend_1_b = ' + kingDefend_1_b + ';' +
+            'var kingDefend_2_b = ' + kingDefend_2_b + ';' +
+            'var kingDefend_3_b = ' + kingDefend_3_b + ';' +
+            'var param_avoidDanger_1_b = ' + param_avoidDanger_1_b + ';' +
+            'var param_avoidDanger_2_b = ' + param_avoidDanger_2_b + ';' +
+            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';'
+
+        download('parameterFile_b.txt', saveStr);
+
+
+    }
+
+    if (winner == 'Black' && game.turnNumber < previousScore_b) {
+
+        var saveStr = 'var previousWinner_b = ' + "'" + game.winner + "'" + ';' +
+            'var previousScore_b = ' + previousScore_b + ';' +
+            'var param_early_b = ' + param_early_b + ';' +
+            'var param_late_b = ' + param_late_b + ';' +
+            'var param_capture_1_b = ' + param_capture_1_b + ';' +
+            'var param_capture_2_b = ' + param_capture_2_b + ';' +
+            'var param_capture_3_b = ' + param_capture_3_b + ';' +
+            'var param_defend_1_b = ' + param_defend_1_b + ';' +
+            'var param_defend_2_b = ' + param_defend_2_b + ';' +
+            'var param_defend_3_b = ' + param_defend_3_b + ';' +
+            'var param_flock_1_b = ' + param_flock_1_b + ';' +
+            'var param_flock_2_b = ' + param_flock_2_b + ';' +
+            'var param_flock_3_b = ' + param_flock_3_b + ';' +
+            'var pawn_1_b = ' + pawn_1_b + ';' +
+            'var pawn_2_b = ' + pawn_2_b + ';' +
+            'var pawn_3_b = ' + pawn_3_b + ';' +
+            'var pawnPromo_1_b = ' + pawnPromo_1_b + ';' +
+            'var pawnPromo_2_b = ' + pawnPromo_2_b + ';' +
+            'var pawnPromo_3_b = ' + pawnPromo_3_b + ';' +
+            'var knight_1_b = ' + knight_1_b + ';' +
+            'var knight_2_b = ' + knight_2_b + ';' +
+            'var knight_3_b = ' + knight_3_b + ';' +
+            'var bishop_1_b = ' + bishop_1_b + ';' +
+            'var bishop_2_b = ' + bishop_2_b + ';' +
+            'var bishop_3_b = ' + bishop_3_b + ';' +
+            'var rook_1_b = ' + rook_1_b + ';' +
+            'var rook_2_b = ' + rook_2_b + ';' +
+            'var rook_3_b = ' + rook_3_b + ';' +
+            'var queen_1_b = ' + queen_1_b + ';' +
+            'var queen_2_b = ' + queen_2_b + ';' +
+            'var queen_3_b = ' + queen_3_b + ';' +
+            'var dragon_1_b = ' + dragon_1_b + ';' +
+            'var dragon_2_b = ' + dragon_2_b + ';' +
+            'var dragon_3_b = ' + dragon_3_b + ';' +
+            'var king_1_b = ' + king_1_b + ';' +
+            'var king_2_b = ' + king_2_b + ';' +
+            'var king_3_b = ' + king_3_b + ';' +
+            'var kingCapture_1_b = ' + kingCapture_1_b + ';' +
+            'var kingCapture_2_b = ' + kingCapture_2_b + ';' +
+            'var kingCapture_3_b = ' + kingCapture_3_b + ';' +
+            'var kingDefend_1_b = ' + kingDefend_1_b + ';' +
+            'var kingDefend_2_b = ' + kingDefend_2_b + ';' +
+            'var kingDefend_3_b = ' + kingDefend_3_b + ';' +
+            'var param_avoidDanger_1_b = ' + param_avoidDanger_1_b + ';' +
+            'var param_avoidDanger_2_b = ' + param_avoidDanger_2_b + ';' +
+            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';'
+
+        download('parameterFile_b.txt', saveStr);
+
+        loadScript('http://127.0.0.1:8887/parameterFile.txt');
+
+        var saveStr = 'var previousWinner = ' + "'" + game.winner + "'" + ';' +
+            'var previousScore = ' + 1000 + ';' +
+            'var param_early = ' + (param_early + (0.1 * param_early_b)) + ';' +
+            'var param_late = ' + (param_late + (0.1 * param_late_b)) + ';' +
+            'var param_capture_1 = ' + (param_capture_1 + (0.1 * param_capture_1_b)) + ';' +
+            'var param_capture_2 = ' + (param_capture_2 + (0.1 * param_capture_2_b)) + ';' +
+            'var param_capture_3 = ' + (param_capture_3 + (0.1 * param_capture_3_b)) + ';' +
+            'var param_defend_1 = ' + (param_defend_1 + (0.1 * param_defend_1_b)) + ';' +
+            'var param_defend_2 = ' + (param_defend_2 + (0.1 * param_defend_2_b)) + ';' +
+            'var param_defend_3 = ' + (param_defend_3 + (0.1 * param_defend_3_b)) + ';' +
+            'var param_flock_1 = ' + (param_flock_1 + (0.1 * param_flock_1_b)) + ';' +
+            'var param_flock_2 = ' + (param_flock_2 + (0.1 * param_flock_2_b)) + ';' +
+            'var param_flock_3 = ' + (param_flock_3 + (0.1 * param_flock_3_b)) + ';' +
+            'var pawn_1 = ' + (pawn_1 + (0.1 * pawn_1_b)) + ';' +
+            'var pawn_2 = ' + (pawn_2 + (0.1 * pawn_2_b)) + ';' +
+            'var pawn_3 = ' + (pawn_3 + (0.1 * pawn_3_b)) + ';' +
+            'var pawnPromo_1 = ' + (pawnPromo_1 + (0.1 * pawnPromo_1_b)) + ';' +
+            'var pawnPromo_2 = ' + (pawnPromo_2 + (0.1 * pawnPromo_2_b)) + ';' +
+            'var pawnPromo_3 = ' + (pawnPromo_3 + (0.1 * pawnPromo_3_b)) + ';' +
+            'var knight_1 = ' + (knight_1 + (0.1 * knight_1_b)) + ';' +
+            'var knight_2 = ' + (knight_2 + (0.1 * knight_2_b)) + ';' +
+            'var knight_3 = ' + (knight_3 + (0.1 * knight_3_b)) + ';' +
+            'var bishop_1 = ' + bishop_1 + ';' +
+            'var bishop_2 = ' + bishop_2 + ';' +
+            'var bishop_3 = ' + bishop_3 + ';' +
+            'var rook_1 = ' + rook_1 + ';' +
+            'var rook_2 = ' + rook_2 + ';' +
+            'var rook_3 = ' + rook_3 + ';' +
+            'var queen_1 = ' + (queen_1 + (0.1 * queen_1_b)) + ';' +
+            'var queen_2 = ' + (queen_2 + (0.1 * queen_2_b)) + ';' +
+            'var queen_3 = ' + (queen_3_b + (0.1 * queen_3_b)) + ';' +
+            'var dragon_1 = ' + (dragon_1 + (0.1 * dragon_1_b)) + ';' +
+            'var dragon_2 = ' + (dragon_2 + (0.1 * dragon_2_b)) + ';' +
+            'var dragon_3 = ' + (dragon_3 + (0.1 * dragon_3_b)) + ';' +
+            'var king_1 = ' + (king_1 + (0.1 * king_1_b)) + ';' +
+            'var king_2 = ' + (king_2 + (0.1 * king_2_b)) + ';' +
+            'var king_3 = ' + (king_3 + (0.1 * king_3_b)) + ';' +
+            'var kingCapture_1 = ' + (kingCapture_1 + (0.1 * kingCapture_1_b)) + ';' +
+            'var kingCapture_2 = ' + (kingCapture_2 + (0.1 * kingCapture_2_b)) + ';' +
+            'var kingCapture_3 = ' + (kingCapture_3 + (0.1 * kingCapture_3_b)) + ';' +
+            'var kingDefend_1 = ' + (kingDefend_1 + (0.1 * kingDefend_1_b)) + ';' +
+            'var kingDefend_2 = ' + (kingDefend_2 + (0.1 * kingDefend_2_b)) + ';' +
+            'var kingDefend_3 = ' + (kingDefend_3 + (0.1 * kingDefend_3_b)) + ';' +
+            'var param_avoidDanger_1 = ' + (param_avoidDanger_1 + (0.1 * param_avoidDanger_1_b)) + ';' +
+            'var param_avoidDanger_2 = ' + (param_avoidDanger_2 + (0.1 * param_avoidDanger_2_b)) + ';' +
+            'var param_avoidDanger_3 = ' + (param_avoidDanger_3 + (0.1 * param_avoidDanger_3_b)) + ';'
+
+        download('parameterFile.txt', saveStr);
+
+
+    }
+
+
+
 }
 
-function loadFile() {
-    loadScript('http://127.0.0.1:8887/parameterFile.txt');
-}
-
+//function loadFile() {
+//    loadScript('http://127.0.0.1:8887/parameterFile.txt');
+//}
+//
 //download function
 function download(filename, text) {
     var pom = document.createElement('a');
@@ -2297,9 +2913,15 @@ function loadScript(url) {
 
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+function getPoints() {
+    console.log("black Points remaining: ", game.getPointTotal('b'));
+    console.log("white Points remaining: ", game.getPointTotal('w'));
+
+}
 
 
 /////////////////////////////////////////////
