@@ -126,6 +126,86 @@ class Gameboard {
 //var param_avoidDanger_1 = 5;
 //var param_avoidDanger_2 = 5;
 //var param_avoidDanger_3 = 5;
+//var param_capture_1_time = 5;
+//var param_capture_1_score = 5;
+//var param_capture_2_time = 5;
+//var param_capture_2_score = 5; 
+//var param_capture_3_time = 5;
+//var param_capture_3_score = 5; 
+//var param_defend_1_time = 5; 
+//var param_defend_1_score = 5;
+//var param_defend_2_time = 5;  
+//var param_defend_2_score = 5;
+//var param_defend_3_time = 5; 
+//var param_defend_3_score = 5; 
+//var param_flock_1_time = 5; 
+//var param_flock_1_score = 5; 
+//var param_flock_2_time = 5;  
+//var param_flock_2_score = 5; 
+//var param_flock_3_time = 5;  
+//var param_flock_3_score = 5;
+//var pawn_1_time = 5;
+//var pawn_1_score = 5; 
+//var pawn_2_time = 5; 
+//var pawn_2_score = 5; 
+//var pawn_3_time = 5;  
+//var pawn_3_score = 5; 
+//var knight_1_time = 5; 
+//var knight_1_score = 5; 
+//var knight_2_time = 5; 
+//var knight_2_score = 5; 
+//var knight_3_time = 5; 
+//var knight_3_score = 5; 
+//var bishop_1_time = 5; 
+//var bishop_1_score = 5; 
+//var bishop_2_time = 5; 
+//var bishop_2_score = 5; 
+//var bishop_3_time = 5;
+//var bishop_3_score = 5; 
+//var rook_1_time = 5; 
+//var rook_1_score = 5;
+//var rook_2_time = 5; 
+//var rook_2_score = 5; 
+//var rook_3_time = 5;  
+//var rook_3_score = 5; 
+//var queen_1_time = 5; 
+//var queen_1_score = 5; 
+//var queen_2_time = 5;  
+//var queen_2_score = 5; 
+//var queen_3_time = 5;  
+//var queen_3_score = 5; 
+//var king_1_time = 5; 
+//var king_1_score = 5; 
+//var king_2_time = 5; 
+//var king_2_score = 5; 
+//var king_3_time = 5; 
+//var king_3_score = 5; 
+//var dragon_1_time = 5; 
+//var dragon_1_score = 5;
+//var dragon_2_time = 5;  
+//var dragon_2_score = 5; 
+//var dragon_3_time = 5;  
+//var dragon_3_score = 5; 
+//var kingCapture_1_time = 5;
+//var kingCapture_1_score = 5; 
+//var kingCapture_2_time = 5;  
+//var kingCapture_2_score = 5; 
+//var kingCapture_3_time = 5;  
+//var kingCapture_3_score = 5; 
+//var kingDefend_1_time = 5; 
+//var kingDefend_1_score = 5;
+//var kingDefend_2_time = 5; 
+//var kingDefend_2_score = 5;
+//var kingDefend_3_time = 5; 
+//var kingDefend_3_score = 5; 
+//var param_avoidDanger_1_time = 5; 
+//var param_avoidDanger_1_score = 5;
+//var param_avoidDanger_2_time = 5; 
+//var param_avoidDanger_2_score = 5;
+//var param_avoidDanger_3_time = 5; 
+//var param_avoidDanger_3_score = 5;
+
+
 
 loadScript('http://127.0.0.1:8887/parameterFile.txt');
 loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
@@ -411,7 +491,7 @@ class PieceList {
     promoteWhitePawn(x, y) {
         var replaceStr = "(" + x + "," + y + ")";
         this.whitePawns = this.whitePawns.replace(replaceStr, "");
-        this.whiteQueen = this.whiteQueen + replaceStr;
+        this.whiteQueen = this.whiteQueen + ";" + replaceStr;
 
         drawHex(getHex_X(x, y),
             getHex_Y(x, y),
@@ -425,7 +505,7 @@ class PieceList {
     promoteBlackPawn(x, y) {
         var replaceStr = "(" + x + "," + y + ")";
         this.blackPawns = this.blackPawns.replace(replaceStr, "");
-        this.blackQueen = this.blackQueen + replaceStr;
+        this.blackQueen = this.blackQueen + ";" + replaceStr;
 
         drawHex(getHex_X(x, y),
             getHex_Y(x, y),
@@ -1320,25 +1400,25 @@ class PieceList {
 
                     if (this.turnNumber < param_early) {
                         if (colour = 'w') {
-                            posList[i][3] = posList[i][3] - (param_avoidDanger_1 * this.getPieceScore(posList[i][0]));
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_1 * this.getPieceScore(posList[i][0])) + (param_avoidDanger_1_time * game.turnNumber) + (param_avoidDanger_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                         } else {
-                            posList[i][3] = posList[i][3] - (param_avoidDanger_1 * this.getPieceScore(posList[i][0]));
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_1_b * this.getPieceScore(posList[i][0])) + (param_avoidDanger_1_time_b * game.turnNumber) + (param_avoidDanger_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                         }
 
                     }
 
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
                         if (colour = 'w') {
-                            posList[i][3] = posList[i][3] - (param_avoidDanger_2 * this.getPieceScore(posList[i][0]));
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_2 * this.getPieceScore(posList[i][0])) + (param_avoidDanger_2_time * game.turnNumber) + (param_avoidDanger_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                         } else {
-                            posList[i][3] = posList[i][3] - (param_avoidDanger_2 * this.getPieceScore(posList[i][0]));
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_2_b * this.getPieceScore(posList[i][0])) + (param_avoidDanger_2_time_b * game.turnNumber) + (param_avoidDanger_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                         }
 
                     } else {
                         if (colour = 'w') {
-                            posList[i][3] = posList[i][3] - (param_avoidDanger_3 * this.getPieceScore(posList[i][0]));
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_3 * this.getPieceScore(posList[i][0])) + (param_avoidDanger_3_time * game.turnNumber) + (param_avoidDanger_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                         } else {
-                            posList[i][3] = posList[i][3] - (param_avoidDanger_3 * this.getPieceScore(posList[i][0]));
+                            posList[i][3] = posList[i][3] - (param_avoidDanger_3_b * this.getPieceScore(posList[i][0])) + (param_avoidDanger_3_time_b * game.turnNumber) + (param_avoidDanger_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                         }
 
                     }
@@ -1427,6 +1507,8 @@ class PieceList {
                 possiblePositions = this.getAvailableMoves(x, y, piece, colour);
                 possiblePositionsIfColourDif = this.getAvailableMoves(x, y, piece, otherColour);
 
+                //console.log('test');
+
                 for (var j = 0; j < possiblePositions.length; j++) {
                     var score = initialScore;
                     var hexContent = this.getHexContent(possiblePositions[j][0], possiblePositions[j][1]);
@@ -1436,9 +1518,9 @@ class PieceList {
                     if (this.turnNumber < param_early) {
                         if (hexContent != 'none') {
                             if (colour == 'w') {
-                                score = score + (param_capture_1 * (this.getPieceScore(piece)));
+                                score = score + (param_capture_1 * (this.getPieceScore(piece))) + (param_capture_1_time * game.turnNumber) + (param_capture_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_capture_1 * (this.getPieceScore(piece)));
+                                score = score + (param_capture_1_b * (this.getPieceScore(piece))) + (param_capture_1_time_b * game.turnNumber) + (param_capture_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
                         }
                     }
@@ -1446,51 +1528,52 @@ class PieceList {
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
                         if (hexContent != 'none') {
                             if (colour == 'w') {
-                                score = score + (param_capture_2 * (this.getPieceScore(piece)));
+                                score = score + (param_capture_2 * (this.getPieceScore(piece))) + (param_capture_2_time * game.turnNumber) + (param_capture_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_capture_2 * (this.getPieceScore(piece)));
+                                score = score + (param_capture_2_b * (this.getPieceScore(piece))) + (param_capture_2_time_b * game.turnNumber) + (param_capture_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
                         }
+
+
                     } else {
                         if (hexContent != 'none') {
                             if (colour == 'w') {
-                                score = score + (param_capture_3 * (this.getPieceScore(piece)));
+                                score = score + (param_capture_3 * (this.getPieceScore(piece))) + (param_capture_3_time * game.turnNumber) + (param_capture_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_capture_3 * (this.getPieceScore(piece)));
+                                score = score + (param_capture_3_b * (this.getPieceScore(piece))) + (param_capture_3_time_b * game.turnNumber) + (param_capture_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
                         }
                     }
+
 
                     //defend own pieces if possible
                     if (this.turnNumber < param_early) {
                         if (hexContent2 != 'none') {
                             if (colour == "w") {
-                                score = score + (param_defend_1 * (this.getPieceScore(hexContent2.split("")[1])));
+                                score = score + (param_defend_1 * (this.getPieceScore(hexContent2.split("")[1]))) + (param_defend_1_time * game.turnNumber) + (param_defend_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_defend_1 * (this.getPieceScore(hexContent2.split("")[1])));
+                                score = score + (param_defend_1_b * (this.getPieceScore(hexContent2.split("")[1]))) + (param_defend_1_time_b * game.turnNumber) + (param_defend_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
                         }
                     }
+
                     if (this.turnNumber > param_early && this.turnNumber < param_late) {
                         if (hexContent2 != 'none') {
                             if (colour == "w") {
-                                score = score + (param_defend_2 * (this.getPieceScore(hexContent2.split("")[1])));
+                                score = score + (param_defend_2 * (this.getPieceScore(hexContent2.split("")[1]))) + (param_defend_2_time * game.turnNumber) + (param_defend_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_defend_2 * (this.getPieceScore(hexContent2.split("")[1])));
+                                score = score + (param_defend_2_b * (this.getPieceScore(hexContent2.split("")[1]))) + (param_defend_2_time_b * game.turnNumber) + (param_defend_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
                         }
                     }
+
                     if (this.turnNumber > param_late) {
                         if (hexContent2 != 'none') {
                             if (colour == "w") {
-                                score = score + (param_defend_3 * (this.getPieceScore(hexContent2.split("")[1])));
+                                score = score + (param_defend_3 * (this.getPieceScore(hexContent2.split("")[1]))) + (param_defend_3_time * game.turnNumber) + (param_defend_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_defend_3 * (this.getPieceScore(hexContent2.split("")[1])));
+                                score = score + (param_defend_3_b * (this.getPieceScore(hexContent2.split("")[1]))) + (param_defend_3_time_b * game.turnNumber) + (param_defend_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
                         }
                     }
 
@@ -1502,11 +1585,16 @@ class PieceList {
                         var ownedHexPos = this.blackHexsOccupied;
                     }
 
-                    if (ownedHexPos.length[0] > 5) {
-                        //head toward owned hexs
-                        var ownedScore = 0;
-                        for (var z = 0; z < ownedHexPos.length; z++) {
-                            var hexPos = this.strToCordinates(ownedHexPos[z]);
+
+                    //console.log("Owned Hex:", ownedHexPos);
+
+                    //head toward owned hexs
+                    var ownedScore = 0;
+                    for (var z = 0; z < ownedHexPos.length; z++) {
+                        var hexPos = this.strToCordinates(ownedHexPos[z]);
+
+                        if (hexPos.length > 1 && possiblePositions[j].length > 1) {
+
                             var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
                             if (distanceToHex > 0) {
                                 var newScore = 1 + Math.ceil(1 / distanceToHex);
@@ -1516,33 +1604,80 @@ class PieceList {
                             }
                         }
 
+
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (param_flock_1 * ownedScore);
+                                score = score + (param_flock_1 * ownedScore) + (param_flock_1_time * game.turnNumber) + (param_flock_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_flock_1 * ownedScore);
+                                score = score + (param_flock_1_b * ownedScore) + (param_flock_1_time_b * game.turnNumber) + (param_flock_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
-
                         }
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (param_flock_2 * ownedScore);
+                                score = score + (param_flock_2 * ownedScore) + (param_flock_2_time * game.turnNumber) + (param_flock_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_flock_2 * ownedScore);
+                                score = score + (param_flock_2_b * ownedScore) + (param_flock_2_time_b * game.turnNumber) + (param_flock_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
-
                         } else {
                             if (colour == 'w') {
-                                score = score + (param_flock_3 * ownedScore);
+                                score = score + (param_flock_3 * ownedScore) + (param_flock_3_time * game.turnNumber) + (param_flock_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (param_flock_3 * ownedScore);
+                                score = score + (param_flock_3_b * ownedScore) + (param_flock_3_time_b * game.turnNumber) + (param_flock_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
-
-
                         }
                     }
+
+
+                    //move at enemy 
+                    if (colour == 'b') {
+                        var ownedHexPos = this.whiteHexsOccupied;
+                    }
+                    if (colour == 'w') {
+                        var ownedHexPos = this.blackHexsOccupied;
+                    }
+
+
+
+                    //head toward opposition hexs
+                    var ownedScore = 0;
+                    for (var z = 0; z < ownedHexPos.length; z++) {
+                        var hexPos = this.strToCordinates(ownedHexPos[z]);
+
+                        if (hexPos.length > 1 && possiblePositions[j].length > 1) {
+
+                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
+                            if (distanceToHex > 0) {
+                                var newScore = 1 + Math.ceil(1 / distanceToHex);
+                                if (newScore > ownedScore) {
+                                    ownedScore = newScore;
+                                }
+                            }
+                        }
+
+
+                        if (this.turnNumber < param_early) {
+                            if (colour == 'w') {
+                                score = score + (param_attack_1 * ownedScore) + (param_attack_1_time * game.turnNumber) + (param_attack_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (param_attack_1_b * ownedScore) + (param_attack_1_time_b * game.turnNumber) + (param_attack_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+                        }
+                        if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                            if (colour == 'w') {
+                                score = score + (param_attack_2 * ownedScore) + (param_attack_2_time * game.turnNumber) + (param_attack_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (param_attack_2_b * ownedScore) + (param_attack_2_time_b * game.turnNumber) + (param_attack_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+                        } else {
+                            if (colour == 'w') {
+                                score = score + (param_attack_3 * ownedScore) + (param_attack_3_time * game.turnNumber) + (param_attack_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (param_attack_3_b * ownedScore) + (param_attack_3_time_b * game.turnNumber) + (param_attack_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+                        }
+                    }
+
+
 
                     //add piece specific scoring here///
 
@@ -1551,44 +1686,48 @@ class PieceList {
 
                         //head toward promo hexs
                         var promoScore = 0;
-                        for (var z = 0; z < promoHexs.length; z++) {
-                            var hexPos = this.strToCordinates(promoHexs[z]);
-                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
-                            var posScore = Math.ceil(1 / distanceToHex);
-                            if (posScore > promoScore) {
-                                promoScore = posScore;
-                            }
-                        }
 
-                        if (this.turnNumber < param_early) {
-                            if (colour == 'w') {
-                                score = score + (pawn_1);
-                                score = score + (pawnPromo_1 * promoScore);
+                        if (possiblePositions[j].length > 1) {
+                            for (var z = 0; z < promoHexs.length; z++) {
+                                var hexPos = this.strToCordinates(promoHexs[z]);
+                                //console.log("test",possiblePositions[j],hexPos);
+                                var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], hexPos[0], hexPos[1]);
+                                var posScore = Math.ceil(1 / distanceToHex);
+                                if (posScore > promoScore) {
+                                    promoScore = posScore;
+                                }
+                            }
+
+                            if (this.turnNumber < param_early) {
+                                if (colour == 'w') {
+                                    score = score + (pawn_1) + (pawn_1_time * game.turnNumber) + (pawn_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                    score = score + (pawnPromo_1 * promoScore);
+                                } else {
+                                    score = score + (pawn_1_b) + (pawn_1_time_b * game.turnNumber) + (pawn_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                    score = score + (pawnPromo_1_b * promoScore);
+                                }
+
+                            }
+
+                            if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                                if (colour == 'w') {
+                                    score = score + (pawn_2) + (pawn_2_time * game.turnNumber) + (pawn_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                    score = score + (pawnPromo_2 * promoScore);
+                                } else {
+                                    score = score + (pawn_2_b) + (pawn_2_time_b * game.turnNumber) + (pawn_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                    score = score + (pawnPromo_2_b * promoScore);
+                                }
+
                             } else {
-                                score = score + (pawn_1);
-                                score = score + (pawnPromo_1 * promoScore);
+                                if (colour == 'w') {
+                                    score = score + (pawn_3) + (pawn_3_time * game.turnNumber) + (pawn_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                    score = score + (pawnPromo_3 * promoScore);
+                                } else {
+                                    score = score + (pawn_3_b) + (pawn_3_time_b * game.turnNumber) + (pawn_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                    score = score + (pawnPromo_3_b * promoScore);
+                                }
+
                             }
-
-                        }
-
-                        if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                            if (colour == 'w') {
-                                score = score + (pawn_2);
-                                score = score + (pawnPromo_2 * promoScore);
-                            } else {
-                                score = score + (pawn_2);
-                                score = score + (pawnPromo_2 * promoScore);
-                            }
-
-                        } else {
-                            if (colour == 'w') {
-                                score = score + (pawn_3);
-                                score = score + (pawnPromo_3 * promoScore);
-                            } else {
-                                score = score + (pawn_3);
-                                score = score + (pawnPromo_3 * promoScore);
-                            }
-
                         }
 
                     } ///end pawns
@@ -1597,26 +1736,27 @@ class PieceList {
                     if (piece == 'N') {
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (knight_1);
+                                score = score + (knight_1) + (knight_1_time * game.turnNumber) + (knight_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (knight_1);
+                                score = score + (knight_1_b) + (knight_1_time_b * game.turnNumber) + (knight_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
 
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (knight_2);
+                                score = score + (knight_2) + (knight_2_time * game.turnNumber) + (knight_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (knight_2);
+                                score = score + (knight_2_b) + (knight_2_time_b * game.turnNumber) + (knight_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
 
                         } else {
                             if (colour == 'w') {
-                                score = score + (knight_3);
+                                score = score + (knight_3) + (knight_3_time * game.turnNumber) + (knight_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (knight_3);
+                                score = score + (knight_3_b) + (knight_3_time_b * game.turnNumber) + (knight_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
 
@@ -1627,24 +1767,25 @@ class PieceList {
                     if (piece == 'B') {
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (bishop_1);
+                                score = score + (bishop_1) + (bishop_1_time * game.turnNumber) + (bishop_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (bishop_1);
+                                score = score + (bishop_1_b) + (bishop_1_time_b * game.turnNumber) + (bishop_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (bishop_2);
+                                score = score + (bishop_2) + (bishop_2_time * game.turnNumber) + (bishop_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (bishop_2);
+                                score = score + (bishop_2_b) + (bishop_2_time_b * game.turnNumber) + (bishop_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         } else {
                             if (colour == 'w') {
-                                score = score + (bishop_3);
+                                score = score + (bishop_3) + (bishop_3_time * game.turnNumber) + (bishop_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (bishop_3);
+                                score = score + (bishop_3_b) + (bishop_3_time_b * game.turnNumber) + (bishop_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
@@ -1654,24 +1795,25 @@ class PieceList {
                     if (piece == 'R') {
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (rook_1);
+                                score = score + (rook_1) + (rook_1_time * game.turnNumber) + (rook_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (rook_1);
+                                score = score + (rook_1_b) + (rook_1_time_b * game.turnNumber) + (rook_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (rook_2);
+                                score = score + (rook_2) + (rook_2_time * game.turnNumber) + (rook_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (rook_2);
+                                score = score + (rook_2_b) + (rook_2_time_b * game.turnNumber) + (rook_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         } else {
                             if (colour == 'w') {
-                                score = score + (rook_3);
+                                score = score + (rook_3) + (rook_3_time * game.turnNumber) + (rook_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (rook_3);
+                                score = score + (rook_3_b) + (rook_3_time_b * game.turnNumber) + (rook_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
@@ -1681,24 +1823,27 @@ class PieceList {
                     if (piece == 'Q') {
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (queen_1);
+                                score = score + (queen_1) + (queen_1_time * game.turnNumber) + (queen_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (queen_1);
+                                score = score + (queen_1_b) + (queen_1_time_b * game.turnNumber) + (queen_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (queen_2);
+                                score = score + (queen_2) + (queen_2_time * game.turnNumber) + (queen_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (queen_2);
+                                score = score + (queen_2_b) + (queen_2_time_b * game.turnNumber) + (queen_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
+
                         } else {
                             if (colour == 'w') {
-                                score = score + (queen_3);
+                                score = score + (queen_3) + (queen_3_time * game.turnNumber) + (queen_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (queen_3);
+                                score = score + (queen_3_b) + (queen_3_time_b * game.turnNumber) + (queen_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
+
                         }
                     } ///end Queen
 
@@ -1706,24 +1851,25 @@ class PieceList {
                     if (piece == 'K') {
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (king_1);
+                                score = score + (king_1) + (king_1_time * game.turnNumber) + (king_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (king_1);
+                                score = score + (king_1_b) + (king_1_time_b * game.turnNumber) + (king_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (king_2);
+                                score = score + (king_2) + (king_2_time * game.turnNumber) + (king_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (king_2);
+                                score = score + (king_2_b) + (king_2_time_b * game.turnNumber) + (king_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         } else {
                             if (colour == 'w') {
-                                score = score + (king_3);
+                                score = score + (king_3) + (king_3_time * game.turnNumber) + (king_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (king_3);
+                                score = score + (king_3_b) + (king_3_time_b * game.turnNumber) + (king_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
@@ -1733,27 +1879,30 @@ class PieceList {
                     if (piece == 'D') {
                         if (this.turnNumber < param_early) {
                             if (colour == 'w') {
-                                score = score + (dragon_1);
+                                score = score + (dragon_1) + (dragon_1_time * game.turnNumber) + (dragon_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (dragon_1);
+                                score = score + (dragon_1_b) + (dragon_1_time_b * game.turnNumber) + (dragon_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
+
                         if (this.turnNumber > param_early && this.turnNumber < param_late) {
                             if (colour == 'w') {
-                                score = score + (dragon_2);
+                                score = score + (dragon_2) + (dragon_2_time * game.turnNumber) + (dragon_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (dragon_2);
+                                score = score + (dragon_2_b) + (dragon_2_time_b * game.turnNumber) + (dragon_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         } else {
                             if (colour == 'w') {
-                                score = score + (dragon_3);
+                                score = score + (dragon_3) + (dragon_3_time * game.turnNumber) + (dragon_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
                             } else {
-                                score = score + (dragon_3);
+                                score = score + (dragon_3_b) + (dragon_3_time_b * game.turnNumber) + (dragon_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
                             }
 
                         }
+
+
                     } ///end Dragon
 
 
@@ -1767,32 +1916,35 @@ class PieceList {
                         var kingPos = this.strToCordinates(this.whiteKing);
                     }
 
-                    var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
-                    var posScore = (2 * Math.ceil(1 / distanceToHex));
 
-                    if (this.turnNumber < param_early) {
-                        if (colour == 'w') {
-                            score = score + (kingCapture_1 * posScore);
-                        } else {
-                            score = score + (kingCapture_1 * posScore);
+                    if (possiblePositions[j].length > 1) {
+                        var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
+                        var posScore = (2 * Math.ceil(1 / distanceToHex));
+
+                        if (this.turnNumber < param_early) {
+                            if (colour == 'w') {
+                                score = score + (kingCapture_1 * posScore) + (kingCapture_1_time * game.turnNumber) + (kingCapture_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (kingCapture_1_b * posScore) + (kingCapture_1_time_b * game.turnNumber) + (kingCapture_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+
                         }
 
-                    }
+                        if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                            if (colour == 'w') {
+                                score = score + (kingCapture_2 * posScore) + (kingCapture_2_time * game.turnNumber) + (kingCapture_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (kingCapture_2_b * posScore) + (kingCapture_2_time_b * game.turnNumber) + (kingCapture_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
 
-                    if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                        if (colour == 'w') {
-                            score = score + (kingCapture_2 * posScore);
                         } else {
-                            score = score + (kingCapture_2 * posScore);
-                        }
+                            if (colour == 'w') {
+                                score = score + (kingCapture_3 * posScore) + (kingCapture_3_time * game.turnNumber) + (kingCapture_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (kingCapture_3_b * posScore) + (kingCapture_3_time_b * game.turnNumber) + (kingCapture_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
 
-                    } else {
-                        if (colour == 'w') {
-                            score = score + (kingCapture_3 * posScore);
-                        } else {
-                            score = score + (kingCapture_3 * posScore);
                         }
-
                     }
 
 
@@ -1804,32 +1956,187 @@ class PieceList {
                         var kingPos = this.strToCordinates(this.whiteKing);
                     }
 
-                    var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
-                    var posScore = (2 * Math.ceil(1 / distanceToHex));
+                    if (possiblePositions[j].length > 1) {
+                        var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], kingPos[0], kingPos[1]);
+                        var posScore = (2 * Math.ceil(1 / distanceToHex));
 
-                    if (this.turnNumber < param_early) {
-                        if (colour == 'w') {
-                            score = score + (kingDefend_1 * posScore);
-                        } else {
-                            score = score + (kingDefend_1 * posScore);
+                        if (this.turnNumber < param_early) {
+                            if (colour == 'w') {
+                                score = score + (kingDefend_1 * posScore) + (kingDefend_1_time * game.turnNumber) + (kingDefend_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (kingDefend_1_b * posScore) + (kingDefend_1_time_b * game.turnNumber) + (kingDefend_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+
                         }
 
+                        if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                            if (colour == 'w') {
+                                score = score + (kingDefend_2 * posScore) + (kingDefend_2_time * game.turnNumber) + (kingDefend_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (kingDefend_2_b * posScore) + (kingDefend_2_time_b * game.turnNumber) + (kingDefend_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+
+                        } else {
+                            if (colour == 'w') {
+                                score = score + (kingDefend_3 * posScore) + (kingDefend_3_time * game.turnNumber) + (kingDefend_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                            } else {
+                                score = score + (kingDefend_3_b * posScore) + (kingDefend_3_time_b * game.turnNumber) + (kingDefend_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                            }
+
+                        }
                     }
-                    if (this.turnNumber > param_early && this.turnNumber < param_late) {
-                        if (colour == 'w') {
-                            score = score + (kingDefend_2 * posScore);
-                        } else {
-                            score = score + (kingDefend_2 * posScore);
-                        }
 
-                    } else {
-                        if (colour == 'w') {
-                            score = score + (kingDefend_3 * posScore);
-                        } else {
-                            score = score + (kingDefend_3 * posScore);
-                        }
 
+                    //Dragon capture   
+                    
+                    if (colour == 'w') {
+                        var dragonPos = this.strToCordinates(this.blackDragon.split(";")[0]);
                     }
+                    if (colour == 'b') {
+                        var dragonPos = this.strToCordinates(this.whiteDragon.split(";")[0]);
+                    }
+
+                    
+                    if (dragonPos.length > 4 && possiblePositions[j].length > 1) {
+
+
+                        if (possiblePositions[j].length > 1) {
+                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], dragonPos[0], dragonPos[1]);
+                            var posScore = (2 * Math.ceil(1 / distanceToHex));
+
+                            if (this.turnNumber < param_early) {
+                                if (colour == 'w') {
+                                    score = score + (dragonCapture_1 * posScore) + (dragonCapture_1_time * game.turnNumber) + (dragonCapture_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (dragonCapture_1_b * posScore) + (dragonCapture_1_time_b * game.turnNumber) + (dragonCapture_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            }
+
+                            if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                                if (colour == 'w') {
+                                    score = score + (dragonCapture_2 * posScore) + (dragonCapture_2_time * game.turnNumber) + (dragonCapture_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (dragonCapture_2_b * posScore) + (dragonCapture_2_time_b * game.turnNumber) + (dragonCapture_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            } else {
+                                if (colour == 'w') {
+                                    score = score + (dragonCapture_3 * posScore) + (dragonCapture_3_time * game.turnNumber) + (dragonCapture_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (dragonCapture_3_b * posScore) + (dragonCapture_3_time_b * game.turnNumber) + (dragonCapture_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            }
+                        }
+                    }
+
+
+                    //Dragon defend////////
+                    if (colour == 'b') {
+                        var dragonPos = this.strToCordinates(this.blackDragon.split(";")[0]);
+                    }
+                    if (colour == 'w') {
+                        var dragonPos = this.strToCordinates(this.whiteDragon.split(";")[0]);
+                    }
+
+
+                    if (dragonPos.length > 4 && possiblePositions[j].length > 1) {
+
+                        if (possiblePositions[j].length > 1) {
+                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], dragonPos[0], dragonPos[1]);
+                            var posScore = (2 * Math.ceil(1 / distanceToHex));
+
+                            if (this.turnNumber < param_early) {
+                                if (colour == 'w') {
+                                    score = score + (dragonDefend_1 * posScore) + (dragonDefend_1_time * game.turnNumber) + (dragonDefend_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (dragonDefend_1_b * posScore) + (dragonDefend_1_time_b * game.turnNumber) + (dragonDefend_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            }
+
+                            if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                                if (colour == 'w') {
+                                    score = score + (dragonDefend_2 * posScore) + (dragonDefend_2_time * game.turnNumber) + (dragonDefend_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (dragonDefend_2_b * posScore) + (dragonDefend_2_time_b * game.turnNumber) + (dragonDefend_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            } else {
+                                if (colour == 'w') {
+                                    score = score + (dragonDefend_3 * posScore) + (dragonDefend_3_time * game.turnNumber) + (dragonDefend_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (dragonDefend_3_b * posScore) + (dragonDefend_3_time_b * game.turnNumber) + (dragonDefend_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            }
+                        }
+                    }
+                    
+                    
+                    
+                    
+                    //Pawn capture
+                    
+                    if (colour == 'w') {
+                        var pawnList = this.blackPawns;
+                    }
+                    if (colour == 'b') {
+                        var pawnList = this.whitePawns;
+                    }
+                    
+                    var splitList = pawnList.split(';');
+                      
+                    for (var z = 0; z < splitList.length; z++) {
+                    
+                        var pawnPos = this.strToCordinates(splitList[z]);
+                        //console.log(pawnPos);
+
+                        var finalScore = 0;
+                        var testScore = 0;
+                    
+                    if (pawnPos.length > 4 && possiblePositions[j].length > 1) {
+
+
+                        if (possiblePositions[j].length > 1) {
+                            var distanceToHex = this.distanceBetweenTwoHexs(possiblePositions[j][0], possiblePositions[j][1], pawnPos[z][0], pawnPos[z][1]);
+                            var posScore = (2 * Math.ceil(1 / distanceToHex));
+
+                            if (this.turnNumber < param_early) {
+                                if (colour == 'w') {
+                                    testScore= (pawnCapture_1 * posScore) + (pawnCapture_1_time * game.turnNumber) + (pawnCapture_1_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    testScore = (pawnCapture_1_b * posScore) + (pawnCapture_1_time_b * game.turnNumber) + (pawnCapture_1_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            }
+
+                            if (this.turnNumber > param_early && this.turnNumber < param_late) {
+                                if (colour == 'w') {
+                                    testScore = (pawnCapture_2 * posScore) + (pawnCapture_2_time * game.turnNumber) + (pawnCapture_2_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    score = score + (pawnCapture_2_b * posScore) + (pawnCapture_2_time_b * game.turnNumber) + (pawnCapture_2_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            } else {
+                                if (colour == 'w') {
+                                    testScore = (pawnCapture_3 * posScore) + (pawnCapture_3_time * game.turnNumber) + (pawnCapture_3_score * game.getPointTotal('w') / game.getPointTotal('b'));
+                                } else {
+                                    testScore = (pawnCapture_3_b * posScore) + (pawnCapture_3_time_b * game.turnNumber) + (pawnCapture_3_score_b * game.getPointTotal('b') / game.getPointTotal('w'));
+                                }
+
+                            }
+                        }
+                    }
+                        if(testScore > finalScore){
+                            finalScore = testScore;
+                        }
+                    }
+
+
+                    score = score + finalScore;
+                                        
 
 
                     ///////////////////////////////////
@@ -1859,11 +2166,14 @@ class PieceList {
 
 
     mutateParam() {
-        var rndChoice = Math.floor(Math.random() * Math.floor(43));
+        var times = 3
+        
+        for (var i = 0; i < times; i++){
+        var rndChoice = Math.floor(Math.random() * Math.floor(148));
 
         //console.log("choice :", rndChoice);
 
-        var rndValue = Math.round(Math.random() * 200, 1);
+        var rndValue = Math.round(Math.random() * 250, 1);
         if (Math.random() > 0.5) {
             rndValue = rndValue * -1;
         }
@@ -2004,57 +2314,342 @@ class PieceList {
             param_avoidDanger_3 = rndValue;
         }
 
+        if (rndChoice == 44) {
+            param_capture_1_time = rndValue;
+        }
+        if (rndChoice == 45) {
+            param_capture_2_time = rndValue;
+        }
+        if (rndChoice == 46) {
+            param_capture_3_time = rndValue;
+        }
+        if (rndChoice == 47) {
+            param_capture_1_score = rndValue;
+        }
+        if (rndChoice == 48) {
+            param_capture_2_score = rndValue;
+        }
+        if (rndChoice == 49) {
+            param_capture_3_score = rndValue;
+        }
+        if (rndChoice == 50) {
+            param_defend_1_time = rndValue;
+        }
+        if (rndChoice == 51) {
+            param_defend_2_time = rndValue;
+        }
+        if (rndChoice == 52) {
+            param_defend_3_time = rndValue;
+        }
+        if (rndChoice == 53) {
+            param_defend_1_score = rndValue;
+        }
+        if (rndChoice == 54) {
+            param_defend_2_score = rndValue;
+        }
+        if (rndChoice == 55) {
+            param_defend_3_score = rndValue;
+        }
+        if (rndChoice == 56) {
+            param_flock_1_time = rndValue;
+        }
+        if (rndChoice == 57) {
+            param_flock_2_time = rndValue;
+        }
+        if (rndChoice == 58) {
+            param_flock_3_time = rndValue;
+        }
+        if (rndChoice == 59) {
+            param_flock_1_score = rndValue;
+        }
+        if (rndChoice == 60) {
+            param_flock_2_score = rndValue;
+        }
+        if (rndChoice == 61) {
+            param_flock_3_score = rndValue;
+        }
+        if (rndChoice == 62) {
+            pawn_1_time = rndValue;
+        }
+        if (rndChoice == 63) {
+            pawn_2_time = rndValue;
+        }
+        if (rndChoice == 64) {
+            pawn_3_time = rndValue;
+        }
+        if (rndChoice == 65) {
+            pawn_1_score = rndValue;
+        }
+        if (rndChoice == 66) {
+            pawn_2_score = rndValue;
+        }
+        if (rndChoice == 67) {
+            pawn_3_score = rndValue;
+        }
+        if (rndChoice == 68) {
+            knight_1_time = rndValue;
+        }
+        if (rndChoice == 69) {
+            knight_2_time = rndValue;
+        }
+        if (rndChoice == 70) {
+            knight_3_time = rndValue;
+        }
+        if (rndChoice == 71) {
+            knight_1_score = rndValue;
+        }
+        if (rndChoice == 72) {
+            knight_2_score = rndValue;
+        }
+        if (rndChoice == 73) {
+            knight_3_score = rndValue;
+        }
+        if (rndChoice == 74) {
+            bishop_1_time = rndValue;
+        }
+        if (rndChoice == 75) {
+            bishop_2_time = rndValue;
+        }
+        if (rndChoice == 76) {
+            bishop_3_time = rndValue;
+        }
+        if (rndChoice == 77) {
+            bishop_1_score = rndValue;
+        }
+        if (rndChoice == 78) {
+            bishop_2_score = rndValue;
+        }
+        if (rndChoice == 79) {
+            bishop_3_score = rndValue;
+        }
+        if (rndChoice == 80) {
+            rook_1_time = rndValue;
+        }
+        if (rndChoice == 81) {
+            rook_2_time = rndValue;
+        }
+        if (rndChoice == 82) {
+            rook_3_time = rndValue;
+        }
+        if (rndChoice == 83) {
+            rook_1_score = rndValue;
+        }
+        if (rndChoice == 84) {
+            rook_2_score = rndValue;
+        }
+        if (rndChoice == 85) {
+            rook_3_score = rndValue;
+        }
+        if (rndChoice == 86) {
+            queen_1_time = rndValue;
+        }
+        if (rndChoice == 87) {
+            queen_2_time = rndValue;
+        }
+        if (rndChoice == 88) {
+            queen_3_time = rndValue;
+        }
+        if (rndChoice == 89) {
+            queen_1_score = rndValue;
+        }
+        if (rndChoice == 90) {
+            queen_2_score = rndValue;
+        }
+        if (rndChoice == 91) {
+            queen_3_score = rndValue;
+        }
+        if (rndChoice == 92) {
+            king_1_time = rndValue;
+        }
+        if (rndChoice == 93) {
+            king_2_time = rndValue;
+        }
+        if (rndChoice == 94) {
+            king_3_time = rndValue;
+        }
+        if (rndChoice == 95) {
+            king_1_score = rndValue;
+        }
+        if (rndChoice == 96) {
+            king_2_score = rndValue;
+        }
+        if (rndChoice == 97) {
+            king_3_score = rndValue;
+        }
+        if (rndChoice == 98) {
+            dragon_1_time = rndValue;
+        }
+        if (rndChoice == 99) {
+            dragon_2_time = rndValue;
+        }
+        if (rndChoice == 100) {
+            dragon_3_time = rndValue;
+        }
+        if (rndChoice == 101) {
+            dragon_1_score = rndValue;
+        }
+        if (rndChoice == 102) {
+            dragon_2_score = rndValue;
+        }
+        if (rndChoice == 103) {
+            dragon_3_score = rndValue;
+        }
+        if (rndChoice == 104) {
+            kingCapture_1_time = rndValue;
+        }
+        if (rndChoice == 105) {
+            kingCapture_2_time = rndValue;
+        }
+        if (rndChoice == 106) {
+            kingCapture_3_time = rndValue;
+        }
+        if (rndChoice == 107) {
+            kingCapture_1_score = rndValue;
+        }
+        if (rndChoice == 108) {
+            kingCapture_2_score = rndValue;
+        }
+        if (rndChoice == 109) {
+            kingCapture_3_score = rndValue;
+        }
+        if (rndChoice == 110) {
+            kingDefend_1_time = rndValue;
+        }
+        if (rndChoice == 111) {
+            kingDefend_2_time = rndValue;
+        }
+        if (rndChoice == 112) {
+            kingDefend_3_time = rndValue;
+        }
+        if (rndChoice == 113) {
+            kingDefend_1_score = rndValue;
+        }
+        if (rndChoice == 114) {
+            kingDefend_2_score = rndValue;
+        }
+        if (rndChoice == 115) {
+            kingDefend_3_score = rndValue;
+        }
+        if (rndChoice == 116) {
+            param_avoidDanger_1_time = rndValue;
+        }
+        if (rndChoice == 117) {
+            param_avoidDanger_2_time = rndValue;
+        }
+        if (rndChoice == 118) {
+            param_avoidDanger_3_time = rndValue;
+        }
+        if (rndChoice == 116) {
+            param_avoidDanger_1_score = rndValue;
+        }
+        if (rndChoice == 117) {
+            param_avoidDanger_2_score = rndValue;
+        }
+        if (rndChoice == 118) {
+            param_avoidDanger_3_score = rndValue;
+        }
 
-
-        //        console.log(param_early,
-        //    param_late,
-        //    param_capture_1,
-        //    param_capture_2,
-        //    param_capture_3,
-        //    param_defend_1,
-        //    param_defend_2,
-        //    param_defend_3,
-        //    param_flock_1,
-        //    param_flock_2,
-        //    param_flock_3,
-        //    pawn_1,
-        //    pawn_2,
-        //    pawn_3,
-        //    pawnPromo_1,
-        //    pawnPromo_2,
-        //    pawnPromo_3,
-        //    knight_1,
-        //    knight_2,
-        //    knight_3,
-        //    bishop_1,
-        //    bishop_2,
-        //    bishop_3,
-        //    rook_1,
-        //    rook_2,
-        //    rook_3,
-        //    queen_1,
-        //    queen_2,
-        //    queen_3,
-        //    dragon_1,
-        //    dragon_2,
-        //    dragon_3,
-        //    king_1,
-        //    king_2,
-        //    king_3,
-        //    kingCapture_1,
-        //    kingCapture_2,
-        //    kingCapture_3,
-        //    kingDefend_1,
-        //    kingDefend_2,
-        //    kingDefend_3,
-        //    param_avoidDanger_1,
-        //    param_avoidDanger_2,
-        //    param_avoidDanger_3);
-        //        
+        if (rndChoice == 119) {
+            param_attack_1 = rndValue;
+        }
+        if (rndChoice == 120) {
+            param_attack_2 = rndValue;
+        }
+        if (rndChoice == 121) {
+            param_attack_3 = rndValue;
+        }
+        if (rndChoice == 122) {
+            param_attack_1_score = rndValue;
+        }
+        if (rndChoice == 123) {
+            param_attack_2_score = rndValue;
+        }
+        if (rndChoice == 124) {
+            param_attack_3_score = rndValue;
+        }
+        if (rndChoice == 125) {
+            param_attack_1_time = rndValue;
+        }
+        if (rndChoice == 126) {
+            param_attack_1_time = rndValue;
+        }
+        if (rndChoice == 127) {
+            param_attack_1_time = rndValue;
+        }
+        if (rndChoice == 128) {
+            dragonCapture_1 = rndValue;
+        }
+        if (rndChoice == 129) {
+            dragonCapture_2 = rndValue;
+        }
+        if (rndChoice == 130) {
+            dragonCapture_3 = rndValue;
+        }
+        if (rndChoice == 131) {
+            dragonDefend_1 = rndValue;
+        }
+        if (rndChoice == 132) {
+            dragonDefend_2 = rndValue;
+        }
+        if (rndChoice == 133) {
+            dragonDefend_3 = rndValue;
+        }
+  
+        if (rndChoice == 134) {
+            dragonDefend_1_time = rndValue;
+        }
+        if (rndChoice == 135) {
+            dragonDefend_2_time = rndValue;
+        }
+        if (rndChoice == 136) {
+            dragonDefend_3_time = rndValue;
+        }    
+            
+        if (rndChoice == 137) {
+            dragonDefend_1_score = rndValue;
+        }
+        if (rndChoice == 138) {
+            dragonDefend_2_score = rndValue;
+        }
+        if (rndChoice == 139) {
+            dragonDefend_3_score = rndValue;
+        }        
+    
+        if (rndChoice == 140) {
+            pawnCapture_1 = rndValue;
+        }
+        if (rndChoice == 141) {
+            pawnCapture_2 = rndValue;
+        }
+        if (rndChoice == 142) {
+            pawnCapture_3 = rndValue;
+        }
+               
+        if (rndChoice == 143) {
+            pawnCapture_1_time = rndValue;
+        }
+        if (rndChoice == 144) {
+            pawnCapture_2_time = rndValue;
+        }
+        if (rndChoice == 145) {
+            pawnCapture_3_time = rndValue;
+        }    
+            
+        if (rndChoice == 146) {
+            pawnCapture_1_score = rndValue;
+        }
+        if (rndChoice == 147) {
+            pawnCapture_2_score = rndValue;
+        }
+        if (rndChoice == 148) {
+            pawnCapture_3_score = rndValue;
+        }    
+                
+    }
     }
 
     mutateParam_b() {
-        var rndChoice = Math.floor(Math.random() * Math.floor(43));
+        var rndChoice = Math.floor(Math.random() * Math.floor(148));
 
         //console.log("choice :", rndChoice);
 
@@ -2199,6 +2794,337 @@ class PieceList {
             param_avoidDanger_3_b = param_avoidDanger_3_b + rndValue;
         }
 
+        if (rndChoice == 44) {
+            param_capture_1_time_b = param_capture_1_time_b + rndValue;
+        }
+        if (rndChoice == 45) {
+            param_capture_2_time_b = param_capture_2_time_b + rndValue;
+        }
+        if (rndChoice == 46) {
+            param_capture_3_time_b = param_capture_3_time_b + rndValue;
+        }
+        if (rndChoice == 47) {
+            param_capture_1_score_b = param_capture_1_score_b + rndValue;
+        }
+        if (rndChoice == 48) {
+            param_capture_2_score_b = param_capture_2_score_b + rndValue;
+        }
+        if (rndChoice == 49) {
+            param_capture_3_score_b = param_capture_3_score_b + rndValue;
+        }
+        if (rndChoice == 50) {
+            param_defend_1_time_b = param_defend_1_time_b + rndValue;
+        }
+        if (rndChoice == 51) {
+            param_defend_2_time_b = param_defend_2_time_b + rndValue;
+        }
+        if (rndChoice == 52) {
+            param_defend_3_time_b = param_defend_3_time_b + rndValue;
+        }
+        if (rndChoice == 53) {
+            param_defend_1_score_b = param_defend_1_score_b + rndValue;
+        }
+        if (rndChoice == 54) {
+            param_defend_2_score_b = param_defend_2_score_b + rndValue;
+        }
+        if (rndChoice == 55) {
+            param_defend_3_score_b = param_defend_3_score_b + rndValue;
+        }
+        if (rndChoice == 56) {
+            param_flock_1_time_b = param_flock_1_time_b + rndValue;
+        }
+        if (rndChoice == 57) {
+            param_flock_2_time_b = param_flock_2_time_b + rndValue;
+        }
+        if (rndChoice == 58) {
+            param_flock_3_time_b = param_flock_3_time_b + rndValue;
+        }
+        if (rndChoice == 59) {
+            param_flock_1_score_b = param_flock_1_score_b + rndValue;
+        }
+        if (rndChoice == 60) {
+            param_flock_2_score_b = param_flock_2_score_b + rndValue;
+        }
+        if (rndChoice == 61) {
+            param_flock_3_score_b = param_flock_3_score_b + rndValue;
+        }
+        if (rndChoice == 62) {
+            pawn_1_time_b = pawn_1_time_b + rndValue;
+        }
+        if (rndChoice == 63) {
+            pawn_2_time_b = pawn_2_time_b + rndValue;
+        }
+        if (rndChoice == 64) {
+            pawn_3_time_b = pawn_3_time_b + rndValue;
+        }
+        if (rndChoice == 65) {
+            pawn_1_score_b = pawn_1_score_b + rndValue;
+        }
+        if (rndChoice == 66) {
+            pawn_2_score_b = pawn_2_score_b + rndValue;
+        }
+        if (rndChoice == 67) {
+            pawn_3_score_b = pawn_3_score_b + rndValue;
+        }
+        if (rndChoice == 68) {
+            knight_1_time_b = knight_1_time_b + rndValue;
+        }
+        if (rndChoice == 69) {
+            knight_2_time_b = knight_2_time_b + rndValue;
+        }
+        if (rndChoice == 70) {
+            knight_3_time_b = knight_3_time_b + rndValue;
+        }
+        if (rndChoice == 71) {
+            knight_1_score_b = knight_1_score_b + rndValue;
+        }
+        if (rndChoice == 72) {
+            knight_2_score_b = knight_2_score_b + rndValue;
+        }
+        if (rndChoice == 73) {
+            knight_3_score_b = knight_3_score_b + rndValue;
+        }
+        if (rndChoice == 74) {
+            bishop_1_time_b = bishop_1_time_b + rndValue;
+        }
+        if (rndChoice == 75) {
+            bishop_2_time_b = bishop_2_time_b + rndValue;
+        }
+        if (rndChoice == 76) {
+            bishop_3_time_b = bishop_3_time_b + rndValue;
+        }
+        if (rndChoice == 77) {
+            bishop_1_score_b = bishop_1_score_b + rndValue;
+        }
+        if (rndChoice == 78) {
+            bishop_2_score_b = bishop_2_score_b + rndValue;
+        }
+        if (rndChoice == 79) {
+            bishop_3_score_b = bishop_3_score_b + rndValue;
+        }
+        if (rndChoice == 80) {
+            rook_1_time_b = rook_1_time_b + rndValue;
+        }
+        if (rndChoice == 81) {
+            rook_2_time_b = rook_2_time_b + rndValue;
+        }
+        if (rndChoice == 82) {
+            rook_3_time_b = rook_3_time_b + rndValue;
+        }
+        if (rndChoice == 83) {
+            rook_1_score_b = rook_1_score_b + rndValue;
+        }
+        if (rndChoice == 84) {
+            rook_2_score_b = rook_2_score_b + rndValue;
+        }
+        if (rndChoice == 85) {
+            rook_3_score_b = rook_3_score_b + rndValue;
+        }
+        if (rndChoice == 86) {
+            queen_1_time_b = queen_1_time_b + rndValue;
+        }
+        if (rndChoice == 87) {
+            queen_2_time_b = queen_2_time_b + rndValue;
+        }
+        if (rndChoice == 88) {
+            queen_3_time_b = queen_3_time_b + rndValue;
+        }
+        if (rndChoice == 89) {
+            queen_1_score_b = queen_1_score_b + rndValue;
+        }
+        if (rndChoice == 90) {
+            queen_2_score_b = queen_2_score_b + rndValue;
+        }
+        if (rndChoice == 91) {
+            queen_3_score_b = queen_3_score_b + rndValue;
+        }
+        if (rndChoice == 92) {
+            king_1_time_b = king_1_time_b + rndValue;
+        }
+        if (rndChoice == 93) {
+            king_2_time_b = king_2_time_b + rndValue;
+        }
+        if (rndChoice == 94) {
+            king_3_time_b = king_3_time_b + rndValue;
+        }
+        if (rndChoice == 95) {
+            king_1_score_b = king_1_score_b + rndValue;
+        }
+        if (rndChoice == 96) {
+            king_2_score_b = king_2_score_b + rndValue;
+        }
+        if (rndChoice == 97) {
+            king_3_score_b = king_3_score_b + rndValue;
+        }
+        if (rndChoice == 98) {
+            dragon_1_time_b = dragon_1_time_b + rndValue;
+        }
+        if (rndChoice == 99) {
+            dragon_2_time_b = dragon_2_time_b + rndValue;
+        }
+        if (rndChoice == 100) {
+            dragon_3_time_b = dragon_3_time_b + rndValue;
+        }
+        if (rndChoice == 101) {
+            dragon_1_score_b = dragon_1_score_b + rndValue;
+        }
+        if (rndChoice == 102) {
+            dragon_2_score_b = dragon_2_score_b + rndValue;
+        }
+        if (rndChoice == 103) {
+            dragon_3_score_b = dragon_3_score_b + rndValue;
+        }
+        if (rndChoice == 104) {
+            kingCapture_1_time_b = kingCapture_1_time_b + rndValue;
+        }
+        if (rndChoice == 105) {
+            kingCapture_2_time_b = kingCapture_2_time_b + rndValue;
+        }
+        if (rndChoice == 106) {
+            kingCapture_3_time_b = kingCapture_3_time_b + rndValue;
+        }
+        if (rndChoice == 107) {
+            kingCapture_1_score_b = kingCapture_1_score_b + rndValue;
+        }
+        if (rndChoice == 108) {
+            kingCapture_2_score_b = kingCapture_2_score_b + rndValue;
+        }
+        if (rndChoice == 109) {
+            kingCapture_3_score_b = kingCapture_3_score_b + rndValue;
+        }
+        if (rndChoice == 110) {
+            kingDefend_1_time_b = kingDefend_1_time_b + rndValue;
+        }
+        if (rndChoice == 111) {
+            kingDefend_2_time_b = kingDefend_2_time_b + rndValue;
+        }
+        if (rndChoice == 112) {
+            kingDefend_3_time_b = kingDefend_3_time_b + rndValue;
+        }
+        if (rndChoice == 113) {
+            kingDefend_1_score_b = kingDefend_1_score_b + rndValue;
+        }
+        if (rndChoice == 114) {
+            kingDefend_2_score_b = kingDefend_2_score_b + rndValue;
+        }
+        if (rndChoice == 115) {
+            kingDefend_3_score_b = kingDefend_3_score_b + rndValue;
+        }
+        if (rndChoice == 116) {
+            param_avoidDanger_1_time_b = param_avoidDanger_1_time_b + rndValue;
+        }
+        if (rndChoice == 117) {
+            param_avoidDanger_2_time_b = param_avoidDanger_2_time_b + rndValue;
+        }
+        if (rndChoice == 118) {
+            param_avoidDanger_3_time_b = param_avoidDanger_3_time_b + rndValue;
+        }
+        if (rndChoice == 116) {
+            param_avoidDanger_1_score_b = param_avoidDanger_1_score_b + rndValue;
+        }
+        if (rndChoice == 117) {
+            param_avoidDanger_2_score_b = param_avoidDanger_2_score_b + rndValue;
+        }
+        if (rndChoice == 118) {
+            param_avoidDanger_3_score_b = param_avoidDanger_3_score_b + rndValue;
+        }
+        if (rndChoice == 119) {
+            param_attack_1_b = param_attack_1_b + rndValue;
+        }
+        if (rndChoice == 120) {
+            param_attack_2_b = param_attack_2_b + rndValue;
+        }
+        if (rndChoice == 121) {
+            param_attack_3_b = param_attack_3_b + rndValue;
+        }
+        if (rndChoice == 122) {
+            param_attack_1_score_b = param_attack_1_score_b + rndValue;
+        }
+        if (rndChoice == 123) {
+            param_attack_2_score_b = param_attack_2_score_b + rndValue;
+        }
+        if (rndChoice == 124) {
+            param_attack_3_score_b = param_attack_3_score_b + rndValue;
+        }
+        if (rndChoice == 125) {
+            param_attack_1_time_b = param_attack_1_time_b + rndValue;
+        }
+        if (rndChoice == 126) {
+            param_attack_1_time_b = param_attack_1_time_b + rndValue;
+        }
+        if (rndChoice == 127) {
+            param_attack_1_time_b = param_attack_1_time_b + rndValue;
+        }
+        if (rndChoice == 128) {
+            dragonCapture_1_b = dragonCapture_1_b + rndValue;
+        }
+        if (rndChoice == 129) {
+            dragonCapture_2_b = dragonCapture_2_b + rndValue;
+        }
+        if (rndChoice == 130) {
+            dragonCapture_3_b = dragonCapture_3_b + rndValue;
+        }
+        if (rndChoice == 131) {
+            dragonDefend_1_b = dragonDefend_1_b + rndValue;
+        }
+        if (rndChoice == 132) {
+            dragonDefend_2_b = dragonDefend_2_b + rndValue;
+        }
+        if (rndChoice == 133) {
+            dragonDefend_3_b = dragonDefend_3_b + rndValue;
+
+        }
+        if (rndChoice == 134) {
+            dragonDefend_1_time = rndValue;
+        }
+        if (rndChoice == 135) {
+            dragonDefend_2_time = rndValue;
+        }
+        if (rndChoice == 136) {
+            dragonDefend_3_time = rndValue;
+        }    
+            
+        if (rndChoice == 137) {
+            dragonDefend_1_score = rndValue;
+        }
+        if (rndChoice == 138) {
+            dragonDefend_2_score = rndValue;
+        }
+        if (rndChoice == 139) {
+            dragonDefend_3_score = rndValue;
+        }        
+    
+        if (rndChoice == 140) {
+            pawnCapture_1 = rndValue;
+        }
+        if (rndChoice == 141) {
+            pawnCapture_2 = rndValue;
+        }
+        if (rndChoice == 142) {
+            pawnCapture_3 = rndValue;
+        }
+               
+        if (rndChoice == 143) {
+            pawnCapture_1_time = rndValue;
+        }
+        if (rndChoice == 144) {
+            pawnCapture_2_time = rndValue;
+        }
+        if (rndChoice == 145) {
+            pawnCapture_3_time = rndValue;
+        }    
+            
+        if (rndChoice == 146) {
+            pawnCapture_1_score = rndValue;
+        }
+        if (rndChoice == 147) {
+            pawnCapture_2_score = rndValue;
+        }
+        if (rndChoice == 148) {
+            pawnCapture_3_score = rndValue;
+        } 
+        
+        
     }
 
 
@@ -2209,23 +3135,33 @@ class PieceList {
 //set start positions
 //white in play
 var whitePawns = "(4,36);(4,35);(5,36);(5,35);(6,34);(6,35);(7,36);(7,35);(8,36);(5,34);(5,33);(6,33);(7,34)";
+
 var whiteKnights = "(4,37);(7,37)";
-var whiteRooks = "(4,38);(8,38),(5,38)";
+//var whiteKnights = "(7,37)";
+var whiteRooks = "(4,38);(8,38);(5,38)";
+//var whiteRooks = "";
 var whiteBishops = "(6,36);(6,37);(7,38)";
+//var whiteBishops = "";
 var whiteQueen = "(5,37)";
+//var whiteQueen = "";
 var whiteKing = "(6,38)"
 var whiteDragon = "(9,35);(2,35)";
-
+//var whiteDragon = "";
 
 //black in play
 var blackPawns = "(4,4);(4,5);(5,4);(5,5);(6,6);(6,5);(7,4);(7,5);(8,4);(5,6);(5,7);(6,7);(7,6)";
+
 var blackKnights = "(4,3);(7,3)";
-var blackRooks = "(4,2);(8,2),(7,2)";
+//var blackKnights = "(4,3)";
+var blackRooks = "(4,2);(8,2);(7,2)";
+//var blackRooks = "";
 var blackBishops = "(5,2);(5,3);(6,4)";
+//var blackBishops = "";
 var blackQueen = "(6,3)";
+//var blackQueen = "";
 var blackKing = "(6,2)";
 var blackDragon = "(2,5);(9,5)";
-
+//var blackDragon = "";
 
 //pawn promotion hexs
 var whitePawnPromoHexs = "(4,2);(5,2);(6,2);(7,2);(8,2)";
@@ -2321,20 +3257,19 @@ function updateMessageBox(x, y) {
 }
 
 function displayWinnerMessage() {
-    if (game.winner == 'stalemate'){
-        if (game.getPointTotal('w') > game.getPointTotal('b')){
+    if (game.winner == 'stalemate') {
+        if (game.getPointTotal('w') > game.getPointTotal('b')) {
             game.winner = 'White';
-        }
-        else{
+        } else {
             game.winner = 'Black';
         }
-        
+
     }
-    
+
     info.innerHTML = game.winner + ' Wins!' + '<br />Turn #: ' + game.turnNumber;
     console.log(game.getPointTotal('b'));
-    
-    
+
+
 
     //save parameters
     //console.log("Turn #",game.turnNumber);
@@ -2351,10 +3286,12 @@ function displayWinnerMessage() {
     loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
     resetGame();
     game.gameOver = false;
-
+    sleep(500);
     document.getElementById('btnMutate').click();
 
 }
+
+//////////Main Game Loop /////////////////////////////////
 
 function selectPiece(p) {
     if (game.gameOver == false) {
@@ -2365,7 +3302,7 @@ function selectPiece(p) {
                 if (game.computerPlayer == 'Auto') {
                     computerMoves();
                 }
-            }, 300);
+            }, 400);
 
         } else {
             var rect = c.getBoundingClientRect();
@@ -2608,8 +3545,8 @@ function computerMoves() {
         game.movePiece(newX, newY, pieceToMove);
 
         //test if game won - if so exit and display winner
-        if (game.isGameWon() == true || game.turnNumber > 301) {
-            if (game.turnNumber >= 300) {
+        if (game.isGameWon() == true || game.turnNumber > 600) {
+            if (game.turnNumber >= 600) {
                 game.winner = 'stalemate';
             }
             game.gameOver = true;
@@ -2668,10 +3605,10 @@ function saveFile(winner) {
     console.log("Winner: ", winner);
     console.log("Turns:", game.turnNumber);
 
-    if (winner == 'White' && game.turnNumber < previousScore) {
+    if (winner == 'White' && game.turnNumber <= previousScore + 20) {
 
         var saveStr = 'var previousWinner = ' + "'" + game.winner + "'" + ';' +
-            'var previousScore = ' + previousScore + ';' +
+            'var previousScore = ' + game.turnNumber + ';' +
             'var param_early = ' + param_early + ';' +
             'var param_late = ' + param_late + ';' +
             'var param_capture_1 = ' + param_capture_1 + ';' +
@@ -2715,14 +3652,131 @@ function saveFile(winner) {
             'var kingDefend_3 = ' + kingDefend_3 + ';' +
             'var param_avoidDanger_1 = ' + param_avoidDanger_1 + ';' +
             'var param_avoidDanger_2 = ' + param_avoidDanger_2 + ';' +
-            'var param_avoidDanger_3 = ' + param_avoidDanger_3 + ';'
+            'var param_avoidDanger_3 = ' + param_avoidDanger_3 + ';' +
+            'var param_capture_1_time = ' + param_capture_1_time + ';' +
+            'var param_capture_1_score = ' + param_capture_1_score + ';' +
+            'var param_capture_2_time = ' + param_capture_2_time + ';' +
+            'var param_capture_2_score = ' + param_capture_2_score + ';' +
+            'var param_capture_3_time = ' + param_capture_3_time + ';' +
+            'var param_capture_3_score = ' + param_capture_3_score + ';' +
+            'var param_defend_1_time = ' + param_defend_1_time + ';' +
+            'var param_defend_1_score = ' + param_defend_1_score + ';' +
+            'var param_defend_2_time = ' + param_defend_2_time + ';' +
+            'var param_defend_2_score = ' + param_defend_2_score + ';' +
+            'var param_defend_3_time = ' + param_defend_3_time + ';' +
+            'var param_defend_3_score = ' + param_defend_3_score + ';' +
+            'var param_flock_1_time = ' + param_flock_1_time + ';' +
+            'var param_flock_1_score = ' + param_flock_1_score + ';' +
+            'var param_flock_2_time = ' + param_flock_2_time + ';' +
+            'var param_flock_2_score = ' + param_flock_2_score + ';' +
+            'var param_flock_3_time = ' + param_flock_3_time + ';' +
+            'var param_flock_3_score = ' + param_flock_3_score + ';' +
+            'var pawn_1_time = ' + pawn_1_time + ';' +
+            'var pawn_1_score = ' + pawn_1_score + ';' +
+            'var pawn_2_time = ' + pawn_2_time + ';' +
+            'var pawn_2_score = ' + pawn_2_score + ';' +
+            'var pawn_3_time = ' + pawn_3_time + ';' +
+            'var pawn_3_score = ' + pawn_3_score + ';' +
+            'var knight_1_time = ' + knight_1_time + ';' +
+            'var knight_1_score = ' + knight_1_score + ';' +
+            'var knight_2_time = ' + knight_2_time + ';' +
+            'var knight_2_score = ' + knight_2_score + ';' +
+            'var knight_3_time = ' + knight_3_time + ';' +
+            'var knight_3_score = ' + knight_3_score + ';' +
+            'var bishop_1_time = ' + bishop_1_time + ';' +
+            'var bishop_1_score = ' + bishop_1_score + ';' +
+            'var bishop_2_time = ' + bishop_2_time + ';' +
+            'var bishop_2_score = ' + bishop_2_score + ';' +
+            'var bishop_3_time = ' + bishop_3_time + ';' +
+            'var bishop_3_score = ' + bishop_3_score + ';' +
+            'var rook_1_time = ' + rook_1_time + ';' +
+            'var rook_1_score = ' + rook_1_score + ';' +
+            'var rook_2_time = ' + rook_2_time + ';' +
+            'var rook_2_score = ' + rook_2_score + ';' +
+            'var rook_3_time = ' + rook_3_time + ';' +
+            'var rook_3_score = ' + rook_3_score + ';' +
+            'var queen_1_time = ' + queen_1_time + ';' +
+            'var queen_1_score = ' + queen_1_score + ';' +
+            'var queen_2_time = ' + queen_2_time + ';' +
+            'var queen_2_score = ' + queen_2_score + ';' +
+            'var queen_3_time = ' + queen_3_time + ';' +
+            'var queen_3_score = ' + queen_3_score + ';' +
+            'var king_1_time = ' + king_1_time + ';' +
+            'var king_1_score = ' + king_1_score + ';' +
+            'var king_2_time = ' + king_2_time + ';' +
+            'var king_2_score = ' + king_2_score + ';' +
+            'var king_3_time = ' + king_3_time + ';' +
+            'var king_3_score = ' + king_3_score + ';' +
+            'var dragon_1_time = ' + dragon_1_time + ';' +
+            'var dragon_1_score = ' + dragon_1_score + ';' +
+            'var dragon_2_time = ' + dragon_2_time + ';' +
+            'var dragon_2_score = ' + dragon_2_score + ';' +
+            'var dragon_3_time = ' + dragon_3_time + ';' +
+            'var dragon_3_score = ' + dragon_3_score + ';' +
+            'var kingCapture_1_time = ' + kingCapture_1_time + ';' +
+            'var kingCapture_1_score = ' + kingCapture_1_score + ';' +
+            'var kingCapture_2_time = ' + kingCapture_2_time + ';' +
+            'var kingCapture_2_score = ' + kingCapture_2_score + ';' +
+            'var kingCapture_3_time = ' + kingCapture_3_time + ';' +
+            'var kingCapture_3_score = ' + kingCapture_3_score + ';' +
+            'var kingDefend_1_time = ' + kingDefend_1_time + ';' +
+            'var kingDefend_1_score = ' + kingDefend_1_score + ';' +
+            'var kingDefend_2_time = ' + kingDefend_2_time + ';' +
+            'var kingDefend_2_score = ' + kingDefend_2_score + ';' +
+            'var kingDefend_3_time = ' + kingDefend_3_time + ';' +
+            'var kingDefend_3_score = ' + kingDefend_3_score + ';' +
+            'var param_avoidDanger_1_time = ' + param_avoidDanger_1_time + ';' +
+            'var param_avoidDanger_1_score = ' + param_avoidDanger_1_score + ';' +
+            'var param_avoidDanger_2_time = ' + param_avoidDanger_2_time + ';' +
+            'var param_avoidDanger_2_score = ' + param_avoidDanger_2_score + ';' +
+            'var param_avoidDanger_3_time = ' + param_avoidDanger_3_time + ';' +
+            'var param_avoidDanger_3_score = ' + param_avoidDanger_3_score + ';' +
+            'var param_attack_1 = ' + param_attack_1 + ';' +
+            'var param_attack_2 = ' + param_attack_2 + ';' +
+            'var param_attack_3 = ' + param_attack_3 + ';' +
+            'var param_attack_1_time = ' + param_attack_1_time + ';' +
+            'var param_attack_1_score = ' + param_attack_1_score + ';' +
+            'var param_attack_2_time = ' + param_attack_2_time + ';' +
+            'var param_attack_2_score = ' + param_attack_2_score + ';' +
+            'var param_attack_3_time = ' + param_attack_3_time + ';' +
+            'var param_attack_3_score = ' + param_attack_3_score + ';' +
+            'var dragonCapture_1 = ' + dragonCapture_1 + ';' +
+            'var dragonCapture_2 = ' + dragonCapture_2 + ';' +
+            'var dragonCapture_3 = ' + dragonCapture_3 + ';' +
+            'var dragonDefend_1 = ' + dragonDefend_1 + ';' +
+            'var dragonDefend_2 = ' + dragonDefend_2 + ';' +
+            'var dragonDefend_3 = ' + dragonDefend_3 + ';' +
+            'var dragonCapture_1_time = ' + dragonCapture_1_time + ';' +
+            'var dragonCapture_1_score = ' + dragonCapture_1_score + ';' +
+            'var dragonCapture_2_time = ' + dragonCapture_2_time + ';' +
+            'var dragonCapture_2_score = ' + dragonCapture_2_score + ';' +
+            'var dragonCapture_3_time = ' + dragonCapture_3_time + ';' +
+            'var dragonCapture_3_score = ' + dragonCapture_3_score + ';' +
+            'var dragonDefend_1_time = ' + dragonDefend_1_time + ';' +
+            'var dragonDefend_1_score = ' + dragonDefend_1_score + ';' +
+            'var dragonDefend_2_time = ' + dragonDefend_2_time + ';' +
+            'var dragonDefend_2_score = ' + dragonDefend_2_score + ';' +
+            'var dragonDefend_3_time = ' + dragonDefend_3_time + ';' +
+            'var dragonDefend_3_score = ' + dragonDefend_3_score + ';' +
+            'var pawnCapture_1 = ' + pawnCapture_1 + ';' +
+            'var pawnCapture_2 = ' + pawnCapture_2 + ';' +
+            'var pawnCapture_3 = ' + pawnCapture_3 + ';' +
+            'var pawnCapture_1_time = ' + pawnCapture_1_time + ';' +
+            'var pawnCapture_1_score = ' + pawnCapture_1_score + ';' +
+            'var pawnCapture_2_time = ' + pawnCapture_2_time + ';' +
+            'var pawnCapture_2_score = ' + pawnCapture_2_score + ';' +
+            'var pawnCapture_3_time = ' + pawnCapture_3_time + ';' +
+            'var pawnCapture_3_score = ' + pawnCapture_3_score + ';'  
 
         download('parameterFile.txt', saveStr);
 
-        loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
+    }
+
+    if (winner == 'White' && game.turnNumber > previousScore) {
+
 
         var saveStr = 'var previousWinner_b = ' + "'" + game.winner + "'" + ';' +
-            'var previousScore_b = ' + 1000 + ';' +
+            'var previousScore_b = ' + game.turnNumber + ';' +
             'var param_early_b = ' + param_early_b + ';' +
             'var param_late_b = ' + param_late_b + ';' +
             'var param_capture_1_b = ' + param_capture_1_b + ';' +
@@ -2766,17 +3820,132 @@ function saveFile(winner) {
             'var kingDefend_3_b = ' + kingDefend_3_b + ';' +
             'var param_avoidDanger_1_b = ' + param_avoidDanger_1_b + ';' +
             'var param_avoidDanger_2_b = ' + param_avoidDanger_2_b + ';' +
-            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';'
+            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';' +
+            'var param_capture_1_time_b = ' + param_capture_1_time_b + ';' +
+            'var param_capture_1_score_b = ' + param_capture_1_score_b + ';' +
+            'var param_capture_2_time_b = ' + param_capture_2_time_b + ';' +
+            'var param_capture_2_score_b = ' + param_capture_2_score_b + ';' +
+            'var param_capture_3_time_b = ' + param_capture_3_time_b + ';' +
+            'var param_capture_3_score_b = ' + param_capture_3_score_b + ';' +
+            'var param_defend_1_time_b = ' + param_defend_1_time_b + ';' +
+            'var param_defend_1_score_b = ' + param_defend_1_score_b + ';' +
+            'var param_defend_2_time_b = ' + param_defend_2_time_b + ';' +
+            'var param_defend_2_score_b = ' + param_defend_2_score_b + ';' +
+            'var param_defend_3_time_b = ' + param_defend_3_time_b + ';' +
+            'var param_defend_3_score_b = ' + param_defend_3_score_b + ';' +
+            'var param_flock_1_time_b = ' + param_flock_1_time_b + ';' +
+            'var param_flock_1_score_b = ' + param_flock_1_score_b + ';' +
+            'var param_flock_2_time_b = ' + param_flock_2_time_b + ';' +
+            'var param_flock_2_score_b = ' + param_flock_2_score_b + ';' +
+            'var param_flock_3_time_b = ' + param_flock_3_time_b + ';' +
+            'var param_flock_3_score_b = ' + param_flock_3_score_b + ';' +
+            'var pawn_1_time_b = ' + pawn_1_time_b + ';' +
+            'var pawn_1_score_b = ' + pawn_1_score_b + ';' +
+            'var pawn_2_time_b = ' + pawn_2_time_b + ';' +
+            'var pawn_2_score_b = ' + pawn_2_score_b + ';' +
+            'var pawn_3_time_b = ' + pawn_3_time_b + ';' +
+            'var pawn_3_score_b = ' + pawn_3_score_b + ';' +
+            'var knight_1_time_b = ' + knight_1_time_b + ';' +
+            'var knight_1_score_b = ' + knight_1_score_b + ';' +
+            'var knight_2_time_b = ' + knight_2_time_b + ';' +
+            'var knight_2_score_b = ' + knight_2_score_b + ';' +
+            'var knight_3_time_b = ' + knight_3_time_b + ';' +
+            'var knight_3_score_b = ' + knight_3_score_b + ';' +
+            'var bishop_1_time_b = ' + bishop_1_time_b + ';' +
+            'var bishop_1_score_b = ' + bishop_1_score_b + ';' +
+            'var bishop_2_time_b = ' + bishop_2_time_b + ';' +
+            'var bishop_2_score_b = ' + bishop_2_score_b + ';' +
+            'var bishop_3_time_b = ' + bishop_3_time_b + ';' +
+            'var bishop_3_score_b = ' + bishop_3_score_b + ';' +
+            'var rook_1_time_b = ' + rook_1_time_b + ';' +
+            'var rook_1_score_b = ' + rook_1_score_b + ';' +
+            'var rook_2_time_b = ' + rook_2_time_b + ';' +
+            'var rook_2_score_b = ' + rook_2_score_b + ';' +
+            'var rook_3_time_b = ' + rook_3_time_b + ';' +
+            'var rook_3_score_b = ' + rook_3_score_b + ';' +
+            'var queen_1_time_b = ' + queen_1_time_b + ';' +
+            'var queen_1_score_b = ' + queen_1_score_b + ';' +
+            'var queen_2_time_b = ' + queen_2_time_b + ';' +
+            'var queen_2_score_b = ' + queen_2_score_b + ';' +
+            'var queen_3_time_b = ' + queen_3_time_b + ';' +
+            'var queen_3_score_b = ' + queen_3_score_b + ';' +
+            'var king_1_time_b = ' + king_1_time_b + ';' +
+            'var king_1_score_b = ' + king_1_score_b + ';' +
+            'var king_2_time_b = ' + king_2_time_b + ';' +
+            'var king_2_score_b = ' + king_2_score_b + ';' +
+            'var king_3_time_b = ' + king_3_time_b + ';' +
+            'var king_3_score_b = ' + king_3_score_b + ';' +
+            'var dragon_1_time_b = ' + dragon_1_time_b + ';' +
+            'var dragon_1_score_b = ' + dragon_1_score_b + ';' +
+            'var dragon_2_time_b = ' + dragon_2_time_b + ';' +
+            'var dragon_2_score_b = ' + dragon_2_score_b + ';' +
+            'var dragon_3_time_b = ' + dragon_3_time_b + ';' +
+            'var dragon_3_score_b = ' + dragon_3_score_b + ';' +
+            'var kingCapture_1_time_b = ' + kingCapture_1_time_b + ';' +
+            'var kingCapture_1_score_b = ' + kingCapture_1_score_b + ';' +
+            'var kingCapture_2_time_b = ' + kingCapture_2_time_b + ';' +
+            'var kingCapture_2_score_b = ' + kingCapture_2_score_b + ';' +
+            'var kingCapture_3_time_b = ' + kingCapture_3_time_b + ';' +
+            'var kingCapture_3_score_b = ' + kingCapture_3_score_b + ';' +
+            'var kingDefend_1_time_b = ' + kingDefend_1_time_b + ';' +
+            'var kingDefend_1_score_b = ' + kingDefend_1_score_b + ';' +
+            'var kingDefend_2_time_b = ' + kingDefend_2_time_b + ';' +
+            'var kingDefend_2_score_b = ' + kingDefend_2_score + ';' +
+            'var kingDefend_3_time_b = ' + kingDefend_3_time_b + ';' +
+            'var kingDefend_3_score_b = ' + kingDefend_3_score_b + ';' +
+            'var param_avoidDanger_1_time_b = ' + param_avoidDanger_1_time_b + ';' +
+            'var param_avoidDanger_1_score_b = ' + param_avoidDanger_1_score_b + ';' +
+            'var param_avoidDanger_2_time_b = ' + param_avoidDanger_2_time_b + ';' +
+            'var param_avoidDanger_2_score_b = ' + param_avoidDanger_2_score_b + ';' +
+            'var param_avoidDanger_3_time_b = ' + param_avoidDanger_3_time_b + ';' +
+            'var param_avoidDanger_3_score_b = ' + param_avoidDanger_3_score + ';' +
+            'var param_attack_1_b = ' + param_attack_1_b + ';' +
+            'var param_attack_2_b = ' + param_attack_2_b + ';' +
+            'var param_attack_3_b = ' + param_attack_3_b + ';' +
+            'var param_attack_1_time_b = ' + param_attack_1_time_b + ';' +
+            'var param_attack_1_score_b = ' + param_attack_1_score_b + ';' +
+            'var param_attack_2_time_b = ' + param_attack_2_time_b + ';' +
+            'var param_attack_2_score_b = ' + param_attack_2_score_b + ';' +
+            'var param_attack_3_time_b = ' + param_attack_3_time_b + ';' +
+            'var param_attack_3_score_b = ' + param_attack_3_score_b + ';' +
+            'var dragonCapture_1_b = ' + dragonCapture_1_b + ';' +
+            'var dragonCapture_2_b = ' + dragonCapture_2_b + ';' +
+            'var dragonCapture_3_b = ' + dragonCapture_3_b + ';' +
+            'var dragonDefend_1_b = ' + dragonDefend_1_b + ';' +
+            'var dragonDefend_2_b = ' + dragonDefend_2_b + ';' +
+            'var dragonDefend_3_b = ' + dragonDefend_3_b + ';' +
+            'var dragonCapture_1_time_b = ' + dragonCapture_1_time_b + ';' +
+            'var dragonCapture_1_score_b = ' + dragonCapture_1_score_b + ';' +
+            'var dragonCapture_2_time_b = ' + dragonCapture_2_time_b + ';' +
+            'var dragonCapture_2_score_b = ' + dragonCapture_2_score_b + ';' +
+            'var dragonCapture_3_time_b = ' + dragonCapture_3_time_b + ';' +
+            'var dragonCapture_3_score_b = ' + dragonCapture_3_score_b + ';' +
+            'var dragonDefend_1_time_b = ' + dragonDefend_1_time_b + ';' +
+            'var dragonDefend_1_score_b = ' + dragonDefend_1_score_b + ';' +
+            'var dragonDefend_2_time_b = ' + dragonDefend_2_time_b + ';' +
+            'var dragonDefend_2_score_b = ' + dragonDefend_2_score + ';' +
+            'var dragonDefend_3_time_b = ' + dragonDefend_3_time_b + ';' +
+            'var dragonDefend_3_score_b = ' + dragonDefend_3_score_b + ';' +
+            'var pawnCapture_1_b = ' + pawnCapture_1_b + ';' +
+            'var pawnCapture_2_b = ' + pawnCapture_2_b + ';' +
+            'var pawnCapture_3_b = ' + pawnCapture_3_b + ';' +
+            'var pawnCapture_1_time_b = ' + pawnCapture_1_time_b + ';' +
+            'var pawnCapture_1_score_b = ' + pawnCapture_1_score_b + ';' +
+            'var pawnCapture_2_time_b = ' + pawnCapture_2_time_b + ';' +
+            'var pawnCapture_2_score_b = ' + pawnCapture_2_score_b + ';' +
+            'var pawnCapture_3_time_b = ' + pawnCapture_3_time_b + ';' +
+            'var pawnCapture_3_score_b = ' + pawnCapture_3_score_b + ';'  
+
+
 
         download('parameterFile_b.txt', saveStr);
-
 
     }
 
-    if (winner == 'Black' && game.turnNumber < previousScore_b) {
+    if (winner == 'Black' && game.turnNumber <= previousScore_b + 20) {
 
         var saveStr = 'var previousWinner_b = ' + "'" + game.winner + "'" + ';' +
-            'var previousScore_b = ' + previousScore_b + ';' +
+            'var previousScore_b = ' + game.turnNumber + ';' +
             'var param_early_b = ' + param_early_b + ';' +
             'var param_late_b = ' + param_late_b + ';' +
             'var param_capture_1_b = ' + param_capture_1_b + ';' +
@@ -2820,65 +3989,291 @@ function saveFile(winner) {
             'var kingDefend_3_b = ' + kingDefend_3_b + ';' +
             'var param_avoidDanger_1_b = ' + param_avoidDanger_1_b + ';' +
             'var param_avoidDanger_2_b = ' + param_avoidDanger_2_b + ';' +
-            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';'
+            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';' +
+            'var param_capture_1_time_b = ' + param_capture_1_time_b + ';' +
+            'var param_capture_1_score_b = ' + param_capture_1_score_b + ';' +
+            'var param_capture_2_time_b = ' + param_capture_2_time_b + ';' +
+            'var param_capture_2_score_b = ' + param_capture_2_score_b + ';' +
+            'var param_capture_3_time_b = ' + param_capture_3_time_b + ';' +
+            'var param_capture_3_score_b = ' + param_capture_3_score_b + ';' +
+            'var param_defend_1_time_b = ' + param_defend_1_time_b + ';' +
+            'var param_defend_1_score_b = ' + param_defend_1_score_b + ';' +
+            'var param_defend_2_time_b = ' + param_defend_2_time_b + ';' +
+            'var param_defend_2_score_b = ' + param_defend_2_score_b + ';' +
+            'var param_defend_3_time_b = ' + param_defend_3_time_b + ';' +
+            'var param_defend_3_score_b = ' + param_defend_3_score_b + ';' +
+            'var param_flock_1_time_b = ' + param_flock_1_time_b + ';' +
+            'var param_flock_1_score_b = ' + param_flock_1_score_b + ';' +
+            'var param_flock_2_time_b = ' + param_flock_2_time_b + ';' +
+            'var param_flock_2_score_b = ' + param_flock_2_score_b + ';' +
+            'var param_flock_3_time_b = ' + param_flock_3_time_b + ';' +
+            'var param_flock_3_score_b = ' + param_flock_3_score_b + ';' +
+            'var pawn_1_time_b = ' + pawn_1_time_b + ';' +
+            'var pawn_1_score_b = ' + pawn_1_score_b + ';' +
+            'var pawn_2_time_b = ' + pawn_2_time_b + ';' +
+            'var pawn_2_score_b = ' + pawn_2_score_b + ';' +
+            'var pawn_3_time_b = ' + pawn_3_time_b + ';' +
+            'var pawn_3_score_b = ' + pawn_3_score_b + ';' +
+            'var knight_1_time_b = ' + knight_1_time_b + ';' +
+            'var knight_1_score_b = ' + knight_1_score_b + ';' +
+            'var knight_2_time_b = ' + knight_2_time_b + ';' +
+            'var knight_2_score_b = ' + knight_2_score_b + ';' +
+            'var knight_3_time_b = ' + knight_3_time_b + ';' +
+            'var knight_3_score_b = ' + knight_3_score_b + ';' +
+            'var bishop_1_time_b = ' + bishop_1_time_b + ';' +
+            'var bishop_1_score_b = ' + bishop_1_score_b + ';' +
+            'var bishop_2_time_b = ' + bishop_2_time_b + ';' +
+            'var bishop_2_score_b = ' + bishop_2_score_b + ';' +
+            'var bishop_3_time_b = ' + bishop_3_time_b + ';' +
+            'var bishop_3_score_b = ' + bishop_3_score_b + ';' +
+            'var rook_1_time_b = ' + rook_1_time_b + ';' +
+            'var rook_1_score_b = ' + rook_1_score_b + ';' +
+            'var rook_2_time_b = ' + rook_2_time_b + ';' +
+            'var rook_2_score_b = ' + rook_2_score_b + ';' +
+            'var rook_3_time_b = ' + rook_3_time_b + ';' +
+            'var rook_3_score_b = ' + rook_3_score_b + ';' +
+            'var queen_1_time_b = ' + queen_1_time_b + ';' +
+            'var queen_1_score_b = ' + queen_1_score_b + ';' +
+            'var queen_2_time_b = ' + queen_2_time_b + ';' +
+            'var queen_2_score_b = ' + queen_2_score_b + ';' +
+            'var queen_3_time_b = ' + queen_3_time_b + ';' +
+            'var queen_3_score_b = ' + queen_3_score_b + ';' +
+            'var king_1_time_b = ' + king_1_time_b + ';' +
+            'var king_1_score_b = ' + king_1_score_b + ';' +
+            'var king_2_time_b = ' + king_2_time_b + ';' +
+            'var king_2_score_b = ' + king_2_score_b + ';' +
+            'var king_3_time_b = ' + king_3_time_b + ';' +
+            'var king_3_score_b = ' + king_3_score_b + ';' +
+            'var dragon_1_time_b = ' + dragon_1_time_b + ';' +
+            'var dragon_1_score_b = ' + dragon_1_score_b + ';' +
+            'var dragon_2_time_b = ' + dragon_2_time_b + ';' +
+            'var dragon_2_score_b = ' + dragon_2_score_b + ';' +
+            'var dragon_3_time_b = ' + dragon_3_time_b + ';' +
+            'var dragon_3_score_b = ' + dragon_3_score_b + ';' +
+            'var kingCapture_1_time_b = ' + kingCapture_1_time_b + ';' +
+            'var kingCapture_1_score_b = ' + kingCapture_1_score_b + ';' +
+            'var kingCapture_2_time_b = ' + kingCapture_2_time_b + ';' +
+            'var kingCapture_2_score_b = ' + kingCapture_2_score_b + ';' +
+            'var kingCapture_3_time_b = ' + kingCapture_3_time_b + ';' +
+            'var kingCapture_3_score_b = ' + kingCapture_3_score_b + ';' +
+            'var kingDefend_1_time_b = ' + kingDefend_1_time_b + ';' +
+            'var kingDefend_1_score_b = ' + kingDefend_1_score_b + ';' +
+            'var kingDefend_2_time_b = ' + kingDefend_2_time_b + ';' +
+            'var kingDefend_2_score_b = ' + kingDefend_2_score + ';' +
+            'var kingDefend_3_time_b = ' + kingDefend_3_time_b + ';' +
+            'var kingDefend_3_score_b = ' + kingDefend_3_score_b + ';' +
+            'var param_avoidDanger_1_time_b = ' + param_avoidDanger_1_time_b + ';' +
+            'var param_avoidDanger_1_score_b = ' + param_avoidDanger_1_score_b + ';' +
+            'var param_avoidDanger_2_time_b = ' + param_avoidDanger_2_time_b + ';' +
+            'var param_avoidDanger_2_score_b = ' + param_avoidDanger_2_score_b + ';' +
+            'var param_avoidDanger_3_time_b = ' + param_avoidDanger_3_time_b + ';' +
+            'var param_avoidDanger_3_score_b = ' + param_avoidDanger_3_score + ';' +
+            'var param_attack_1_b = ' + param_attack_1_b + ';' +
+            'var param_attack_2_b = ' + param_attack_2_b + ';' +
+            'var param_attack_3_b = ' + param_attack_3_b + ';' +
+            'var param_attack_1_time_b = ' + param_attack_1_time_b + ';' +
+            'var param_attack_1_score_b = ' + param_attack_1_score_b + ';' +
+            'var param_attack_2_time_b = ' + param_attack_2_time_b + ';' +
+            'var param_attack_2_score_b = ' + param_attack_2_score_b + ';' +
+            'var param_attack_3_time_b = ' + param_attack_3_time_b + ';' +
+            'var param_attack_3_score_b = ' + param_attack_3_score_b + ';' +
+            'var dragonCapture_1_b = ' + dragonCapture_1_b + ';' +
+            'var dragonCapture_2_b = ' + dragonCapture_2_b + ';' +
+            'var dragonCapture_3_b = ' + dragonCapture_3_b + ';' +
+            'var dragonDefend_1_b = ' + dragonDefend_1_b + ';' +
+            'var dragonDefend_2_b = ' + dragonDefend_2_b + ';' +
+            'var dragonDefend_3_b = ' + dragonDefend_3_b + ';' +
+            'var dragonCapture_1_time_b = ' + dragonCapture_1_time_b + ';' +
+            'var dragonCapture_1_score_b = ' + dragonCapture_1_score_b + ';' +
+            'var dragonCapture_2_time_b = ' + dragonCapture_2_time_b + ';' +
+            'var dragonCapture_2_score_b = ' + dragonCapture_2_score_b + ';' +
+            'var dragonCapture_3_time_b = ' + dragonCapture_3_time_b + ';' +
+            'var dragonCapture_3_score_b = ' + dragonCapture_3_score_b + ';' +
+            'var dragonDefend_1_time_b = ' + dragonDefend_1_time_b + ';' +
+            'var dragonDefend_1_score_b = ' + dragonDefend_1_score_b + ';' +
+            'var dragonDefend_2_time_b = ' + dragonDefend_2_time_b + ';' +
+            'var dragonDefend_2_score_b = ' + dragonDefend_2_score + ';' +
+            'var dragonDefend_3_time_b = ' + dragonDefend_3_time_b + ';' +
+            'var dragonDefend_3_score_b = ' + dragonDefend_3_score_b + ';' +
+            'var pawnCapture_1_b = ' + pawnCapture_1_b + ';' +
+            'var pawnCapture_2_b = ' + pawnCapture_2_b + ';' +
+            'var pawnCapture_3_b = ' + pawnCapture_3_b + ';' +
+            'var pawnCapture_1_time_b = ' + pawnCapture_1_time_b + ';' +
+            'var pawnCapture_1_score_b = ' + pawnCapture_1_score_b + ';' +
+            'var pawnCapture_2_time_b = ' + pawnCapture_2_time_b + ';' +
+            'var pawnCapture_2_score_b = ' + pawnCapture_2_score_b + ';' +
+            'var pawnCapture_3_time_b = ' + pawnCapture_3_time_b + ';' +
+            'var pawnCapture_3_score_b = ' + pawnCapture_3_score_b + ';'  
 
         download('parameterFile_b.txt', saveStr);
+    }
 
-        loadScript('http://127.0.0.1:8887/parameterFile.txt');
+    if (winner == 'Black' && game.turnNumber > previousScore_b) {
 
         var saveStr = 'var previousWinner = ' + "'" + game.winner + "'" + ';' +
-            'var previousScore = ' + 1000 + ';' +
-            'var param_early = ' + (param_early + (0.1 * param_early_b)) + ';' +
-            'var param_late = ' + (param_late + (0.1 * param_late_b)) + ';' +
-            'var param_capture_1 = ' + (param_capture_1 + (0.1 * param_capture_1_b)) + ';' +
-            'var param_capture_2 = ' + (param_capture_2 + (0.1 * param_capture_2_b)) + ';' +
-            'var param_capture_3 = ' + (param_capture_3 + (0.1 * param_capture_3_b)) + ';' +
-            'var param_defend_1 = ' + (param_defend_1 + (0.1 * param_defend_1_b)) + ';' +
-            'var param_defend_2 = ' + (param_defend_2 + (0.1 * param_defend_2_b)) + ';' +
-            'var param_defend_3 = ' + (param_defend_3 + (0.1 * param_defend_3_b)) + ';' +
-            'var param_flock_1 = ' + (param_flock_1 + (0.1 * param_flock_1_b)) + ';' +
-            'var param_flock_2 = ' + (param_flock_2 + (0.1 * param_flock_2_b)) + ';' +
-            'var param_flock_3 = ' + (param_flock_3 + (0.1 * param_flock_3_b)) + ';' +
-            'var pawn_1 = ' + (pawn_1 + (0.1 * pawn_1_b)) + ';' +
-            'var pawn_2 = ' + (pawn_2 + (0.1 * pawn_2_b)) + ';' +
-            'var pawn_3 = ' + (pawn_3 + (0.1 * pawn_3_b)) + ';' +
-            'var pawnPromo_1 = ' + (pawnPromo_1 + (0.1 * pawnPromo_1_b)) + ';' +
-            'var pawnPromo_2 = ' + (pawnPromo_2 + (0.1 * pawnPromo_2_b)) + ';' +
-            'var pawnPromo_3 = ' + (pawnPromo_3 + (0.1 * pawnPromo_3_b)) + ';' +
-            'var knight_1 = ' + (knight_1 + (0.1 * knight_1_b)) + ';' +
-            'var knight_2 = ' + (knight_2 + (0.1 * knight_2_b)) + ';' +
-            'var knight_3 = ' + (knight_3 + (0.1 * knight_3_b)) + ';' +
+            'var previousScore = ' + game.turnNumber + ';' +
+            'var param_early = ' + param_early + ';' +
+            'var param_late = ' + param_late + ';' +
+            'var param_capture_1 = ' + param_capture_1 + ';' +
+            'var param_capture_2 = ' + param_capture_2 + ';' +
+            'var param_capture_3 = ' + param_capture_3 + ';' +
+            'var param_defend_1 = ' + param_defend_1 + ';' +
+            'var param_defend_2 = ' + param_defend_2 + ';' +
+            'var param_defend_3 = ' + param_defend_3 + ';' +
+            'var param_flock_1 = ' + param_flock_1 + ';' +
+            'var param_flock_2 = ' + param_flock_2 + ';' +
+            'var param_flock_3 = ' + param_flock_3 + ';' +
+            'var pawn_1 = ' + pawn_1 + ';' +
+            'var pawn_2 = ' + pawn_2 + ';' +
+            'var pawn_3 = ' + pawn_3 + ';' +
+            'var pawnPromo_1 = ' + pawnPromo_1 + ';' +
+            'var pawnPromo_2 = ' + pawnPromo_2 + ';' +
+            'var pawnPromo_3 = ' + pawnPromo_3 + ';' +
+            'var knight_1 = ' + knight_1 + ';' +
+            'var knight_2 = ' + knight_2 + ';' +
+            'var knight_3 = ' + knight_3 + ';' +
             'var bishop_1 = ' + bishop_1 + ';' +
             'var bishop_2 = ' + bishop_2 + ';' +
             'var bishop_3 = ' + bishop_3 + ';' +
             'var rook_1 = ' + rook_1 + ';' +
             'var rook_2 = ' + rook_2 + ';' +
             'var rook_3 = ' + rook_3 + ';' +
-            'var queen_1 = ' + (queen_1 + (0.1 * queen_1_b)) + ';' +
-            'var queen_2 = ' + (queen_2 + (0.1 * queen_2_b)) + ';' +
-            'var queen_3 = ' + (queen_3_b + (0.1 * queen_3_b)) + ';' +
-            'var dragon_1 = ' + (dragon_1 + (0.1 * dragon_1_b)) + ';' +
-            'var dragon_2 = ' + (dragon_2 + (0.1 * dragon_2_b)) + ';' +
-            'var dragon_3 = ' + (dragon_3 + (0.1 * dragon_3_b)) + ';' +
-            'var king_1 = ' + (king_1 + (0.1 * king_1_b)) + ';' +
-            'var king_2 = ' + (king_2 + (0.1 * king_2_b)) + ';' +
-            'var king_3 = ' + (king_3 + (0.1 * king_3_b)) + ';' +
-            'var kingCapture_1 = ' + (kingCapture_1 + (0.1 * kingCapture_1_b)) + ';' +
-            'var kingCapture_2 = ' + (kingCapture_2 + (0.1 * kingCapture_2_b)) + ';' +
-            'var kingCapture_3 = ' + (kingCapture_3 + (0.1 * kingCapture_3_b)) + ';' +
-            'var kingDefend_1 = ' + (kingDefend_1 + (0.1 * kingDefend_1_b)) + ';' +
-            'var kingDefend_2 = ' + (kingDefend_2 + (0.1 * kingDefend_2_b)) + ';' +
-            'var kingDefend_3 = ' + (kingDefend_3 + (0.1 * kingDefend_3_b)) + ';' +
-            'var param_avoidDanger_1 = ' + (param_avoidDanger_1 + (0.1 * param_avoidDanger_1_b)) + ';' +
-            'var param_avoidDanger_2 = ' + (param_avoidDanger_2 + (0.1 * param_avoidDanger_2_b)) + ';' +
-            'var param_avoidDanger_3 = ' + (param_avoidDanger_3 + (0.1 * param_avoidDanger_3_b)) + ';'
+            'var queen_1 = ' + queen_1 + ';' +
+            'var queen_2 = ' + queen_2 + ';' +
+            'var queen_3 = ' + queen_3 + ';' +
+            'var dragon_1 = ' + dragon_1 + ';' +
+            'var dragon_2 = ' + dragon_2 + ';' +
+            'var dragon_3 = ' + dragon_3 + ';' +
+            'var king_1 = ' + king_1 + ';' +
+            'var king_2 = ' + king_2 + ';' +
+            'var king_3 = ' + king_3 + ';' +
+            'var kingCapture_1 = ' + kingCapture_1 + ';' +
+            'var kingCapture_2 = ' + kingCapture_2 + ';' +
+            'var kingCapture_3 = ' + kingCapture_3 + ';' +
+            'var kingDefend_1 = ' + kingDefend_1 + ';' +
+            'var kingDefend_2 = ' + kingDefend_2 + ';' +
+            'var kingDefend_3 = ' + kingDefend_3 + ';' +
+            'var param_avoidDanger_1 = ' + param_avoidDanger_1 + ';' +
+            'var param_avoidDanger_2 = ' + param_avoidDanger_2 + ';' +
+            'var param_avoidDanger_3 = ' + param_avoidDanger_3 + ';' +
+            'var param_capture_1_time = ' + param_capture_1_time + ';' +
+            'var param_capture_1_score = ' + param_capture_1_score + ';' +
+            'var param_capture_2_time = ' + param_capture_2_time + ';' +
+            'var param_capture_2_score = ' + param_capture_2_score + ';' +
+            'var param_capture_3_time = ' + param_capture_3_time + ';' +
+            'var param_capture_3_score = ' + param_capture_3_score + ';' +
+            'var param_defend_1_time = ' + param_defend_1_time + ';' +
+            'var param_defend_1_score = ' + param_defend_1_score + ';' +
+            'var param_defend_2_time = ' + param_defend_2_time + ';' +
+            'var param_defend_2_score = ' + param_defend_2_score + ';' +
+            'var param_defend_3_time = ' + param_defend_3_time + ';' +
+            'var param_defend_3_score = ' + param_defend_3_score + ';' +
+            'var param_flock_1_time = ' + param_flock_1_time + ';' +
+            'var param_flock_1_score = ' + param_flock_1_score + ';' +
+            'var param_flock_2_time = ' + param_flock_2_time + ';' +
+            'var param_flock_2_score = ' + param_flock_2_score + ';' +
+            'var param_flock_3_time = ' + param_flock_3_time + ';' +
+            'var param_flock_3_score = ' + param_flock_3_score + ';' +
+            'var pawn_1_time = ' + pawn_1_time + ';' +
+            'var pawn_1_score = ' + pawn_1_score + ';' +
+            'var pawn_2_time = ' + pawn_2_time + ';' +
+            'var pawn_2_score = ' + pawn_2_score + ';' +
+            'var pawn_3_time = ' + pawn_3_time + ';' +
+            'var pawn_3_score = ' + pawn_3_score + ';' +
+            'var knight_1_time = ' + knight_1_time + ';' +
+            'var knight_1_score = ' + knight_1_score + ';' +
+            'var knight_2_time = ' + knight_2_time + ';' +
+            'var knight_2_score = ' + knight_2_score + ';' +
+            'var knight_3_time = ' + knight_3_time + ';' +
+            'var knight_3_score = ' + knight_3_score + ';' +
+            'var bishop_1_time = ' + bishop_1_time + ';' +
+            'var bishop_1_score = ' + bishop_1_score + ';' +
+            'var bishop_2_time = ' + bishop_2_time + ';' +
+            'var bishop_2_score = ' + bishop_2_score + ';' +
+            'var bishop_3_time = ' + bishop_3_time + ';' +
+            'var bishop_3_score = ' + bishop_3_score + ';' +
+            'var rook_1_time = ' + rook_1_time + ';' +
+            'var rook_1_score = ' + rook_1_score + ';' +
+            'var rook_2_time = ' + rook_2_time + ';' +
+            'var rook_2_score = ' + rook_2_score + ';' +
+            'var rook_3_time = ' + rook_3_time + ';' +
+            'var rook_3_score = ' + rook_3_score + ';' +
+            'var queen_1_time = ' + queen_1_time + ';' +
+            'var queen_1_score = ' + queen_1_score + ';' +
+            'var queen_2_time = ' + queen_2_time + ';' +
+            'var queen_2_score = ' + queen_2_score + ';' +
+            'var queen_3_time = ' + queen_3_time + ';' +
+            'var queen_3_score = ' + queen_3_score + ';' +
+            'var king_1_time = ' + king_1_time + ';' +
+            'var king_1_score = ' + king_1_score + ';' +
+            'var king_2_time = ' + king_2_time + ';' +
+            'var king_2_score = ' + king_2_score + ';' +
+            'var king_3_time = ' + king_3_time + ';' +
+            'var king_3_score = ' + king_3_score + ';' +
+            'var dragon_1_time = ' + dragon_1_time + ';' +
+            'var dragon_1_score = ' + dragon_1_score + ';' +
+            'var dragon_2_time = ' + dragon_2_time + ';' +
+            'var dragon_2_score = ' + dragon_2_score + ';' +
+            'var dragon_3_time = ' + dragon_3_time + ';' +
+            'var dragon_3_score = ' + dragon_3_score + ';' +
+            'var kingCapture_1_time = ' + kingCapture_1_time + ';' +
+            'var kingCapture_1_score = ' + kingCapture_1_score + ';' +
+            'var kingCapture_2_time = ' + kingCapture_2_time + ';' +
+            'var kingCapture_2_score = ' + kingCapture_2_score + ';' +
+            'var kingCapture_3_time = ' + kingCapture_3_time + ';' +
+            'var kingCapture_3_score = ' + kingCapture_3_score + ';' +
+            'var kingDefend_1_time = ' + kingDefend_1_time + ';' +
+            'var kingDefend_1_score = ' + kingDefend_1_score + ';' +
+            'var kingDefend_2_time = ' + kingDefend_2_time + ';' +
+            'var kingDefend_2_score = ' + kingDefend_2_score + ';' +
+            'var kingDefend_3_time = ' + kingDefend_3_time + ';' +
+            'var kingDefend_3_score = ' + kingDefend_3_score + ';' +
+            'var param_avoidDanger_1_time = ' + param_avoidDanger_1_time + ';' +
+            'var param_avoidDanger_1_score = ' + param_avoidDanger_1_score + ';' +
+            'var param_avoidDanger_2_time = ' + param_avoidDanger_2_time + ';' +
+            'var param_avoidDanger_2_score = ' + param_avoidDanger_2_score + ';' +
+            'var param_avoidDanger_3_time = ' + param_avoidDanger_3_time + ';' +
+            'var param_avoidDanger_3_score = ' + param_avoidDanger_3_score + ';' +
+            'var param_attack_1 = ' + param_attack_1 + ';' +
+            'var param_attack_2 = ' + param_attack_2 + ';' +
+            'var param_attack_3 = ' + param_attack_3 + ';' +
+            'var param_attack_1_time = ' + param_attack_1_time + ';' +
+            'var param_attack_1_score = ' + param_attack_1_score + ';' +
+            'var param_attack_2_time = ' + param_attack_2_time + ';' +
+            'var param_attack_2_score = ' + param_attack_2_score + ';' +
+            'var param_attack_3_time = ' + param_attack_3_time + ';' +
+            'var param_attack_3_score = ' + param_attack_3_score + ';' +
+            'var dragonCapture_1 = ' + dragonCapture_1 + ';' +
+            'var dragonCapture_2 = ' + dragonCapture_2 + ';' +
+            'var dragonCapture_3 = ' + dragonCapture_3 + ';' +
+            'var dragonDefend_1 = ' + dragonDefend_1 + ';' +
+            'var dragonDefend_2 = ' + dragonDefend_2 + ';' +
+            'var dragonDefend_3 = ' + dragonDefend_3 + ';' +
+            'var dragonCapture_1_time = ' + dragonCapture_1_time + ';' +
+            'var dragonCapture_1_score = ' + dragonCapture_1_score + ';' +
+            'var dragonCapture_2_time = ' + dragonCapture_2_time + ';' +
+            'var dragonCapture_2_score = ' + dragonCapture_2_score + ';' +
+            'var dragonCapture_3_time = ' + dragonCapture_3_time + ';' +
+            'var dragonCapture_3_score = ' + dragonCapture_3_score + ';' +
+            'var dragonDefend_1_time = ' + dragonDefend_1_time + ';' +
+            'var dragonDefend_1_score = ' + dragonDefend_1_score + ';' +
+            'var dragonDefend_2_time = ' + dragonDefend_2_time + ';' +
+            'var dragonDefend_2_score = ' + dragonDefend_2_score + ';' +
+            'var dragonDefend_3_time = ' + dragonDefend_3_time + ';' +
+            'var dragonDefend_3_score = ' + dragonDefend_3_score + ';' +
+            'var pawnCapture_1 = ' + pawnCapture_1 + ';' +
+            'var pawnCapture_2 = ' + pawnCapture_2 + ';' +
+            'var pawnCapture_3 = ' + pawnCapture_3 + ';' +
+            'var pawnCapture_1_time = ' + pawnCapture_1_time + ';' +
+            'var pawnCapture_1_score = ' + pawnCapture_1_score + ';' +
+            'var pawnCapture_2_time = ' + pawnCapture_2_time + ';' +
+            'var pawnCapture_2_score = ' + pawnCapture_2_score + ';' +
+            'var pawnCapture_3_time = ' + pawnCapture_3_time + ';' +
+            'var pawnCapture_3_score = ' + pawnCapture_3_score + ';'   
 
         download('parameterFile.txt', saveStr);
 
-
     }
-
-
 
 }
 
