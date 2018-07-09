@@ -209,7 +209,7 @@ class Gameboard {
 
 loadScript('http://127.0.0.1:8887/parameterFile.txt');
 loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
-//console.log(param_early);
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -3631,14 +3631,37 @@ function mutate() {
 addEventListener('click', selectPiece, false);
 
 
+
+
 function saveFile(winner) {
     console.log("Winner: ", winner);
     console.log("Turns:", game.turnNumber);
     console.log("Previous Score:", previousScore);
+    
+    
+    console.log(param_early,
+        previousWinner,
+        numberOfWins,
+        previousScore,
+        param_early,
+        param_late,
+        param_capture_1,
+        param_capture_2,
+        param_capture_3,
+        param_defend_1,
+        param_defend_2,
+        param_defend_3,
+        param_flock_1,
+        param_flock_2,
+        param_flock_3);
+    
 
-    if (winner == 'White' && game.turnNumber <= previousScore + 20) {
+    if (winner == 'White' && game.turnNumber <= previousScore) {
+        var wins = numberOfWins +1;
 
         var saveStr = 'var previousWinner = ' + "'" + game.winner + "'" + ';' +
+            'var numberOfGames = '
+            'var numberOfWins = ' + wins + ';' +
             'var previousScore = ' + game.turnNumber + ';' +
             'var param_early = ' + param_early + ';' +
             'var param_late = ' + param_late + ';' +
@@ -3971,10 +3994,13 @@ function saveFile(winner) {
 //
 //    }
 
-    if (winner == 'Black' && game.turnNumber <= previousScore_b + 20) {
+    if (winner == 'Black' && game.turnNumber <= previousScore_b) {
+        var wins = numberOfWins_b +1
+        
         
 
         var saveStr = 'var previousWinner_b = ' + "'" + game.winner + "'" + ';' +
+            'var numberOfWins_b = ' + wins + ';' +
             'var previousScore_b = ' + game.turnNumber + ';' +
             'var param_early_b = ' + param_early_b + ';' +
             'var param_late_b = ' + param_late_b + ';' +
@@ -4349,12 +4375,13 @@ function getPoints() {
 }
 
 
-function resetParameters(){
+function resetParamFiles(){
     //TODO
             var saveStr1 = 'var previousWinner = ' + "'" + 'None' + "'" + ';' +
-            'var previousScore = ' + 0 + ';' +
-            'var param_early = ' + 0+ ';' +
-            'var param_late = ' + 0 + ';' +
+            'var numberOfWins = ' + 0 + ';' +
+            'var previousScore = ' + 10000 + ';' +
+            'var param_early = ' + 50+ ';' +
+            'var param_late = ' + 100 + ';' +
             'var param_capture_1 = ' + 0 + ';' +
             'var param_capture_2 = ' + 0 + ';' +
             'var param_capture_3 = ' + 0+ ';' +
@@ -4515,9 +4542,10 @@ function resetParameters(){
         download('parameterFile.txt', saveStr1);
     
             var saveStr2 = 'var previousWinner_b = ' + "'" + 'None' + "'" + ';' +
-            'var previousScore_b = ' + 0 + ';' +
-            'var param_early_b = ' + 0 + ';' +
-            'var param_late_b = ' + 0 + ';' +
+            'var numberOfWins_b = ' + 0 + ';' +    
+            'var previousScore_b = ' + 10000 + ';' +
+            'var param_early_b = ' + 50 + ';' +
+            'var param_late_b = ' + 100 + ';' +
             'var param_capture_1_b = ' + 0 + ';' +
             'var param_capture_2_b = ' + 0 + ';' +
             'var param_capture_3_b = ' + 0 + ';' +
@@ -4533,138 +4561,138 @@ function resetParameters(){
             'var pawnPromo_1_b = ' + 0+ ';' +
             'var pawnPromo_2_b = ' + 0 + ';' +
             'var pawnPromo_3_b = ' + 0 + ';' +
-            'var knight_1_b = ' + knight_1_b + ';' +
-            'var knight_2_b = ' + knight_2_b + ';' +
-            'var knight_3_b = ' + knight_3_b + ';' +
-            'var bishop_1_b = ' + bishop_1_b + ';' +
-            'var bishop_2_b = ' + bishop_2_b + ';' +
-            'var bishop_3_b = ' + bishop_3_b + ';' +
-            'var rook_1_b = ' + rook_1_b + ';' +
-            'var rook_2_b = ' + rook_2_b + ';' +
-            'var rook_3_b = ' + rook_3_b + ';' +
-            'var queen_1_b = ' + queen_1_b + ';' +
-            'var queen_2_b = ' + queen_2_b + ';' +
-            'var queen_3_b = ' + queen_3_b + ';' +
-            'var dragon_1_b = ' + dragon_1_b + ';' +
-            'var dragon_2_b = ' + dragon_2_b + ';' +
-            'var dragon_3_b = ' + dragon_3_b + ';' +
-            'var king_1_b = ' + king_1_b + ';' +
-            'var king_2_b = ' + king_2_b + ';' +
-            'var king_3_b = ' + king_3_b + ';' +
-            'var kingCapture_1_b = ' + kingCapture_1_b + ';' +
-            'var kingCapture_2_b = ' + kingCapture_2_b + ';' +
-            'var kingCapture_3_b = ' + kingCapture_3_b + ';' +
-            'var kingDefend_1_b = ' + kingDefend_1_b + ';' +
-            'var kingDefend_2_b = ' + kingDefend_2_b + ';' +
-            'var kingDefend_3_b = ' + kingDefend_3_b + ';' +
-            'var param_avoidDanger_1_b = ' + param_avoidDanger_1_b + ';' +
-            'var param_avoidDanger_2_b = ' + param_avoidDanger_2_b + ';' +
-            'var param_avoidDanger_3_b = ' + param_avoidDanger_3_b + ';' +
-            'var param_capture_1_time_b = ' + param_capture_1_time_b + ';' +
-            'var param_capture_1_score_b = ' + param_capture_1_score_b + ';' +
-            'var param_capture_2_time_b = ' + param_capture_2_time_b + ';' +
-            'var param_capture_2_score_b = ' + param_capture_2_score_b + ';' +
-            'var param_capture_3_time_b = ' + param_capture_3_time_b + ';' +
-            'var param_capture_3_score_b = ' + param_capture_3_score_b + ';' +
-            'var param_defend_1_time_b = ' + param_defend_1_time_b + ';' +
-            'var param_defend_1_score_b = ' + param_defend_1_score_b + ';' +
-            'var param_defend_2_time_b = ' + param_defend_2_time_b + ';' +
-            'var param_defend_2_score_b = ' + param_defend_2_score_b + ';' +
-            'var param_defend_3_time_b = ' + param_defend_3_time_b + ';' +
-            'var param_defend_3_score_b = ' + param_defend_3_score_b + ';' +
-            'var param_flock_1_time_b = ' + param_flock_1_time_b + ';' +
-            'var param_flock_1_score_b = ' + param_flock_1_score_b + ';' +
-            'var param_flock_2_time_b = ' + param_flock_2_time_b + ';' +
-            'var param_flock_2_score_b = ' + param_flock_2_score_b + ';' +
-            'var param_flock_3_time_b = ' + param_flock_3_time_b + ';' +
-            'var param_flock_3_score_b = ' + param_flock_3_score_b + ';' +
-            'var pawn_1_time_b = ' + pawn_1_time_b + ';' +
-            'var pawn_1_score_b = ' + pawn_1_score_b + ';' +
-            'var pawn_2_time_b = ' + pawn_2_time_b + ';' +
-            'var pawn_2_score_b = ' + pawn_2_score_b + ';' +
-            'var pawn_3_time_b = ' + pawn_3_time_b + ';' +
-            'var pawn_3_score_b = ' + pawn_3_score_b + ';' +
-            'var knight_1_time_b = ' + knight_1_time_b + ';' +
-            'var knight_1_score_b = ' + knight_1_score_b + ';' +
-            'var knight_2_time_b = ' + knight_2_time_b + ';' +
-            'var knight_2_score_b = ' + knight_2_score_b + ';' +
-            'var knight_3_time_b = ' + knight_3_time_b + ';' +
-            'var knight_3_score_b = ' + knight_3_score_b + ';' +
-            'var bishop_1_time_b = ' + bishop_1_time_b + ';' +
-            'var bishop_1_score_b = ' + bishop_1_score_b + ';' +
-            'var bishop_2_time_b = ' + bishop_2_time_b + ';' +
-            'var bishop_2_score_b = ' + bishop_2_score_b + ';' +
-            'var bishop_3_time_b = ' + bishop_3_time_b + ';' +
-            'var bishop_3_score_b = ' + bishop_3_score_b + ';' +
-            'var rook_1_time_b = ' + rook_1_time_b + ';' +
-            'var rook_1_score_b = ' + rook_1_score_b + ';' +
-            'var rook_2_time_b = ' + rook_2_time_b + ';' +
-            'var rook_2_score_b = ' + rook_2_score_b + ';' +
-            'var rook_3_time_b = ' + rook_3_time_b + ';' +
-            'var rook_3_score_b = ' + rook_3_score_b + ';' +
-            'var queen_1_time_b = ' + queen_1_time_b + ';' +
-            'var queen_1_score_b = ' + queen_1_score_b + ';' +
-            'var queen_2_time_b = ' + queen_2_time_b + ';' +
-            'var queen_2_score_b = ' + queen_2_score_b + ';' +
-            'var queen_3_time_b = ' + queen_3_time_b + ';' +
-            'var queen_3_score_b = ' + queen_3_score_b + ';' +
-            'var king_1_time_b = ' + king_1_time_b + ';' +
-            'var king_1_score_b = ' + king_1_score_b + ';' +
-            'var king_2_time_b = ' + king_2_time_b + ';' +
-            'var king_2_score_b = ' + king_2_score_b + ';' +
-            'var king_3_time_b = ' + king_3_time_b + ';' +
-            'var king_3_score_b = ' + king_3_score_b + ';' +
-            'var dragon_1_time_b = ' + dragon_1_time_b + ';' +
-            'var dragon_1_score_b = ' + dragon_1_score_b + ';' +
-            'var dragon_2_time_b = ' + dragon_2_time_b + ';' +
-            'var dragon_2_score_b = ' + dragon_2_score_b + ';' +
-            'var dragon_3_time_b = ' + dragon_3_time_b + ';' +
-            'var dragon_3_score_b = ' + dragon_3_score_b + ';' +
-            'var kingCapture_1_time_b = ' + kingCapture_1_time_b + ';' +
-            'var kingCapture_1_score_b = ' + kingCapture_1_score_b + ';' +
-            'var kingCapture_2_time_b = ' + kingCapture_2_time_b + ';' +
-            'var kingCapture_2_score_b = ' + kingCapture_2_score_b + ';' +
-            'var kingCapture_3_time_b = ' + kingCapture_3_time_b + ';' +
-            'var kingCapture_3_score_b = ' + kingCapture_3_score_b + ';' +
-            'var kingDefend_1_time_b = ' + kingDefend_1_time_b + ';' +
-            'var kingDefend_1_score_b = ' + kingDefend_1_score_b + ';' +
-            'var kingDefend_2_time_b = ' + kingDefend_2_time_b + ';' +
-            'var kingDefend_2_score_b = ' + kingDefend_2_score + ';' +
-            'var kingDefend_3_time_b = ' + kingDefend_3_time_b + ';' +
-            'var kingDefend_3_score_b = ' + kingDefend_3_score_b + ';' +
-            'var param_avoidDanger_1_time_b = ' + param_avoidDanger_1_time_b + ';' +
-            'var param_avoidDanger_1_score_b = ' + param_avoidDanger_1_score_b + ';' +
-            'var param_avoidDanger_2_time_b = ' + param_avoidDanger_2_time_b + ';' +
-            'var param_avoidDanger_2_score_b = ' + param_avoidDanger_2_score_b + ';' +
-            'var param_avoidDanger_3_time_b = ' + param_avoidDanger_3_time_b + ';' +
-            'var param_avoidDanger_3_score_b = ' + param_avoidDanger_3_score + ';' +
-            'var param_attack_1_b = ' + param_attack_1_b + ';' +
-            'var param_attack_2_b = ' + param_attack_2_b + ';' +
-            'var param_attack_3_b = ' + param_attack_3_b + ';' +
-            'var param_attack_1_time_b = ' + param_attack_1_time_b + ';' +
-            'var param_attack_1_score_b = ' + param_attack_1_score_b + ';' +
-            'var param_attack_2_time_b = ' + param_attack_2_time_b + ';' +
-            'var param_attack_2_score_b = ' + param_attack_2_score_b + ';' +
-            'var param_attack_3_time_b = ' + param_attack_3_time_b + ';' +
-            'var param_attack_3_score_b = ' + param_attack_3_score_b + ';' +
-            'var dragonCapture_1_b = ' + dragonCapture_1_b + ';' +
-            'var dragonCapture_2_b = ' + dragonCapture_2_b + ';' +
-            'var dragonCapture_3_b = ' + dragonCapture_3_b + ';' +
-            'var dragonDefend_1_b = ' + dragonDefend_1_b + ';' +
-            'var dragonDefend_2_b = ' + dragonDefend_2_b + ';' +
-            'var dragonDefend_3_b = ' + dragonDefend_3_b + ';' +
-            'var dragonCapture_1_time_b = ' + dragonCapture_1_time_b + ';' +
-            'var dragonCapture_1_score_b = ' + dragonCapture_1_score_b + ';' +
-            'var dragonCapture_2_time_b = ' + dragonCapture_2_time_b + ';' +
-            'var dragonCapture_2_score_b = ' + dragonCapture_2_score_b + ';' +
-            'var dragonCapture_3_time_b = ' + dragonCapture_3_time_b + ';' +
-            'var dragonCapture_3_score_b = ' + dragonCapture_3_score_b + ';' +
-            'var dragonDefend_1_time_b = ' + dragonDefend_1_time_b + ';' +
-            'var dragonDefend_1_score_b = ' + dragonDefend_1_score_b + ';' +
-            'var dragonDefend_2_time_b = ' + dragonDefend_2_time_b + ';' +
-            'var dragonDefend_2_score_b = ' + dragonDefend_2_score + ';' +
-            'var dragonDefend_3_time_b = ' + dragonDefend_3_time_b + ';' +
-            'var dragonDefend_3_score_b = ' + dragonDefend_3_score_b + ';' +
+            'var knight_1_b = ' + 0 + ';' +
+            'var knight_2_b = ' + 0 + ';' +
+            'var knight_3_b = ' + 0 + ';' +
+            'var bishop_1_b = ' + 0 + ';' +
+            'var bishop_2_b = ' + 0 + ';' +
+            'var bishop_3_b = ' + 0 + ';' +
+            'var rook_1_b = ' + 0 + ';' +
+            'var rook_2_b = ' + 0 + ';' +
+            'var rook_3_b = ' + 0 + ';' +
+            'var queen_1_b = ' + 0 + ';' +
+            'var queen_2_b = ' + 0 + ';' +
+            'var queen_3_b = ' + 0 + ';' +
+            'var dragon_1_b = ' + 0 + ';' +
+            'var dragon_2_b = ' + 0 + ';' +
+            'var dragon_3_b = ' + 0 + ';' +
+            'var king_1_b = ' + 0 + ';' +
+            'var king_2_b = ' + 0 + ';' +
+            'var king_3_b = ' + 0 + ';' +
+            'var kingCapture_1_b = ' + 0 + ';' +
+            'var kingCapture_2_b = ' + 0 + ';' +
+            'var kingCapture_3_b = ' + 0 + ';' +
+            'var kingDefend_1_b = ' + 0 + ';' +
+            'var kingDefend_2_b = ' + 0 + ';' +
+            'var kingDefend_3_b = ' + 0 + ';' +
+            'var param_avoidDanger_1_b = ' + 0 + ';' +
+            'var param_avoidDanger_2_b = ' + 0 + ';' +
+            'var param_avoidDanger_3_b = ' + 0 + ';' +
+            'var param_capture_1_time_b = ' + 0 + ';' +
+            'var param_capture_1_score_b = ' + 0 + ';' +
+            'var param_capture_2_time_b = ' + 0 + ';' +
+            'var param_capture_2_score_b = ' + 0 + ';' +
+            'var param_capture_3_time_b = ' + 0 + ';' +
+            'var param_capture_3_score_b = ' + 0 + ';' +
+            'var param_defend_1_time_b = ' + 0 + ';' +
+            'var param_defend_1_score_b = ' + 0 + ';' +
+            'var param_defend_2_time_b = ' + 0 + ';' +
+            'var param_defend_2_score_b = ' + 0 + ';' +
+            'var param_defend_3_time_b = ' + 0 + ';' +
+            'var param_defend_3_score_b = ' + 0 + ';' +
+            'var param_flock_1_time_b = ' + 0 + ';' +
+            'var param_flock_1_score_b = ' + 0 + ';' +
+            'var param_flock_2_time_b = ' + 0 + ';' +
+            'var param_flock_2_score_b = ' + 0 + ';' +
+            'var param_flock_3_time_b = ' + 0 + ';' +
+            'var param_flock_3_score_b = ' + 0 + ';' +
+            'var pawn_1_time_b = ' + 0 + ';' +
+            'var pawn_1_score_b = ' + 0 + ';' +
+            'var pawn_2_time_b = ' + 0 + ';' +
+            'var pawn_2_score_b = ' + 0 + ';' +
+            'var pawn_3_time_b = ' + 0 + ';' +
+            'var pawn_3_score_b = ' + 0 + ';' +
+            'var knight_1_time_b = ' + 0 + ';' +
+            'var knight_1_score_b = ' + 0 + ';' +
+            'var knight_2_time_b = ' + 0 + ';' +
+            'var knight_2_score_b = ' + 0 + ';' +
+            'var knight_3_time_b = ' + 0 + ';' +
+            'var knight_3_score_b = ' + 0 + ';' +
+            'var bishop_1_time_b = ' + 0 + ';' +
+            'var bishop_1_score_b = ' + 0 + ';' +
+            'var bishop_2_time_b = ' + 0 + ';' +
+            'var bishop_2_score_b = ' + 0 + ';' +
+            'var bishop_3_time_b = ' + 0 + ';' +
+            'var bishop_3_score_b = ' + 0 + ';' +
+            'var rook_1_time_b = ' + 0 + ';' +
+            'var rook_1_score_b = ' + 0 + ';' +
+            'var rook_2_time_b = ' + 0 + ';' +
+            'var rook_2_score_b = ' + 0 + ';' +
+            'var rook_3_time_b = ' + 0 + ';' +
+            'var rook_3_score_b = ' + 0 + ';' +
+            'var queen_1_time_b = ' + 0+ ';' +
+            'var queen_1_score_b = ' + 0 + ';' +
+            'var queen_2_time_b = ' + 0+ ';' +
+            'var queen_2_score_b = ' + 0 + ';' +
+            'var queen_3_time_b = ' + 0+ ';' +
+            'var queen_3_score_b = ' + 0 + ';' +
+            'var king_1_time_b = ' + 0 + ';' +
+            'var king_1_score_b = ' + 0 + ';' +
+            'var king_2_time_b = ' + 0 + ';' +
+            'var king_2_score_b = ' + 0 + ';' +
+            'var king_3_time_b = ' + 0 + ';' +
+            'var king_3_score_b = ' + 0 + ';' +
+            'var dragon_1_time_b = ' + 0 + ';' +
+            'var dragon_1_score_b = ' + 0 + ';' +
+            'var dragon_2_time_b = ' + 0 + ';' +
+            'var dragon_2_score_b = ' + 0 + ';' +
+            'var dragon_3_time_b = ' + 0 + ';' +
+            'var dragon_3_score_b = ' + 0+ ';' +
+            'var kingCapture_1_time_b = ' + 0 + ';' +
+            'var kingCapture_1_score_b = ' + 0 + ';' +
+            'var kingCapture_2_time_b = ' + 0 + ';' +
+            'var kingCapture_2_score_b = ' + 0 + ';' +
+            'var kingCapture_3_time_b = ' + 0 + ';' +
+            'var kingCapture_3_score_b = ' + 0 + ';' +
+            'var kingDefend_1_time_b = ' + 0+ ';' +
+            'var kingDefend_1_score_b = ' + 0 + ';' +
+            'var kingDefend_2_time_b = ' + 0+ ';' +
+            'var kingDefend_2_score_b = ' + 0+ ';' +
+            'var kingDefend_3_time_b = ' + 0 + ';' +
+            'var kingDefend_3_score_b = ' + 0 + ';' +
+            'var param_avoidDanger_1_time_b = ' + 0 + ';' +
+            'var param_avoidDanger_1_score_b = ' + 0 + ';' +
+            'var param_avoidDanger_2_time_b = ' + 0 + ';' +
+            'var param_avoidDanger_2_score_b = ' + 0 + ';' +
+            'var param_avoidDanger_3_time_b = ' + 0 + ';' +
+            'var param_avoidDanger_3_score_b = ' + 0 + ';' +
+            'var param_attack_1_b = ' + 0 + ';' +
+            'var param_attack_2_b = ' + 0 + ';' +
+            'var param_attack_3_b = ' + 0 + ';' +
+            'var param_attack_1_time_b = ' + 0 + ';' +
+            'var param_attack_1_score_b = ' + 0 + ';' +
+            'var param_attack_2_time_b = ' + 0 + ';' +
+            'var param_attack_2_score_b = ' + 0 + ';' +
+            'var param_attack_3_time_b = ' + 0 + ';' +
+            'var param_attack_3_score_b = ' + 0 + ';' +
+            'var dragonCapture_1_b = ' + 0 + ';' +
+            'var dragonCapture_2_b = ' + 0 + ';' +
+            'var dragonCapture_3_b = ' + 0 + ';' +
+            'var dragonDefend_1_b = ' + 0 + ';' +
+            'var dragonDefend_2_b = ' + 0 + ';' +
+            'var dragonDefend_3_b = ' + 0 + ';' +
+            'var dragonCapture_1_time_b = ' + 0 + ';' +
+            'var dragonCapture_1_score_b = ' + 0 + ';' +
+            'var dragonCapture_2_time_b = ' + 0 + ';' +
+            'var dragonCapture_2_score_b = ' + 0 + ';' +
+            'var dragonCapture_3_time_b = ' + 0 + ';' +
+            'var dragonCapture_3_score_b = ' + 0 + ';' +
+            'var dragonDefend_1_time_b = ' + 0 + ';' +
+            'var dragonDefend_1_score_b = ' + 0 + ';' +
+            'var dragonDefend_2_time_b = ' + 0 + ';' +
+            'var dragonDefend_2_score_b = ' + 0 + ';' +
+            'var dragonDefend_3_time_b = ' + 0 + ';' +
+            'var dragonDefend_3_score_b = ' + 0 + ';' +
             'var pawnCapture_1_b = ' + 0 + ';' +
             'var pawnCapture_2_b = ' + 0 + ';' +
             'var pawnCapture_3_b = ' + 0 + ';' +
@@ -4677,6 +4705,7 @@ function resetParameters(){
 
         download('parameterFile_b.txt', saveStr2);
 }
+
 
 
 /////////////////////////////////////////////
