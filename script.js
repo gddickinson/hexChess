@@ -1,6 +1,8 @@
 var c = document.getElementById('canvas');
 var ctx = c.getContext('2d');
 
+var numberOfWins = 0;
+
 if (ctx.canvas.width < ctx.canvas.height) {
     ctx.canvas.width = window.innerWidth - (window.innerWidth * 0.05);
     ctx.canvas.height = ctx.canvas.width;
@@ -206,11 +208,13 @@ class Gameboard {
 //var param_avoidDanger_3_score = 5;
 
 
+// TURNED OFF DOWNLOAD FOR NOW AS NOT LOADING
+//loadScript('http://127.0.0.1:8887/parameterFile.txt');
+//loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
 
-loadScript('http://127.0.0.1:8887/parameterFile.txt');
-loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
-
-
+// USING LOCAL PARAMETER FILES
+loadScript('parameterFile.txt');
+loadScript('parameterFile_b.txt');
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -3304,8 +3308,13 @@ function displayWinnerMessage() {
 
 
     //console.log('restart now')
-    loadScript('http://127.0.0.1:8887/parameterFile.txt');
-    loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
+    //loadScript('http://127.0.0.1:8887/parameterFile.txt');
+    //loadScript('http://127.0.0.1:8887/parameterFile_b.txt');
+    
+    // USING LOCAL PARAMETER FILES
+    loadScript('parameterFile.txt');
+    loadScript('parameterFile_b.txt');   
+    
     resetGame();
     game.gameOver = false;
     sleep(500);
@@ -3524,7 +3533,6 @@ function showBoard() {
 
 function computerMoves() {
     if (game.gameOver == false) {
-
         game.colourSelected = game.sideToMove;
         game.allMovesAvailable_white = game.getAllMovesForTurn('w');
         game.allMovesAvailable_black = game.getAllMovesForTurn('b');
@@ -3559,7 +3567,8 @@ function computerMoves() {
         }
 
         //make move
-        //console.log(moveToMake[1]);
+        // uncomment to display moves
+        console.log(moveToMake[1]);
         var currentPosition = moveToMake[1].split(",");
         xPos = Number(currentPosition[0].replace("(", ""));
         yPos = Number(currentPosition[1].replace(")", ""));
