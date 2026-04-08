@@ -1,0 +1,6 @@
+2024-09-11 12:04:07,487 - INFO - Starting game 1 of 10
+2024-09-11 12:04:07,488 - INFO - Starting new game simulation
+2024-09-11 12:04:07,488 - INFO - Move 1: w's turn
+2024-09-11 12:04:07,503 - ERROR - An error occurred during the move: maximum recursion depth exceeded
+2024-09-11 12:04:07,557 - ERROR - Test failed in game 1
+2024-09-11 12:07:13,247 - DEBUG - handle_close[bbc007b2705e11efb2c83240f8ed05f0]({'header': {'msg_id': 'c63f3be2-229d06d550a147e79b97d1d9_72025_11', 'msg_type': 'comm_close', 'username': 'george', 'session': 'c63f3be2-229d06d550a147e79b97d1d9', 'date': datetime.datetime(2024, 9, 11, 17, 7, 13, 243522, tzinfo=tzutc()), 'version': '5.3'}, 'msg_id': 'c63f3be2-229d06d550a147e79b97d1d9_72025_11', 'msg_type': 'comm_close', 'parent_header': {}, 'metadata': {}, 'content': {'comm_id': 'bbc007b2705e11efb2c83240f8ed05f0', 'data': {}}, 'buffers': []})

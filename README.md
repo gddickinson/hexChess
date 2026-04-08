@@ -1,113 +1,47 @@
 # HexChess
 
-A hexagonal chess game with an AI opponent driven by evolutionary algorithms.
+A PyQt5 hexagonal chess variant with custom pieces (Dragon, Prince), a learning AI system, and an interactive GUI with custom piece images and a help system.
 
-![HexChess Game](https://github.com/gddickinson/hexChess/raw/main/screenshot.png)
+## Features
 
-## Live Demo
+- **Hexagonal board** with unique movement rules adapted for hex geometry
+- **Custom pieces** -- Dragon and Prince in addition to standard chess pieces
+- **Learning AI** that saves and loads parameters, with decision logging
+- **Full game testing** and move validation
+- **Help system** with piece movement guides
+- **Custom piece images** support
 
-Try it now: [https://gddickinson.github.io/hexChess/](https://gddickinson.github.io/hexChess/)
+## Requirements
 
-## Description
+- Python 3.7+
+- PyQt5
 
-HexChess is a variant of chess played on a hexagonal grid. This implementation features:
+```bash
+pip install PyQt5
+```
 
-- A fully functional hexagonal chess board with custom pieces
-- Standard chess pieces with adapted movement rules for a hexagonal grid
-- An AI opponent that learns and evolves through gameplay
-- Parameter-based evolutionary algorithm that improves piece movement strategies
+## Usage
 
-## Game Pieces
+```bash
+python hexchess_main.py
+```
 
-HexChess includes all standard chess pieces with adapted movements for hexagonal geometry:
+## Project Structure
 
-- **Pawns**: Move forward and capture diagonally
-- **Knights**: Jump in an extended L-pattern
-- **Bishops**: Move diagonally along hex grid lines
-- **Rooks**: Move in straight lines along hex grid axes
-- **Queen**: Combines rook and bishop movement patterns
-- **King**: Moves one hex in any direction
-- **Dragon**: A special piece with extended movement capabilities
-
-## How to Play
-
-1. White moves first
-2. Click on a piece to select it (available moves will be highlighted in yellow)
-3. Click on a highlighted hex to move your piece
-4. Capture opponent pieces by moving onto their position
-5. Win by capturing the opponent's king
-
-### Controls
-
-- **Undo Move**: Reverses the last move
-- **Reset Game**: Starts a new game
-- **Show Board**: Refreshes the board display
-- **Computer Makes Move**: Forces the AI to make its next move
-- **Auto Play On/Off**: Toggles automatic play mode
-- **Save/Load File**: Manages game state
-- **Mutate & Play**: Introduces mutations to the AI parameters
-- **Get Points**: Displays current score
-- **Reset Parameter Files**: Resets AI learning parameters
-
-## AI and Evolutionary Algorithm
-
-The HexChess AI uses a sophisticated evolutionary algorithm to improve its gameplay:
-
-- The AI evaluates potential moves based on multiple weighted parameters
-- Parameters include board position, piece value, attack/defense potential, etc.
-- When games conclude, successful strategies have their parameters saved
-- The "Mutate & Play" function introduces random variations to parameters
-- Over time, the AI evolves more effective playing strategies
-
-### Parameter Categories
-
-The AI considers many factors when choosing moves:
-
-- Early/mid/late game strategies
-- Piece-specific movement preferences
-- Capture and defense values
-- King safety parameters
-- Piece coordination ("flocking")
-- Pawn promotion incentives
-- Danger avoidance
-
-## Development
-
-### Technologies Used
-
-- Vanilla JavaScript
-- HTML5 Canvas for rendering
-- CSS for styling
-
-### Project Structure
-
-- `index.html`: Main game page
-- `script.js`: Core game logic and AI
-- `style.css`: Game styling
-- `hexPositionTable.js`: Hex grid coordinate calculations
-- `params.js`: Parameter management for the evolutionary algorithm
-- `parameterFile.txt` and `parameterFile_b.txt`: Saved AI parameters
-
-## Future Enhancements
-
-- Network multiplayer capabilities
-- Additional hex chess variants
-- Enhanced AI visualization tools
-- Improved UI/UX with game history and notation
-- Mobile-friendly responsive design
-
-## Contributing
-
-Contributions to HexChess are welcome! Please feel free to submit pull requests or open issues to suggest improvements.
-
-## License
-
-This project is available under an open source license.
-
-## Credits
-
-Developed by G.D. Dickinson
-
----
-
-*HexChess - Chess reinvented on hexagons with evolving AI*
+```
+hexchess/
+├── hexchess_main.py          # Application entry point
+├── hexchess_gui.py           # MainWindow and board rendering
+├── hexchess_game.py          # Game logic and rules
+├── hexchess_board.py         # Hex board representation
+├── hexchess_pieces.py        # Piece definitions (including Dragon, Prince)
+├── hexchess_ai.py            # Learning AI with parameter persistence
+├── hexchess_help.py          # Help system
+├── hexchess_testing.py       # Game testing utilities
+├── hexchess_tests.py         # Test suite
+├── hexchess_full_game_test.py
+├── ai_params_b.json          # AI parameters (black)
+├── ai_params_w.json          # AI parameters (white)
+├── ai_decisions.log          # AI decision log
+└── game_moves.log            # Move history log
+```
