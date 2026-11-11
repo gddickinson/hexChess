@@ -590,14 +590,16 @@ class AdvancedAI(BasicAI):
         return score
 
     def _evaluate_piece_positions(self, game: HexChess) -> float:
+        """Pawn and Dragon placement: this AI's pieces count for it, the opponent's against it."""
         score = 0
         for q, r in game.board.get_all_cells():
             piece = game.board.get_cell(q, r)
             if piece:
+                sign = 1 if piece[0] == self.color else -1
                 if piece[1] == 'P':
-                    score += self._evaluate_pawn_position(game, q, r, piece[0])
+                    score += sign * self._evaluate_pawn_position(game, q, r, piece[0])
                 elif piece[1] == 'D':
-                    score += self._evaluate_dragon_position(game, q, r, piece[0])
+                    score += sign * self._evaluate_dragon_position(game, q, r, piece[0])
         return score
 
     def _evaluate_dragon_position(self, game: HexChess, q: int, r: int, color: str) -> float:

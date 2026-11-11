@@ -96,3 +96,9 @@ def test_black_values_a_guarded_king():
     far = position({(-8, 8): 'wK', (0, -8): 'bP', (8, -8): 'bK'}, to_move='b')
     near = position({(-8, 8): 'wK', (7, -8): 'bP', (8, -8): 'bK'}, to_move='b')
     assert AdvancedAI(near, 'b')._evaluate_board(near) > AdvancedAI(far, 'b')._evaluate_board(far)
+
+
+def test_opponent_dragon_placement_does_not_help():
+    g = position({(-8, 8): 'wK', (0, 0): 'bD', (8, -8): 'bK'})
+    assert AdvancedAI(g, 'w')._evaluate_piece_positions(g) < 0
+    assert AdvancedAI(g, 'b')._evaluate_piece_positions(g) > 0
