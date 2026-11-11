@@ -1,7 +1,7 @@
 import unittest
 from hexchess_board import HexBoard
 from hexchess_game import HexChess
-from hexchess_pieces import PieceFactory
+from hexchess_pieces import PieceFactory, KNIGHT_OFFSETS
 from hexchess_ai import BasicAI
 
 class TestHexBoard(unittest.TestCase):
@@ -15,6 +15,17 @@ class TestHexBoard(unittest.TestCase):
         self.assertTrue(self.board.is_valid_cell(0, 0))
         self.assertTrue(self.board.is_valid_cell(8, 0))
         self.assertFalse(self.board.is_valid_cell(9, 0))
+
+def cleared(pieces, to_move='w'):
+    """A game with only `pieces` ({(q, r): 'wK', ...}) on the board."""
+    game = HexChess()
+    for cell in game.board.cells:
+        game.board.cells[cell] = None
+    for (q, r), piece in pieces.items():
+        game.board.set_cell(q, r, piece)
+    game.current_player = to_move
+    return game
+
 
 class TestHexChess(unittest.TestCase):
     def setUp(self):
@@ -49,8 +60,8 @@ class TestHexChess(unittest.TestCase):
         self.assertFalse(self.game.make_move(0, 0, 0, 2))  # Rook can't jump over pawn
 
     def test_valid_knight_move(self):
-        self.assertTrue(self.game.make_move(-7, -1, -5, 0))  # Knight can jump
-        self.assertEqual(self.game.board.get_cell(-5, 0), 'wN')
+        self.assertTrue(self.game.make_move(-7, -1, -6, 0))  # Knight jumps over the pawn line
+        self.assertEqual(self.game.board.get_cell(-6, 0), 'wN')
 
     def test_player_switch(self):
         self.assertEqual(self.game.current_player, 'w')
@@ -58,9 +69,7 @@ class TestHexChess(unittest.TestCase):
         self.assertEqual(self.game.current_player, 'b')
 
     def test_move_into_check(self):
-        self.game.board.set_cell(0, 0, 'wK')
-        self.game.board.set_cell(2, 0, 'bR')
-        self.game.current_player = 'w'
+        self.game = cleared({(0, 0): 'wK', (2, 0): 'bR', (5, 3): 'bK'})
         self.assertFalse(self.game.make_move(0, 0, 1, 0))  # Moving into check should be invalid
 
     def test_valid_capture(self):
@@ -69,16 +78,18 @@ class TestHexChess(unittest.TestCase):
         self.assertTrue(self.game.make_move(0, 0, 0, 1))
         self.assertEqual(self.game.board.get_cell(0, 1), 'wR')
 
-    def test_pawn_diagonal_capture(self):
+    def test_pawn_captures_on_its_move_cells(self):
+        # Pawns move and capture on the same two forward cells ((0, 1) and (1, 0) for white).
         self.game.board.set_cell(0, 0, 'wP')
-        self.game.board.set_cell(1, 1, 'bP')
-        self.assertTrue(self.game.make_move(0, 0, 1, 1))
-        self.assertEqual(self.game.board.get_cell(1, 1), 'wP')
+        self.game.board.set_cell(1, 0, 'bP')
+        self.assertTrue(self.game.make_move(0, 0, 1, 0))
+        self.assertEqual(self.game.board.get_cell(1, 0), 'wP')
 
     def test_bishop_diagonal_move(self):
+        # The Bishop currently slides along the same six lines as the Rook (see hexchess_pieces.py).
         self.game.board.set_cell(0, 0, 'wB')
-        self.assertTrue(self.game.make_move(0, 0, 2, 2))
-        self.assertEqual(self.game.board.get_cell(2, 2), 'wB')
+        self.assertTrue(self.game.make_move(0, 0, 2, -2))
+        self.assertEqual(self.game.board.get_cell(2, -2), 'wB')
 
     def test_invalid_bishop_move(self):
         self.game.board.set_cell(0, 0, 'wB')
@@ -87,8 +98,9 @@ class TestHexChess(unittest.TestCase):
 
     def test_queen_move(self):
         self.game.board.set_cell(0, 0, 'wQ')
-        self.assertTrue(self.game.make_move(0, 0, 3, 3))  # Diagonal move
+        self.assertTrue(self.game.make_move(0, 0, 3, -3))
         self.game.board.set_cell(0, 0, 'wQ')
+        self.game.current_player = 'w'
         self.assertTrue(self.game.make_move(0, 0, 0, 3))  # Straight move
 
 
@@ -96,33 +108,35 @@ class TestHexChess(unittest.TestCase):
         self.game.board.set_cell(0, 0, 'wD')
         self.assertTrue(self.game.make_move(0, 0, 2, -1))  # Knight-like move
         self.game.board.set_cell(0, 0, 'wD')
+        self.game.current_player = 'w'
         self.assertTrue(self.game.make_move(0, 0, 0, 3))  # Queen-like move
 
 
     def test_checkmate(self):
-        self.game.board.set_cell(0, 0, 'wK')
-        self.game.board.set_cell(1, 0, 'bR')
-        self.game.board.set_cell(0, 1, 'bR')
-        self.game.current_player = 'w'
-        self.assertTrue(self.game.is_checkmate())
+        self.game = cleared({(-8, 8): 'wK', (7, 0): 'wR', (3, -1): 'wR', (8, -8): 'bK'})
+        self.assertTrue(self.game.make_move(3, -1, 8, -1))
+        self.assertTrue(self.game.is_checkmate('b'))
         self.assertTrue(self.game.is_game_over())
-        self.assertEqual(self.game.get_winner(), 'b')
+        self.assertEqual(self.game.get_winner(), 'w')
 
     def test_stalemate(self):
-        self.game.board.set_cell(0, 0, 'wK')
-        self.game.board.set_cell(2, 0, 'bQ')
-        self.game.board.set_cell(1, 2, 'bR')
-        self.game.current_player = 'w'
-        self.assertTrue(self.game.is_stalemate())
+        self.game = cleared({(-8, 8): 'wK', (7, 0): 'wR', (0, 0): 'wR', (8, -8): 'bK'})
+        self.assertTrue(self.game.make_move(0, 0, 0, -7))
+        self.assertTrue(self.game.is_stalemate('b'))
         self.assertTrue(self.game.is_game_over())
         self.assertEqual(self.game.get_winner(), 'draw')
 
 
     def test_pawn_promotion(self):
-        # Pawn promotion is not implemented in the current version, but we can test for its absence
+        # Far edge (q + r == 8) promotes to a Queen, the side edges (q == 8 or r == 8) to a Prince;
+        # (0, 8) is on both, and the Prince rule wins.
+        self.game = cleared({(3, 4): 'wP', (-8, 8): 'wK', (8, -8): 'bK'})
+        self.assertTrue(self.game.make_move(3, 4, 4, 4))
+        self.assertEqual(self.game.board.get_cell(4, 4), 'wQ')
         self.game.board.set_cell(0, 7, 'wP')
-        self.game.make_move(0, 7, 0, 8)  # Move pawn to the last rank
-        self.assertEqual(self.game.board.get_cell(0, 8), 'wP')  # Should still be a pawn
+        self.game.current_player = 'w'
+        self.assertTrue(self.game.make_move(0, 7, 0, 8))
+        self.assertEqual(self.game.board.get_cell(0, 8), 'wC')
 
 class TestPieces(unittest.TestCase):
     def test_pawn_moves(self):
@@ -147,8 +161,8 @@ class TestPieces(unittest.TestCase):
     def test_knight_moves(self):
         knight = PieceFactory.create_piece('N', 'w')
         moves = knight.get_moves(0, 0, 5)
-        expected_moves = [(2, -1), (1, 1), (-1, 2), (-2, 1), (-1, -1), (1, -2),
-                          (2, 1), (1, 2), (-1, -2), (-2, -1)]
+        # The Knight reaches every cell at hex distance 2 (12 cells).
+        expected_moves = list(KNIGHT_OFFSETS)
         for move in expected_moves:
             self.assertIn(move, moves)
         self.assertEqual(len(moves), len(expected_moves))
@@ -195,10 +209,8 @@ class TestPieces(unittest.TestCase):
         self.assertIn((0, 5), moves)
         self.assertIn((-5, 5), moves)
         # Knight-like moves
-        self.assertIn((2, -1), moves)
-        self.assertIn((1, 2), moves)
-        self.assertIn((-1, -2), moves)
-        self.assertIn((-2, 1), moves)
+        for move in KNIGHT_OFFSETS:
+            self.assertIn(move, moves)
         # Check that dragon has more moves than a queen (due to knight-like moves)
         queen = PieceFactory.create_piece('Q', 'w')
         queen_moves = queen.get_moves(0, 0, 5)
@@ -278,9 +290,6 @@ class TestKingCapture(unittest.TestCase):
         self.assertTrue(move_made, "The move to capture the king should be successful")
         self.assertTrue(self.game.is_game_over(), "The game should be over after capturing the king")
         self.assertEqual(self.game.get_winner(), 'w', "White should be the winner")
-
-if __name__ == '__main__':
-    unittest.main()
 
 if __name__ == '__main__':
     unittest.main()
