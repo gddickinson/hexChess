@@ -6,6 +6,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 
 class GameStatsMixin:
+    def _piece_moves(self, q: int, r: int) -> List[Tuple[int, int]]:
+        """Legal moves of the piece at (q, r) whoever is to move (get_possible_moves answers only for the mover)."""
+        return [m for m in self.game._pseudo_moves(q, r) if not self.game._leaves_king_in_check(q, r, *m)]
+
     def get_game_stats(self) -> Dict[str, Any]:
         stats = {
             'total_moves': len(self.game.move_history),
@@ -112,7 +116,7 @@ class GameStatsMixin:
                 stats[color]['material_balance'] += piece_values[piece_type]
                 if (q, r) in center_hexes:
                     stats[color]['center_control'] += 1
-                moves = self.game.get_possible_moves(q, r)
+                moves = self._piece_moves(q, r)
                 stats[color]['mobility'] += len(moves)
                 if piece_type == 'P':
                     if self.is_passed_pawn(q, r, color):
@@ -176,5 +180,5 @@ class GameStatsMixin:
         for q, r in self.game.board.get_all_cells():
             piece = self.game.board.get_cell(q, r)
             if piece and piece[0] == color:
-                moves.extend([(q, r, to_q, to_r) for to_q, to_r in self.game.get_possible_moves(q, r)])
+                moves.extend([(q, r, to_q, to_r) for to_q, to_r in self._piece_moves(q, r)])
         return moves
