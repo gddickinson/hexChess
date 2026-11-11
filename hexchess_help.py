@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QH
 from PyQt5.QtGui import QPainter, QColor, QPen, QPolygonF, QPixmap, QFont
 from PyQt5.QtCore import Qt, QPointF
 
-from hexchess_board import VisualizationHexBoard
+from hexchess_board_view import VisualizationHexBoard
 
 class HelpWindow(QMainWindow):
     def __init__(self):
@@ -40,7 +40,7 @@ class HelpWindow(QMainWindow):
         introduces new strategic elements while maintaining the core essence of chess.
 
         Key Features:
-        • Hexagonal board with 91 cells
+        • Hexagonal board with 217 cells (radius 8)
         • Traditional chess pieces plus new 'Prince' and 'Dragon' pieces
         • Modified movement rules adapted to the hexagonal grid
         • AI opponent with learning capabilities
@@ -70,21 +70,20 @@ class HelpWindow(QMainWindow):
         1. White moves first, then players alternate turns.
         2. Each type of piece has its own unique movement pattern.
         3. A piece is captured when an opponent's piece moves to its cell.
-        4. The game ends when a King is captured or when a player has no legal moves.
-        5. Pawns promote to Princes or Queens when they reach the opposite edge of the board.
-        6. There is no castling in HexChess.
-        7. En passant captures are not implemented in this version.
+        4. You may not make a move that leaves your own King attacked (check).
+        5. The game ends by checkmate (the player to move is in check and has no legal move)
+           or stalemate (no legal move, not in check: a draw).
+        6. Pawns reaching the far edge promote to a Queen; reaching one of the two side edges
+           next to it promotes them to a Prince.
+        7. There is no castling in HexChess.
+        8. En passant captures are not implemented in this version.
 
         Winning the Game:
-        • Capture the opponent's King
-        • Force a checkmate where the opponent's King has no legal moves
-        • The opponent resigns
+        • Checkmate: the opponent is in check and has no legal move
 
         Draws:
         • Stalemate: The player to move has no legal moves, but their King is not in check
-        • Insufficient material: Neither player has enough pieces to force a checkmate
-        • Threefold repetition: The same position occurs three times with the same player to move
-        • 50-move rule: No captures or pawn moves in the last 50 moves
+        (Insufficient material, threefold repetition and the 50-move rule are not implemented.)
 
         Remember, the hexagonal board changes the dynamics of piece movements and
         strategy compared to traditional chess. Experiment and discover new tactics!
@@ -106,17 +105,17 @@ class HelpWindow(QMainWindow):
         pieces = ['Pawn', 'Rook', 'Knight', 'Bishop', 'Queen', 'King', 'Prince', 'Dragon']
         symbols = ['♟', '♜', '♞', '♝', '♛', '♚', '♔', 'D']  # Unicode chess symbols
         descriptions = [
-            "Moves one step forward in two directions: up-right or right for white, down-left or left for black. Captures diagonally. Promotes to Prince upon reaching the opposite edge.",
+            "Moves one step forward in two directions: (0, +1) or (+1, 0) for white, (0, -1) or (-1, 0) for black, and captures on the same two cells. Promotes to a Queen on the far edge and to a Prince on the two side edges next to it.",
             "Moves any number of steps in straight lines (6 directions).",
-            "Moves in an extended 'L' shape: 2 steps in one direction, then 1 step in a different direction, or 2 steps in one direction, then 2 steps in a perpendicular direction.",
-            "Moves any number of steps diagonally in any of the 6 directions.",
-            "Combines Rook and Bishop movements. Can move any number of steps in any of the 6 directions (straight or diagonal).",
+            "Jumps to any of the 12 cells at distance 2: two steps in a straight line, or one step in each of two neighbouring directions. It jumps over pieces.",
+            "In this version the Bishop slides along the same six straight lines as the Rook.",
+            "Combines Rook and Bishop movements (in this version: any number of steps along the 6 straight lines).",
             "Moves one step in any of the 6 directions to adjacent hexes.",
-            "Moves one step in any of the 6 directions, like the King. Obtained through pawn promotion."
-            "Combines Queen and Knight moves"
+            "Moves one step in any of the 6 directions, like the King. Obtained through pawn promotion.",
+            "Combines Queen and Knight moves: slides like a Queen and jumps like a Knight."
         ]
         moves = [
-            [(0, 1), (1, 0), (1, -1), (-1, 1)],  # Pawn (including capture moves)
+            [(0, 1), (1, 0)],  # Pawn (moves and captures on the same cells)
             [(0, 1), (0, 2), (0, 3), (1, 0), (2, 0), (3, 0), (1, -1), (2, -2), (3, -3),
              (0, -1), (0, -2), (0, -3), (-1, 0), (-2, 0), (-3, 0), (-1, 1), (-2, 2), (-3, 3)],  # Rook
             [(2, -1), (1, 1), (-1, 2), (-2, 1), (-1, -1), (1, -2),
@@ -128,7 +127,8 @@ class HelpWindow(QMainWindow):
             [(0, 1), (1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1)],  # King
             [(0, 1), (1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1)],  # Prince
             [(0, 1), (0, 2), (0, 3), (1, 0), (2, 0), (3, 0), (1, -1), (2, -2), (3, -3),
-             (0, -1), (0, -2), (0, -3), (-1, 0), (-2, 0), (-3, 0), (-1, 1), (-2, 2), (-3, 3)],  # Dragon
+             (0, -1), (0, -2), (0, -3), (-1, 0), (-2, 0), (-3, 0), (-1, 1), (-2, 2), (-3, 3),
+             (2, -1), (1, 1), (-1, 2), (-2, 1), (-1, -1), (1, -2)],  # Dragon
         ]
 
         for i, (piece, symbol, desc, piece_moves) in enumerate(zip(pieces, symbols, descriptions, moves)):
@@ -172,8 +172,8 @@ class HelpWindow(QMainWindow):
         4. Adaptive Play: The AI considers the game phase (opening, middlegame, endgame) and adjusts
            its strategy accordingly.
 
-        5. Difficulty Levels: You can choose between different AI difficulty levels, which affect
-           the depth of the AI's search and the complexity of its evaluation function.
+        5. Two AI players: BasicAI scores each move with its learned weights (one move deep);
+           AdvancedAI searches deeper with minimax (up to 5 plies or 6 seconds).
 
         How the AI Learns:
         • After each game, the AI analyzes its performance and the game outcome.
@@ -216,6 +216,8 @@ class HelpWindow(QMainWindow):
         • PATCH version for backwards-compatible bug fixes.
 
         Recent Updates:
+        • Rules fixes - moves must follow the piece's pattern, check is enforced, and
+          checkmate and stalemate end the game
         • 1.0.0 - Initial release of HexChess
           - Implemented basic game rules and all piece movements
           - Added AI opponent with learning capabilities
@@ -225,20 +227,13 @@ class HelpWindow(QMainWindow):
         • Improved AI with deeper search capabilities
         • Online multiplayer functionality
         • More customization options (board themes, piece sets)
-        • Tournament mode for multiple AI players
         • Mobile version of HexChess
 
         How to Update:
-        When a new version is available, you'll see a notification in the main menu.
-        Click on the update button to download and install the latest version.
+        Pull the latest version from https://github.com/gddickinson/hexChess
 
-        Feedback and Suggestions:
-        We value your input! If you have ideas for improvements or new features,
-        please send them to: feedback@hexchess.com
-
-        Bug Reports:
-        If you encounter any issues while playing HexChess, please report them
-        to: bugs@hexchess.com
+        Feedback, Suggestions and Bug Reports:
+        Please open an issue on the GitHub repository.
 
         Stay tuned for exciting new developments in the world of HexChess!
         """
