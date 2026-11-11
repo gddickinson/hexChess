@@ -1,5 +1,16 @@
 from typing import List, Tuple
 
+# The Knight jumps to any of the 12 cells at hex distance 2 (6 "diagonal" + 6 two-step straight cells).
+KNIGHT_OFFSETS = [
+    (2, -1), (1, 1), (-1, 2), (-2, 1), (-1, -1), (1, -2),
+    (0, -2), (2, -2), (2, 0), (0, 2), (-2, 2), (-2, 0)
+]
+
+
+def _unique(moves: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    """Drop duplicates but keep first-seen order, so move lists (and AI tie-breaks) are deterministic."""
+    return list(dict.fromkeys(moves))
+
 class Piece:
     def __init__(self, color: str):
         self.color = color
@@ -34,11 +45,7 @@ class Rook(Piece):
 
 class Knight(Piece):
     def get_moves(self, q: int, r: int, board_size: int) -> List[Tuple[int, int]]:
-        knight_moves = [
-            (2, -1), (1, 1), (-1, 2), (-2, 1), (-1, -1), (1, -2),
-            (0, -2), (2, -2), (2, 0), (0, 2), (-2, 2), (-2, 0)
-        ]
-        return [(q + dq, r + dr) for dq, dr in knight_moves
+        return [(q + dq, r + dr) for dq, dr in KNIGHT_OFFSETS
                 if max(abs(q + dq), abs(r + dr), abs(-(q + dq)-(r + dr))) <= board_size]
 
 class Bishop(Piece):
@@ -59,7 +66,7 @@ class Queen(Piece):
     def get_moves(self, q: int, r: int, board_size: int) -> List[Tuple[int, int]]:
         rook = Rook(self.color)
         bishop = Bishop(self.color)
-        return list(set(rook.get_moves(q, r, board_size) + bishop.get_moves(q, r, board_size)))
+        return _unique(rook.get_moves(q, r, board_size) + bishop.get_moves(q, r, board_size))
 
 class King(Piece):
     def get_moves(self, q: int, r: int, board_size: int) -> List[Tuple[int, int]]:
@@ -71,7 +78,7 @@ class Dragon(Piece):
     def get_moves(self, q: int, r: int, board_size: int) -> List[Tuple[int, int]]:
         queen = Queen(self.color)
         knight = Knight(self.color)
-        return list(set(queen.get_moves(q, r, board_size) + knight.get_moves(q, r, board_size)))
+        return _unique(queen.get_moves(q, r, board_size) + knight.get_moves(q, r, board_size))
 
 class PieceFactory:
     @staticmethod

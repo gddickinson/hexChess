@@ -26,8 +26,8 @@ class TestHexChess(unittest.TestCase):
         self.assertFalse(self.game.make_move(8, -1, 8, -2))
 
     def test_valid_knight_move(self):
-        self.assertTrue(self.game.make_move(-7, -1, -5, 0))
-        self.assertEqual(self.game.board.get_cell(-5, 0), 'wN')
+        self.assertTrue(self.game.make_move(-7, -1, -6, 0))  # Knight offset (1, 1)
+        self.assertEqual(self.game.board.get_cell(-6, 0), "wN")
 
     def test_player_switch(self):
         self.assertEqual(self.game.current_player, 'w')
