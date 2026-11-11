@@ -29,7 +29,7 @@ class EvaluationMixin:
             score += self._evaluate_development(piece, from_q, from_r, to_q, to_r)
             score += self._evaluate_center_control(to_q, to_r)
         elif phase == 'middlegame':
-            score += self._evaluate_piece_activity(piece, to_q, to_r)
+            score += self._evaluate_piece_activity(piece, to_q, to_r, from_q, from_r)
             score += self._evaluate_pawn_structure(to_q, to_r)
         else:  # endgame
             score += self._evaluate_king_activity(piece, to_q, to_r)
@@ -47,9 +47,21 @@ class EvaluationMixin:
         center_distance = max(abs(q), abs(r))
         return self.learning_module.params['center_control'] * (self.game.board.size - center_distance)
 
-    def _evaluate_piece_activity(self, piece: str, q: int, r: int) -> float:
-        moves = self.game.get_possible_moves(q, r)
-        return len(moves) * self.learning_module.params['mobility'] * 0.1
+    def _evaluate_piece_activity(self, piece: str, q: int, r: int,
+                                 from_q: Optional[int] = None, from_r: Optional[int] = None) -> float:
+        return self._evaluate_mobility(q, r, from_q, from_r)
+
+    def _count_moves_after(self, from_q: int, from_r: int, to_q: int, to_r: int) -> int:
+        """Number of legal moves the piece would have from (to_q, to_r) after moving there."""
+        board = self.game.board
+        piece, captured = board.get_cell(from_q, from_r), board.get_cell(to_q, to_r)
+        board.set_cell(to_q, to_r, piece)
+        board.set_cell(from_q, from_r, None)
+        try:
+            return len(self.game.get_possible_moves(to_q, to_r))
+        finally:
+            board.set_cell(from_q, from_r, piece)
+            board.set_cell(to_q, to_r, captured)
 
     def _evaluate_pawn_structure(self, q: int, r: int) -> float:
         score = 0
@@ -79,9 +91,15 @@ class EvaluationMixin:
         return self.learning_module.params['board_control'] * (
             self.game.board.size - max(abs(q), abs(r)))
 
-    def _evaluate_mobility(self, q: int, r: int) -> float:
-        moves = self.game.get_possible_moves(q, r)
-        return len(moves) * self.learning_module.params['mobility'] * 0.1
+    def _evaluate_mobility(self, q: int, r: int,
+                           from_q: Optional[int] = None, from_r: Optional[int] = None) -> float:
+        # Mobility of the moving piece on its new cell: before the move that cell is empty or holds an enemy,
+        # so asking get_possible_moves without making the move always gave 0.
+        if from_q is None:
+            count = len(self.game.get_possible_moves(q, r))
+        else:
+            count = self._count_moves_after(from_q, from_r, q, r)
+        return count * self.learning_module.params['mobility'] * 0.1
 
     def _evaluate_piece_coordination(self, q: int, r: int) -> float:
         score = 0

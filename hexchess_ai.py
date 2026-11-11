@@ -15,6 +15,9 @@ import time
 
 logger = logging.getLogger('hexchess.ai')
 
+# Learned parameter files live next to this module, whatever the working directory.
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 class BasicAI(EvaluationMixin):
     def __init__(self, game, color: str, custom_filename: str = None):
@@ -82,6 +85,12 @@ class BasicAI(EvaluationMixin):
         logger.info(f"Penalized parameters: {self.learning_module.params}")
 
     def make_move(self) -> Optional[Tuple[int, int, int, int]]:
+        move = self._choose_move()
+        if move is not None:
+            self.total_moves += 1
+        return move
+
+    def _choose_move(self) -> Optional[Tuple[int, int, int, int]]:
         all_moves = self._get_all_possible_moves()
         if not all_moves:
             self.logger.warning(f"{self.color} AI: No possible moves found")
@@ -166,7 +175,7 @@ class BasicAI(EvaluationMixin):
         # Evaluate other factors
         score += self._evaluate_position(to_q, to_r)
         score += self._evaluate_king_safety(to_q, to_r)
-        score += self._evaluate_mobility(to_q, to_r)
+        score += self._evaluate_mobility(to_q, to_r, from_q, from_r)
         score += self._evaluate_piece_coordination(to_q, to_r)
         score += self._evaluate_tempo(moving_piece, from_q, from_r, to_q, to_r)
 
@@ -199,13 +208,17 @@ class BasicAI(EvaluationMixin):
         return any(count > self.long_loop_threshold // 2 for count in position_counts.values())
 
     def _get_board_state_after_move(self, from_q: int, from_r: int, to_q: int, to_r: int) -> str:
-        board_state = self._get_board_state()
+        """Board string (same format as _get_board_state) after moving the piece, ignoring promotion."""
         piece = self.game.board.get_cell(from_q, from_r)
-        board_state = (board_state[:self._get_index(from_q, from_r)] + '.' +
-                       board_state[self._get_index(from_q, from_r)+1:])
-        board_state = (board_state[:self._get_index(to_q, to_r)] + piece +
-                       board_state[self._get_index(to_q, to_r)+1:])
-        return board_state
+        tokens = []
+        for q, r in self.game.board.get_all_cells():
+            if (q, r) == (from_q, from_r):
+                tokens.append('.')
+            elif (q, r) == (to_q, to_r):
+                tokens.append(piece)
+            else:
+                tokens.append(self.game.board.get_cell(q, r) or '.')
+        return ''.join(tokens)
 
     def _get_hypothetical_board(self, from_q: int, from_r: int, to_q: int, to_r: int):
         hypothetical_board = self.game.board.__class__(self.game.board.size)
@@ -347,7 +360,7 @@ class BasicAI(EvaluationMixin):
     def get_filename(self):
         if self.custom_filename:
             return self.custom_filename
-        return f'ai_params_{self.color}.json'
+        return os.path.join(MODULE_DIR, f'ai_params_{self.color}.json')
 
     def save_learning_progress(self):
         filename = self.get_filename()
@@ -390,7 +403,7 @@ class AdvancedAI(BasicAI):
     def make_move(self) -> Optional[Tuple[int, int, int, int]]:
         self.start_time = time.time()
         best_move = None
-        best_score = float('-inf') if self.color == 'w' else float('inf')
+        best_score = float('-inf')
 
         for depth in range(1, self.max_depth + 1):
             move, score = self._iterative_deepening(depth)
@@ -409,7 +422,7 @@ class AdvancedAI(BasicAI):
 
     def _iterative_deepening(self, depth: int):
         best_move = None
-        best_score = float('-inf') if self.color == 'w' else float('inf')
+        best_score = float('-inf')
 
         all_moves = self._get_all_possible_moves()
         all_moves.sort(key=lambda m: self.move_ordering.get(m, 0), reverse=True)
@@ -419,10 +432,10 @@ class AdvancedAI(BasicAI):
                 break
 
             self.game.make_move(*move)
-            score = self._minimax(depth - 1, float('-inf'), float('inf'), self.color != 'w')
+            score = self._minimax(depth - 1, float('-inf'), float('inf'), False)
+            self.game.undo_move()
 
-            if ((self.color == 'w' and score > best_score) or
-                    (self.color == 'b' and score < best_score)):
+            if score > best_score:
                 best_score = score
                 best_move = move
 
@@ -444,13 +457,13 @@ class AdvancedAI(BasicAI):
         best_score = float('-inf') if maximizing_player else float('inf')
         best_move = None
 
-        all_moves = self._get_all_possible_moves()
+        all_moves = self._get_side_moves(self.game, self.game.current_player)
         all_moves.sort(key=lambda m: self.move_ordering.get(m, 0), reverse=maximizing_player)
 
         for move in all_moves:
             self.game.make_move(*move)
             score = self._minimax(depth - 1, alpha, beta, not maximizing_player)
-            self.game._undo_move()
+            self.game.undo_move()
 
             if maximizing_player:
                 if score > best_score:
@@ -483,8 +496,9 @@ class AdvancedAI(BasicAI):
             else:
                 return float('-inf')
 
-        score = 0
-        score += self._evaluate_material_balance_for_game(game)
+        # Every term is from this AI's side; material is white minus black, so it is flipped for Black.
+        material = self._evaluate_material_balance_for_game(game)
+        score = material if self.color == 'w' else -material
         score += self._evaluate_piece_positions(game)
         score += self._evaluate_advanced_king_safety(game)
         score += self._evaluate_advanced_pawn_structure(game)
@@ -492,7 +506,7 @@ class AdvancedAI(BasicAI):
         score += self._evaluate_advanced_mobility(game)
         score += self._evaluate_advanced_coordination(game)
 
-        return score if self.color == 'w' else -score
+        return score
 
     def _evaluate_advanced_king_safety(self, game: HexChess) -> float:
         king_pos = self._find_king_position(game, self.color)
@@ -535,15 +549,20 @@ class AdvancedAI(BasicAI):
         return score
 
     def _evaluate_advanced_mobility(self, game: HexChess) -> float:
-        my_mobility = sum(len(game.get_possible_moves(q, r))
-                          for q, r in game.board.get_all_cells()
-                          if game.board.get_cell(q, r) and game.board.get_cell(q, r)[0] == self.color)
-
-        opponent_mobility = sum(len(game.get_possible_moves(q, r))
-                                for q, r in game.board.get_all_cells()
-                                if game.board.get_cell(q, r) and game.board.get_cell(q, r)[0] != self.color)
-
+        my_mobility = len(self._get_side_moves(game, self.color))
+        opponent_mobility = len(self._get_side_moves(game, self._opposite_color(self.color)))
         return (my_mobility - opponent_mobility) * 0.1
+
+    @staticmethod
+    def _get_side_moves(game: HexChess, color: str) -> List[Tuple[int, int, int, int]]:
+        """Legal moves of `color` in `game`, whoever is to move (get_possible_moves answers only for the mover)."""
+        moves = []
+        for q, r in game.board.get_all_cells():
+            piece = game.board.get_cell(q, r)
+            if piece and piece[0] == color:
+                moves.extend((q, r, tq, tr) for tq, tr in game._pseudo_moves(q, r)
+                             if not game._leaves_king_in_check(q, r, tq, tr))
+        return moves
 
     def _evaluate_advanced_coordination(self, game: HexChess) -> float:
         score = 0
