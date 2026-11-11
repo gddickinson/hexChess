@@ -4,12 +4,10 @@ import random
 from typing import List, Tuple, Dict, Any, Optional
 import json
 import os
-import numpy as np
 from hexchess_game import HexChess
 from hexchess_learning import LearningModule
 from hexchess_evaluation import EvaluationMixin
 from collections import deque, Counter
-import copy
 import logging
 import time
 
