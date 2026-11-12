@@ -3,11 +3,13 @@
 ## Current State
 A hexagonal chess variant with custom pieces (Dragon, Prince), a learning AI system with parameter persistence, and a PyQt5 GUI. The project is well-modularized across 8+ files. However, `hexchess_gui.py` (1146 lines) and `hexchess_ai.py` (1185 lines) are oversized. The AI uses JSON parameter files and decision logging. Multiple test files exist but lack a unified test runner.
 
+Done 2026-11-11: the web version (difficulty levels, animation, undo/redo and save are in the web app) and the module splits.
+
 ## Short-term Improvements
-- [ ] Split `hexchess_gui.py` (1146 lines): extract board rendering into `hexchess_renderer.py` and dialog/panel code into `hexchess_dialogs.py`
-- [ ] Split `hexchess_ai.py` (1185 lines): extract evaluation functions into `hexchess_evaluation.py` and learning logic into `hexchess_learning.py`
+- [x] Split `hexchess_gui.py` (1146 lines): extract board rendering into `hexchess_renderer.py` and dialog/panel code into `hexchess_dialogs.py`
+- [x] Split `hexchess_ai.py` (1185 lines): extract evaluation functions into `hexchess_evaluation.py` and learning logic into `hexchess_learning.py`
 - [ ] Consolidate test files (`hexchess_testing.py`, `hexchess_tests.py`, `hexchess_full_game_test.py`, `test_ai_learning.py`) into a proper `tests/` directory with pytest
-- [ ] Add `.gitignore` for `__pycache__/`, `*.log`, and AI parameter JSON files
+- [x] Add `.gitignore` for `__pycache__/` and `*.log` (AI parameter files stay tracked: the web AI uses them)
 - [ ] Add a `requirements.txt` with PyQt5 pinned
 - [ ] Validate AI parameter JSON on load to prevent crashes from corrupted files
 
@@ -16,14 +18,14 @@ A hexagonal chess variant with custom pieces (Dragon, Prince), a learning AI sys
 - [ ] Implement undo/redo with a proper command pattern (currently move_history exists but no undo)
 - [ ] Add game save/load functionality (serialize board state to JSON)
 - [ ] Add network multiplayer support using sockets or WebSockets
-- [ ] Implement AI difficulty levels beyond the current parameter-based learning
-- [ ] Add move animation in the GUI for smoother piece transitions
+- [x] Implement AI difficulty levels beyond the current parameter-based learning
+- [x] Add move animation in the GUI for smoother piece transitions
 - [ ] Display captured pieces panel alongside the board
 
 ## Long-term Vision
 - [ ] Port the AI to use Monte Carlo Tree Search (MCTS) for stronger play
 - [ ] Add an ELO rating system for tracking AI improvement over games
-- [ ] Create a web-based version using PyScript or a separate JS frontend
+- [x] Create a web-based version using PyScript or a separate JS frontend
 - [ ] Implement a puzzle mode with curated positions for practice
 - [ ] Add sound effects for moves, captures, and check
 
