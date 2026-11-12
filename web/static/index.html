@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HexChess</title>
+<meta name="description" content="Hexagonal chess with a Dragon and a Prince: play a learning AI in your browser, watch AI against AI, and learn the rules.">
+<link rel="icon" href="static/icon.svg">
+<link rel="stylesheet" href="static/style.css">
+<link rel="stylesheet" href="static/style_app.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<header class="top">
+  <a class="brand" href="#/"><span class="mark"></span>HexChess</a>
+  <nav class="groups">
+    <a href="#/play" data-nav="play">Play</a>
+    <a href="#/watch" data-nav="watch">Watch</a>
+    <a href="#/rules" data-nav="rules">Rules</a>
+    <a href="#/lab" data-nav="lab">AI Lab</a>
+    <a href="#/about" data-nav="about">About</a>
+  </nav>
+  <div class="right"><a class="small mute" href="https://github.com/gddickinson/hexChess" target="_blank" rel="noopener">GitHub</a></div>
+</header>
+<main id="app" tabindex="-1"></main>
+<footer class="foot">HexChess · <a href="https://github.com/gddickinson/hexChess">source on GitHub</a> · <span id="mode"></span></footer>
+<script type="module" src="static/main.js"></script>
+</body>
+</html>
