@@ -49,7 +49,7 @@ class BasicAI(EvaluationMixin):
             'piece_protection': 0,
             'pawn_promotion': 0,
             'material_advantage': 0,
-            'piece_effectiveness': {piece: 0 for piece in 'PNBRQKD'},
+            'piece_effectiveness': {piece: 0 for piece in 'PNBRQKDC'},
             'piece_development': 0,
             'board_control': 0,
             'piece_coordination': 0,
@@ -86,8 +86,64 @@ class BasicAI(EvaluationMixin):
     def make_move(self) -> Optional[Tuple[int, int, int, int]]:
         move = self._choose_move()
         if move is not None:
+            self._record_move_stats(move)
             self.total_moves += 1
         return move
+
+    # --- what the AI's moves did, for learn_from_game ---------------------------------------------------------
+    def _attacked_by(self, color: str, q: int, r: int) -> bool:
+        """True if a `color` piece could move to (q, r) if it held an enemy piece (so own pieces count as defenders)."""
+        board, saved = self.game.board, self.game.board.get_cell(q, r)
+        board.set_cell(q, r, ('b' if color == 'w' else 'w') + 'P')
+        try:
+            return any((q, r) in self.game._pseudo_moves(cq, cr) for cq, cr in board.get_all_cells()
+                       if board.get_cell(cq, cr) and board.get_cell(cq, cr)[0] == color and (cq, cr) != (q, r))
+        finally:
+            board.set_cell(q, r, saved)
+
+    def _record_move_stats(self, move: Tuple[int, int, int, int]):
+        """Count, for the move about to be played, which of the learned features it used. learn_from_game divides
+        the counts by the number of moves, and LearningModule.update_params pulls each weight towards that
+        fraction (scaled by the result), so features used in won games gain weight."""
+        from_q, from_r, to_q, to_r = move
+        board, size, s = self.game.board, self.game.board.size, self.move_stats
+        piece, captured = board.get_cell(from_q, from_r), board.get_cell(to_q, to_r)
+        opponent = 'b' if self.color == 'w' else 'w'
+        centre = lambda q, r: max(abs(q), abs(r))  # noqa: E731
+        own_near = lambda q, r, kind=None: any(  # noqa: E731
+            board.get_cell(aq, ar) and board.get_cell(aq, ar)[0] == self.color and (aq, ar) != (from_q, from_r)
+            and (kind is None or board.get_cell(aq, ar)[1] == kind) for aq, ar in board.get_adjacent_cells(q, r))
+        moves_before = len(self.game._pseudo_moves(from_q, from_r))
+        was_attacked = self._attacked_by(opponent, from_q, from_r)
+        king = self._find_king()
+        flags = {
+            'aggression': bool(captured and captured[0] != self.color),
+            'material_advantage': bool(captured and self.piece_values[captured[1]]['attack']
+                                       >= self.piece_values[piece[1]]['attack']),
+            'center_control': centre(to_q, to_r) < centre(from_q, from_r),
+            'board_control': centre(to_q, to_r) <= size // 2,
+            'king_safety': piece[1] != 'K' and bool(king) and self.game.board.distance(to_q, to_r, *king) == 1,
+            'pawn_structure': piece[1] == 'P' and own_near(to_q, to_r, 'P'),
+            'pawn_promotion': piece[1] == 'P',
+            'piece_development': piece[1] in 'NBRQD' and from_q + from_r == (-size if self.color == 'w' else size),
+            'piece_coordination': own_near(to_q, to_r),
+            'tempo': self.game.board.distance(from_q, from_r, to_q, to_r) >= 2,
+            'endgame_preparedness': piece[1] == 'K' and self._determine_game_phase() == 'endgame',
+        }
+        board.set_cell(to_q, to_r, piece)
+        board.set_cell(from_q, from_r, None)
+        try:
+            flags['mobility'] = len(self.game._pseudo_moves(to_q, to_r)) > moves_before
+            flags['defensive'] = was_attacked and not self._attacked_by(opponent, to_q, to_r)
+            flags['piece_protection'] = self._attacked_by(self.color, to_q, to_r)
+        finally:
+            board.set_cell(from_q, from_r, piece)
+            board.set_cell(to_q, to_r, captured)
+        for name, used in flags.items():
+            s[name] += int(bool(used))
+        s['piece_effectiveness'][piece[1]] += 1
+        if piece[1] == 'K':
+            self.king_move_count += 1
 
     def _choose_move(self) -> Optional[Tuple[int, int, int, int]]:
         all_moves = self._get_all_possible_moves()

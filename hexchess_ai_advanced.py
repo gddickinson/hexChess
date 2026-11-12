@@ -34,6 +34,8 @@ class AdvancedAI(BasicAI):
             if all_moves:
                 best_move = random.choice(all_moves)
 
+        if best_move is not None:
+            self._record_move_stats(best_move)
         return best_move
 
     def _iterative_deepening(self, depth: int):

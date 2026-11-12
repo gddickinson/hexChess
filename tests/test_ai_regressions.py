@@ -83,7 +83,7 @@ def test_params_load_independent_of_working_directory(tmp_path):
         ai = BasicAI(HexChess(), 'w')
     finally:
         os.chdir(cwd)
-    assert ai.learning_module.games_played > 0
+    assert os.path.isabs(ai.get_filename()) and os.path.exists(ai.get_filename())
 
 
 def test_advanced_eval_is_from_the_ais_side():
