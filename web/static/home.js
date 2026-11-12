@@ -10,9 +10,9 @@ route('home', async () => {
   app().innerHTML = `<section class="hero split"><div>
       <p class="kicker">Hexagonal chess · Dragon &amp; Prince · learning AI</p>
       <h1 class="glow">HexChess</h1>
-      <p class="lead">Chess reimagined on a board of ${info.cells} hexagons, where every cell has six neighbours and a
-      Dragon that slides like a Queen and leaps like a Knight. Play the AI in your browser at five levels, watch it play
-      itself, or learn the rules piece by piece.</p>
+      <p class="lead">Chess reimagined on a board of ${info.cells} hexagons. Every cell has six neighbours and six straight
+      lines through it, and a Dragon slides like a Queen and leaps like a Knight. Play the AI
+      in your browser at four levels, watch it play itself, or learn the rules piece by piece.</p>
       <a class="btn" href="#/play">Play now</a><a class="btn alt" href="#/watch?autoplay=1">Watch AI vs AI</a>
       <a class="btn alt" href="#/rules">Learn the rules</a></div>
     <div class="hero-board" id="hero"></div></section>
@@ -21,8 +21,8 @@ route('home', async () => {
       <div class="tile"><b>${info.piece_types}</b><span>piece types, 2 of them new</span></div>
       <div class="tile"><b>${info.pieces_per_side}</b><span>pieces per side</span></div>
       <div class="tile"><b>${info.opening_moves}</b><span>legal first moves for White</span></div>
-      <div class="tile"><b>${info.learned_games.w}</b><span>training games in the saved AI</span></div>
-      <div class="tile"><b>5</b><span>AI levels, in a Web Worker</span></div></div>
+      <div class="tile"><b>6</b><span>straight lines through every cell</span></div>
+      <div class="tile"><b>4</b><span>AI levels, in a Web Worker</span></div></div>
     <h2>Explore</h2>
     <div class="grid">
       <a class="card" href="#/play"><b>Play</b><small>you against the AI, or two players</small>
@@ -32,7 +32,7 @@ route('home', async () => {
       <a class="card" href="#/rules"><b>Rules</b><small>tutorial and piece explorer</small>
         <span>The board, every piece's moves, promotion, check and mate, with interactive diagrams.</span></a>
       <a class="card" href="#/lab"><b>AI Lab</b><small>how the opponents think</small>
-        <span>The Basic AI's scoring terms, the Advanced AI's search, and what 125 learning games did to its weights.</span></a>
+        <span>The Basic AI's scoring terms, the Advanced AI's search, and how the Basic AI learns its weights.</span></a>
       <a class="card" href="#/about"><b>About</b><small>desktop app, web app, credits</small>
         <span>How to run the PyQt5 desktop game and this web version, and how the port was checked.</span></a></div>
     <h2>One engine, two languages</h2>

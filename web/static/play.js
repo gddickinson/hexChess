@@ -1,4 +1,4 @@
-// Play page: you against the AI (either colour, five levels) or two players on one screen. Undo/redo, flip, hint,
+// Play page: you against the AI (either colour, four levels) or two players on one screen. Undo/redo, flip, hint,
 // coordinates, evaluation bar, move list, captured pieces, game-over screen and save/resume in localStorage.
 import { route, app, esc, onLeave } from './core.js';
 import { BoardView } from './board_view.js';

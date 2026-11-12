@@ -71,13 +71,14 @@ def close(a, b):
 def test_info_counts():
     d = client.get("/api/info").json()
     assert d["cells"] == 217 and d["piece_types"] == 8 and d["pieces_per_side"] == 19
-    assert d["learned_games"] == {"w": 125, "b": 125}
+    assert set(d["learned_games"]) == {"w", "b"}
 
 
 def test_pieces_match_python_patterns():
     d = client.get("/api/pieces").json()
     assert d["N"]["w"] == [list(m) for m in hr.PieceFactory.create_piece("N", "w").get_moves(0, 0, 4)]
-    assert len(d["P"]["w"]) == 2 and d["P"]["b"] == [[0, -1], [-1, 0]]
+    assert d["P"]["w"] == [[0, 1], [1, 0]] and d["P"]["b"] == [[0, -1], [-1, 0]]
+    assert sorted(d["B"]["w"]) == sorted(d["R"]["w"])          # this variant's Bishop uses the Rook's lines
 
 
 def test_params_history_complete():

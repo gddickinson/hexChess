@@ -1,5 +1,5 @@
 // AI Lab: how the two AIs choose moves, and what the learning AI's saved files (ai_params_w.json / ai_params_b.json)
-// record about its 125 training games.
+// record about its training games.
 import { route, app, api, esc } from './core.js';
 
 const WEIGHTS = ['aggression', 'center_control', 'king_safety', 'mobility', 'board_control', 'piece_development'];
@@ -33,13 +33,13 @@ route('lab', async () => {
   const w = P.w, b = P.b, xs = w.history.game;
   app().innerHTML = `<section class="hero"><p class="kicker">Inside the opponents</p><h1 class="glow">AI Lab</h1>
     <p class="lead">HexChess has two computer players, both ported line for line from the Python and running in your
-    browser. The Basic AI also "learns": after each game it nudges its weights and saves them. Here is what it does, and
-    what its saved files show.</p></section>
+    browser. The Basic AI also learns: after each game it nudges its weights towards what worked and saves them. Here is
+    how both work.</p></section>
     <div class="tiles">
+      <div class="tile"><b>${Object.keys(P.default).length - 1}</b><span>learned weights</span></div>
+      <div class="tile"><b>${Object.keys(P.default.piece_values).length}</b><span>learned piece values</span></div>
       <div class="tile"><b>${w.games_played}</b><span>games recorded for White</span></div>
-      <div class="tile"><b>${w.wins}</b><span>won by White</span></div>
-      <div class="tile"><b>${b.wins}</b><span>won by Black</span></div>
-      <div class="tile"><b>${fmt(w.params.aggression)}</b><span>White's aggression weight now (default ${P.default.aggression})</span></div></div>
+      <div class="tile"><b>${b.games_played}</b><span>games recorded for Black</span></div></div>
 
     <h2>Basic AI: score every move once</h2>
     <p>The Basic AI (the <b>Novice</b> levels) looks at each legal move without looking ahead and adds up a score:</p>
@@ -61,19 +61,24 @@ route('lab', async () => {
     Prince 2), Pawn advance and neighbouring Pawns, Dragon centralisation, its King's guards and distance from the centre, the seven centre cells, the
     difference in legal moves, and how many of its pieces touch each other. It does not use the learned weights.</p>
 
-    <h2>What the learning did</h2>
-    <p>After every game the Basic AI moves each weight a tenth of the way towards a statistic of that game, scaled by
-    the result (1 for a win, 0.5 for a draw, 0 for a loss), and keeps it between 0 and 1. In the desktop tournament an
-    "Exit Stuck Game" press also multiplies every weight by 0.9.</p>
-    <div class="two"><div class="panel"><h3>Win rate</h3>${chart(xs, [{ name: 'White AI', color: 'var(--accent)', ys: w.history.win_rate },
+    <h2>How it learns</h2>
+    <p>While it plays, the AI counts which features each of its moves used: captures (aggression), equal-or-better
+    trades (material advantage), moves towards the centre (centre control) or into the central half (board control),
+    ending beside its King (king safety), Pawns joining Pawns (pawn structure), Pawn moves (pawn promotion), pieces
+    leaving the back edge (development), ending beside a friend (coordination), moving two or more cells (tempo), King
+    moves in the endgame, gaining moves (mobility), escaping an attack (defensive) and ending on a defended cell
+    (piece protection). After the game each weight moves a tenth of the way towards the fraction of moves that used its
+    feature, scaled by the result (1 for a win, 0.5 for a draw, 0 for a loss), and stays between 0 and 1. In the desktop
+    tournament an "Exit Stuck Game" press also multiplies every weight by 0.9.</p>
+    ${xs.length > 1 ? `<div class="two"><div class="panel"><h3>Win rate</h3>${chart(xs, [{ name: 'White AI', color: 'var(--accent)', ys: w.history.win_rate },
       { name: 'Black AI', color: 'var(--accent2)', ys: b.history.win_rate }], { ymin: 0, ymax: 1, ylabel: 'win rate', pct: true })}</div>
-    <div class="panel"><h3>White's weights (log scale)</h3>${chart(xs, WEIGHTS.map((k, i) => ({ name: nice(k), color: COLORS[i], ys: w.history.params[k] })),
-      { log: true, ylabel: 'weights' })}</div></div>
-    <div class="callout"><b>Why the weights fell to almost zero.</b> The statistics the update compares against
-    (the AI's <span class="mono">move_stats</span> counters) are never increased anywhere in the code, so they stay 0 and
-    every win pulls each weight 10% towards 0. Together with the stuck-game penalties, ${w.games_played} games took the
-    weights from 0.5–0.8 down to about 1e-5. The <b>Novice</b> level plays with these saved weights (so its fixed terms
-    dominate); <b>Novice+</b> uses the original defaults for comparison.</div>
+    <div class="panel"><h3>White's weights</h3>${chart(xs, WEIGHTS.map((k, i) => ({ name: nice(k), color: COLORS[i], ys: w.history.params[k] })),
+      { ymin: 0, ymax: 1, ylabel: 'weights' })}</div></div>` : ''}
+    <div class="callout">${w.games_played ? `The saved files record ${w.games_played} games.` : `<b>A fresh start.</b> The
+    saved files hold the code's starting weights and no games: an earlier version never counted these features, so
+    every win pulled every weight towards 0 and the old files (125 games) had decayed to about 1e-5. They were reset
+    when that bug was fixed. Run tournaments in the desktop app to train the AI; the history will be charted here.`}
+    The <b>Novice</b> level plays with the saved weights.</div>
 
     <h2>Saved weights</h2>
     <div class="scroll"><table><thead><tr><th>Weight</th><th>White</th><th>Black</th><th>Default</th></tr></thead><tbody>

@@ -18,11 +18,11 @@
 | `hexchess_board.py` | `HexBoard`: radius-8 hexagon of axial (q, r) cells (217), distance, neighbours |
 | `hexchess_pieces.py` | `Piece` subclasses (`Pawn`, `Rook`, `Knight`, `Bishop`, `Queen`, `King`, `Dragon`, `Prince`), `KNIGHT_OFFSETS`, `PieceFactory` |
 | `hexchess_game.py` | `HexChess`: setup, `get_possible_moves`, `_pseudo_moves`, `is_in_check`, `make_move` (promotion, mate/stalemate), `undo_move` |
-| `hexchess_ai.py` | `BasicAI` (one-move scoring with learned weights, histories, learning, save/load of `ai_params_<c>.json`); re-exports `AdvancedAI` |
+| `hexchess_ai.py` | `BasicAI` (one-move scoring with learned weights, histories, `_record_move_stats`, learning, save/load of `ai_params_<c>.json`); re-exports `AdvancedAI` |
 | `hexchess_ai_advanced.py` | `AdvancedAI`: iterative-deepening minimax, alpha-beta, transposition table, `_evaluate_board` |
 | `hexchess_evaluation.py` | `EvaluationMixin`: BasicAI's move-scoring terms |
 | `hexchess_learning.py` | `LearningModule`: weights, `update_params`, validation, save/load |
-| `ai_params_w.json`, `ai_params_b.json` | Learned weights + per-game learning history (125 games each) |
+| `ai_params_w.json`, `ai_params_b.json` | Learned weights + per-game learning history (reset to defaults 2026-11-11) |
 
 ## Web interface
 | File | Purpose |
@@ -41,7 +41,7 @@
 | `scripts/build_static.py`, `scripts/screenshots.py` | Static export to `site/`; Playwright smoke test + `docs/img/` |
 
 ## Tests
-`tests/` (pytest): board, pieces, game, AI, `test_rules_regressions.py`, `test_ai_regressions.py`, `test_gui_stats.py`,
+`tests/` (pytest): board, pieces, game, AI, `test_rules_regressions.py`, `test_ai_regressions.py`, `test_learning_regressions.py`, `test_gui_stats.py`,
 `test_web.py` (API, static build, fixture currency, node engine test). Older suites: `hexchess_tests.py`,
 `test_ai_learning.py`, `hexchess_full_game_test.py` (slow, ~2 min).
 

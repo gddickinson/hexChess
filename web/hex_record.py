@@ -98,8 +98,8 @@ def params_summary(color):
     digits): one entry per game the desktop app recorded in ai_params_<color>.json."""
     d = load_params(color)
     hist = d['learning_history']
-    names = [k for k in hist[0]['params'] if k != 'piece_values']
-    pieces = list(hist[0]['params']['piece_values'])
+    names = [k for k in d['params'] if k != 'piece_values']
+    pieces = list(d['params']['piece_values'])
     return {'color': color, 'games_played': d['games_played'], 'wins': d['wins'], 'params': d['params'],
             'history': {'game': [h['games_played'] for h in hist],
                         'win_rate': [_sig(h['win_rate']) for h in hist],

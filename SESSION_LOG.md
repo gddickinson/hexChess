@@ -23,3 +23,13 @@
   images/moves.JPG; pawns capture on their move cells; the learning update compares weights with `move_stats` counters
   that are never incremented, so learning only decays weights (now ~1e-5); pawn promotion to Prince on side edges.
 - Nothing ran on the Mac mini.
+
+## 2026-11-11 (later): learning fix; rules kept as coded
+- Learning: BasicAI/AdvancedAI now record move_stats for every move (`_record_move_stats`), so weights move towards
+  the features used in won games (up or down); ai_params_w.json / ai_params_b.json reset to the code defaults.
+  Web: Novice+ level dropped (identical to Novice now), AI Lab describes the learning, /api/params copes with an
+  empty history; fixtures regenerated.
+- A Bishop-on-diagonals / diagonal-pawn-capture change was tried and dropped: on this board the (1,1) diagonals skip
+  the pawn row, so White could take Black's Queen on move 1. George decided to keep the variant as coded (Bishop on
+  the Rook's lines, pawns capture on their move cells, Prince promotion on the side edges) and fix the docs; the
+  README now says images/moves.JPG shows standard hexagonal chess, not this variant.

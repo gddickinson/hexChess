@@ -12,6 +12,20 @@ A PyQt5 hexagonal chess variant with custom pieces (Dragon, Prince), a learning 
 - **Help system** with piece movement guides
 - **Custom piece images** support
 
+## Rules of this variant
+
+- Board: a hexagon of radius 8 (217 cells, axial q/r coordinates); each side has 19 pieces (back edge R N B Q K B N R
+  plus a Dragon, and 10 Pawns).
+- Rook, Bishop and Queen all slide up to 8 cells along the six straight lines through a cell: in this variant the
+  Bishop uses the Rook's lines, so the three move alike. The Knight jumps to the 12 cells at distance 2; the Dragon
+  moves like a Queen and jumps on the Knight's cells; King and Prince step to a neighbouring cell.
+- Pawns move one cell forward in either of two directions ((q, r+1) or (q+1, r) for White) and capture on those same
+  two cells. A Pawn reaching the far edge becomes a Queen; one reaching either side edge next to it becomes a Prince.
+- Moves may not leave your King in check; checkmate wins, stalemate draws. No castling or en passant.
+
+Note: `images/moves.JPG` shows the moves of standard hexagonal chess (diagonal Bishop, diagonal Pawn captures), not
+this variant.
+
 ## Requirements
 
 - Python 3.7+
@@ -53,12 +67,12 @@ See INTERFACE.md for the full module map.
 
 **https://gddickinson.github.io/hexChess/** -- the whole game runs in your browser (no server):
 
-- **Play** against the AI at five levels (Basic AI with its learned or default weights; Advanced AI at 1 ply, 2 plies,
+- **Play** against the AI at four levels (Basic AI with its saved weights; Advanced AI at 1 ply, 2 plies,
   or the desktop settings of 5 plies / 6 s), as White, Black or two players; undo/redo, hints, flip, coordinates,
   evaluation bar, move list with notation, and the game is saved in your browser.
 - **Watch** AI against AI with a live evaluation graph.
 - **Rules**: a tutorial of the rules as the code implements them, with an interactive piece explorer.
-- **AI Lab**: how both AIs score positions, and what the 125 recorded learning games did to the weights.
+- **AI Lab**: how both AIs score positions and how the Basic AI learns.
 
 The rules engine and both AIs are ported to JavaScript (`web/static/hex_engine.js`, `hex_ai_basic.js`,
 `hex_ai_advanced.js`) and checked against the Python: `node web/static/hex_engine.test.mjs` replays games recorded by

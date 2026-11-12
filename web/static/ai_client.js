@@ -3,9 +3,7 @@ import { api } from './core.js';
 
 export const LEVELS = [
   { id: 'basic', name: 'Novice', kind: 'basic', weights: 'learned',
-    desc: 'Basic AI with the weights it learned in 125 desktop games: scores every move once, no look-ahead.' },
-  { id: 'basic-default', name: 'Novice+', kind: 'basic', weights: 'default',
-    desc: 'Basic AI with its original default weights (before learning).' },
+    desc: 'Basic AI with its saved (learned) weights: scores every move once, no look-ahead.' },
   { id: 'adv1', name: 'Casual', kind: 'advanced', depth: 1, time: 2,
     desc: 'Advanced AI, 1 ply: picks the move with the best position evaluation.' },
   { id: 'adv2', name: 'Club', kind: 'advanced', depth: 2, time: 4,

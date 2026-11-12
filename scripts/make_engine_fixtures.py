@@ -54,6 +54,9 @@ POSITIONS = [
     ([[3, 4, 'wP'], [-8, 8, 'wK'], [8, -8, 'bK']], 'w', [3, 4, 4, 4], 'promotion to Queen'),
     ([[0, 7, 'wP'], [-8, 8, 'wK'], [8, -8, 'bK']], 'w', [0, 7, 0, 8], 'promotion to Prince'),
     ([[-3, -4, 'bP'], [-8, 8, 'wK'], [8, -8, 'bK']], 'b', [-3, -4, -4, -4], 'black promotion'),
+    ([[0, 0, 'wP'], [0, 1, 'bN'], [-8, 8, 'wK'], [8, -8, 'bK']], 'w', [0, 0, 0, 1], 'pawn captures on a move cell'),
+    ([[0, 0, 'wB'], [0, 2, 'bP'], [3, -3, 'bR'], [-8, 8, 'wK'], [8, -8, 'bK']], 'w', [0, 0, 3, -3],
+     'bishop on the rook lines'),
     ([[0, 0, 'wD'], [0, 1, 'bP'], [-1, 0, 'bP'], [1, -1, 'wP'], [-8, 8, 'wK'], [8, -8, 'bK']], 'w', [0, 0, 0, 2],
      'dragon jumps'),
     ([[0, 0, 'wQ'], [0, 3, 'bR'], [1, 1, 'bN'], [-8, 8, 'wK'], [8, -8, 'bK'], [4, -2, 'bP']], 'b', [1, 1, 0, 0],
@@ -135,12 +138,13 @@ def advanced():
 def build():
     learned_w, learned_b = hr.load_params('w')['params'], hr.load_params('b')['params']
     default = hr.default_params()
+    custom = dict(default, aggression=0.9, mobility=0.2, center_control=0.3, tempo=0.8)
     return {
         'cells': [list(c) for c in CELLS],
         'random_games': random_games(),
         'positions': positions(),
-        'basic_games': [basic_game(learned_w, learned_b, 40, 'learned weights'),
-                        basic_game(default, default, 30, 'default weights')],
+        'basic_games': [basic_game(learned_w, learned_b, 40, 'saved weights'),
+                        basic_game(custom, default, 30, 'custom vs default weights')],
         'advanced': advanced(),
     }
 
